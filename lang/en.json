@@ -1,0 +1,85 @@
+{
+  "app": {
+    "nama": "Degup",
+    "subtajuk": "Can you feel your own heartbeat?"
+  },
+  "umum": {
+    "penafian": "A body-awareness game, not a health test.",
+    "simulasi": "Simulation",
+    "main_semula": "Replay: {sesi}",
+    "teruskan": "Continue",
+    "kembali": "Back"
+  },
+  "kamera": {
+    "hidup": "Camera on",
+    "matikan": "Turn camera off"
+  },
+  "izin": {
+    "tajuk": "Before the camera turns on",
+    "pengenalan": "Degup uses the Presage SmartSpectra SDK to read your pulse and breathing from your camera. Read these seven points first.",
+    "perkara": {
+      "1": {
+        "tajuk": "What is measured",
+        "teks": "Pulse and pulse waveform, breathing rate and breathing waveform, from the camera video. No video recording is stored."
+      },
+      "2": {
+        "tajuk": "What stays on this computer",
+        "teks": "All video processing happens inside the SDK on this computer. Video and images are not sent anywhere."
+      },
+      "3": {
+        "tajuk": "What the Presage SDK sends out",
+        "teks": "(a) API key validation and model download, to Presage. (b) Derived measurements (pulse, breathing, HRV) and a session identifier are sent automatically to Presage for its Insights feature, which is generated with Anthropic. Degup cannot turn this off (SmartSpectra SDK Privacy Policy, 3 Nov 2026, §4.2 and §7.4). Degup sends no prompt text. (c) Aggregate SDK telemetry is turned off."
+      },
+      "4": {
+        "tajuk": "What Degup keeps",
+        "teks": "Nothing, unless you turn on History (scores only, a local file, deleted with one click). Your API key is stored encrypted with Electron safeStorage in your user folder."
+      },
+      "5": {
+        "tajuk": "Who it is for",
+        "teks": "Adults aged 18 and over. One person in the frame."
+      },
+      "6": {
+        "tajuk": "Not a medical device",
+        "teks": "This is a body-awareness game. It does not diagnose, treat or monitor any condition. SDK measurements are for general wellness and are not FDA cleared for diagnosis."
+      },
+      "7": {
+        "tajuk": "Short terms",
+        "teks": "No warranty, on behalf of Degup and Presage. Do not reverse engineer the SDK. Do not use it for diagnosis or treatment."
+      }
+    },
+    "pautan_dasar": "Presage privacy policy",
+    "umur_kotak": "I am 18 or older",
+    "hidupkan": "Turn on camera",
+    "tidak_sekarang": "Not now"
+  },
+  "babak": {
+    "lihat": "See",
+    "rasa": "Feel",
+    "lentur": "Bend",
+    "keputusan": "Result"
+  },
+  "lihat": {
+    "membaca": "Reading your pulse…",
+    "arahan": "This is your heartbeat, seen by the camera. Watch it for 30 seconds.",
+    "sedia": "Ready"
+  },
+  "rasa": {
+    "arahan": "Press Space (or click) every time you FEEL your heart beat. Do not touch your pulse, do not hold your breath.",
+    "jalur": {
+      "meneka": "Guessing",
+      "ada_rasa": "Some sense",
+      "selaras": "In tune"
+    },
+    "tak_cukup": "Not enough data: try again with light in front of you.",
+    "kiraan": "The camera saw {N} beats. You tapped {n}.",
+    "cuba_lagi": "Try again"
+  },
+  "lentur": {
+    "tarik": "Breathe in",
+    "hembus": "Breathe out",
+    "sela": "Beat interval: {dari} → {ke} ms",
+    "ringkasan": "Your heart slowed by about {ms} ms on each exhale.",
+    "nisbah": "About {prq} beats per breath.",
+    "penerangan": "This is normal. It is called respiratory sinus arrhythmia: the heart follows the breath. We name it, we do not judge it."
+  }
+}

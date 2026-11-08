@@ -1,0 +1,65 @@
+{
+  "_nota": "PRD §4.8 + padanan BM. Perkataan dipadan tanpa kira huruf besar, pada sempadan perkataan. senarai_benar = HANYA kunci teks izin/penafian wajib (PRD §4.6, §4.2) dan kunci RSA LENTUR yang dinamakan; setiap kunci hanya membenarkan perkataan yang disenaraikan untuknya. Rekod D-n dalam docs/02-DECISIONS.md sebelum menambah.",
+  "kata": [
+    "anxiety",
+    "stress",
+    "Stress Index",
+    "arrhythmia",
+    "irregular",
+    "abnormal",
+    "diagnose",
+    "diagnosis",
+    "health test",
+    "medical",
+    "heart condition",
+    "HRV",
+    "100% on-device",
+    "never leaves your machine",
+    "no AI service",
+    "stres",
+    "kebimbangan",
+    "aritmia",
+    "tidak normal",
+    "mendiagnosis",
+    "perubatan",
+    "ujian kesihatan",
+    "penyakit jantung",
+    "kecemasan"
+  ],
+  "senarai_benar": {
+    "izin.perkara.3.teks": [
+      "HRV"
+    ],
+    "izin.perkara.6.tajuk": [
+      "medical",
+      "perubatan"
+    ],
+    "izin.perkara.6.teks": [
+      "diagnose",
+      "diagnosis",
+      "mendiagnosis"
+    ],
+    "izin.perkara.7.teks": [
+      "diagnosis"
+    ],
+    "umum.penafian": [
+      "health test",
+      "ujian kesihatan"
+    ],
+    "lentur.penerangan": [
+      "arrhythmia",
+      "aritmia"
+    ]
+  },
+  "fail_markdown": [
+    "README.md",
+    "docs/hantar/HANTAR.md"
+  ],
+  "_nota_markdown": "Dalam fail_markdown, hanya blok antara <!-- izin mula --> dan <!-- izin akhir --> (salinan teks izin PRD §4.6) boleh memakai perkataan dalam markdown_izin.",
+  "markdown_izin": [
+    "HRV",
+    "medical",
+    "diagnose",
+    "diagnosis"
+  ]
+}

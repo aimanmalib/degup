@@ -1,0 +1,85 @@
+{
+  "app": {
+    "nama": "Degup",
+    "subtajuk": "Boleh tak kau rasa degupan jantung sendiri?"
+  },
+  "umum": {
+    "penafian": "Permainan rasa tubuh, bukan ujian kesihatan.",
+    "simulasi": "Simulasi",
+    "main_semula": "Main semula: {sesi}",
+    "teruskan": "Teruskan",
+    "kembali": "Kembali"
+  },
+  "kamera": {
+    "hidup": "Kamera hidup",
+    "matikan": "Matikan kamera"
+  },
+  "izin": {
+    "tajuk": "Sebelum kamera hidup",
+    "pengenalan": "Degup memakai Presage SmartSpectra SDK untuk membaca nadi dan nafas dari kamera kau. Baca tujuh perkara ini dahulu.",
+    "perkara": {
+      "1": {
+        "tajuk": "Apa yang diukur",
+        "teks": "Nadi dan gelombang nadi, kadar nafas dan gelombang nafas, dari video kamera. Tiada rakaman video disimpan."
+      },
+      "2": {
+        "tajuk": "Apa yang kekal dalam komputer ini",
+        "teks": "Semua pemprosesan video berlaku dalam SDK di komputer ini. Video dan imej tidak dihantar ke mana-mana."
+      },
+      "3": {
+        "tajuk": "Apa yang dihantar keluar oleh SDK Presage",
+        "teks": "(a) Pengesahan kunci API dan muat turun model ke Presage. (b) Ukuran terbitan (nadi, nafas, HRV) dan pengecam sesi dihantar automatik ke Presage untuk ciri Insights, yang dijana dengan Anthropic. Degup tidak boleh mematikan ini (Dasar Privasi SDK SmartSpectra, 3 Nov 2026, §4.2 dan §7.4). Degup tidak menghantar sebarang teks prompt. (c) Telemetri agregat SDK dimatikan."
+      },
+      "4": {
+        "tajuk": "Apa yang Degup simpan",
+        "teks": "Tiada, melainkan kau hidupkan Sejarah (skor sahaja, fail tempatan, boleh dipadam dengan satu klik). Kunci API disimpan terenkripsi dengan safeStorage Electron dalam folder pengguna."
+      },
+      "5": {
+        "tajuk": "Untuk siapa",
+        "teks": "Orang dewasa berumur 18 tahun ke atas. Satu orang sahaja dalam bingkai."
+      },
+      "6": {
+        "tajuk": "Bukan alat perubatan",
+        "teks": "Ini permainan kesedaran tubuh. Ia tidak mendiagnosis, merawat atau memantau apa-apa keadaan. Ukuran SDK untuk tujuan kesejahteraan am dan tidak diluluskan FDA untuk diagnosis."
+      },
+      "7": {
+        "tajuk": "Terma ringkas",
+        "teks": "Tiada waranti, bagi pihak Degup dan Presage. Dilarang membuat kejuruteraan terbalik ke atas SDK. Dilarang memakainya untuk diagnosis atau rawatan."
+      }
+    },
+    "pautan_dasar": "Dasar privasi Presage",
+    "umur_kotak": "Saya berumur 18 tahun ke atas",
+    "hidupkan": "Hidupkan kamera",
+    "tidak_sekarang": "Tidak sekarang"
+  },
+  "babak": {
+    "lihat": "Lihat",
+    "rasa": "Rasa",
+    "lentur": "Lentur",
+    "keputusan": "Keputusan"
+  },
+  "lihat": {
+    "membaca": "Membaca nadi…",
+    "arahan": "Ini degupan jantung kau, dilihat kamera. Perhatikan 30 saat.",
+    "sedia": "Sedia"
+  },
+  "rasa": {
+    "arahan": "Tekan Space (atau klik) setiap kali kau RASA jantung berdegup. Jangan sentuh nadi, jangan tahan nafas.",
+    "jalur": {
+      "meneka": "Meneka",
+      "ada_rasa": "Ada rasa",
+      "selaras": "Selaras"
+    },
+    "tak_cukup": "Tak cukup data: cuba lagi dengan cahaya depan.",
+    "kiraan": "Kamera nampak {N} degupan. Kau ketuk {n}.",
+    "cuba_lagi": "Cuba lagi"
+  },
+  "lentur": {
+    "tarik": "Tarik",
+    "hembus": "Hembus",
+    "sela": "Sela degupan: {dari} → {ke} ms",
+    "ringkasan": "Jantung kau melambat kira-kira {ms} ms setiap kali hembus.",
+    "nisbah": "Kira-kira {prq} degupan setiap nafas.",
+    "penerangan": "Ini normal. Namanya aritmia sinus pernafasan: jantung mengikut nafas. Kami menamakannya, tidak menilainya."
+  }
+}

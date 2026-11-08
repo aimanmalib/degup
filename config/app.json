@@ -1,0 +1,69 @@
+{
+  "_nota": "Semua nilai yang munasabah berubah (PRD §4.1 hingga §4.5, §4.7, §4.9, §4.10). Kod membaca; kod tidak menyimpan. Ubah di sini, bukan dalam src/.",
+  "bahasa_lalai": "ms",
+  "bahasa": ["ms", "en"],
+  "sumber_lalai": "live",
+  "sumber_env": "DEGUP_SUMBER",
+  "tetingkap": { "lebar": 1280, "tinggi": 800, "min_lebar": 1024, "min_tinggi": 640 },
+  "aliran": {
+    "lihat_s": 30,
+    "lihat_maks_s": 90,
+    "lihat_sedia_selepas_stabil_s": 15,
+    "rasa_s": 40,
+    "lentur_s": 60,
+    "jeda_ulang_pusingan_s": 20
+  },
+  "lihat": { "denyut_ms": 120 },
+  "beats": {
+    "buffer_s": 12,
+    "kadar_hz": 30,
+    "detrend_s": 1.0,
+    "lowpass_hz": 3,
+    "ambang_k_sisihan": 0.5,
+    "ambang_tetingkap_s": 3,
+    "refraktori_ms": 330,
+    "ragu_bawah": 0.6,
+    "ragu_atas": 1.5,
+    "jurang_s": 2,
+    "keyakinan_stabil": 40,
+    "semak_kendiri_s": 10,
+    "semak_kendiri_toleransi": 0.1,
+    "sandaran_pulse_trace_selepas_s": 5
+  },
+  "rasa": {
+    "bunyi_lalai": true,
+    "n_min": 10,
+    "kualiti_min": 0.6,
+    "jalur": [
+      { "id": "selaras", "r_min": 0.6, "p_bawah": 0.01 },
+      { "id": "ada_rasa", "p_bawah": 0.05 },
+      { "id": "meneka" }
+    ]
+  },
+  "lentur": { "tarik_s": 4, "hembus_s": 6, "min_degupan_kitaran": 4 },
+  "sejarah_lalai": false,
+  "rakam_fixture": false,
+  "perakam": {
+    "fps": 30,
+    "lebar": 1920,
+    "tinggi": 1080,
+    "mime": "video/webm;codecs=vp9",
+    "folder": "Degup",
+    "awalan_fail": "degup-demo-"
+  },
+  "sdk": {
+    "pakej": "@smartspectra/node-sdk",
+    "versi": "3.4.0",
+    "metrik": ["cardio", "breathing"],
+    "telemetri": false,
+    "output_terkumpul": false,
+    "vulkan_icd_linux": "/usr/share/vulkan/icd.d/lvp_icd.json"
+  },
+  "pautan": {
+    "kunci_percuma": "https://physiology.presagetech.com/auth/register",
+    "dasar_privasi_presage": "https://presagetech.com/legal/privacy-policy",
+    "terma_presage": "https://presagetech.com/legal/terms-of-service",
+    "repo": "https://github.com/aimanmalib/degup",
+    "lesen": "MIT"
+  }
+}
