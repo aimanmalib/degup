@@ -45,7 +45,7 @@ Format D-n: keputusan · sebab · undur. D-K1 hingga D-K15 = salinan PRD §5 (di
   SATU kunci lang → perkataan yang dibenarkan untuknya sahaja: `izin.perkara.3.teks` (HRV), `izin.perkara.6.tajuk`/`.teks`
   (medical/perubatan, diagnose/diagnosis/mendiagnosis), `izin.perkara.7.teks` (diagnosis), `umum.penafian` (health test/ujian kesihatan;
   ayat tetap PRD §4.2), `lentur.penerangan` (arrhythmia/aritmia; ayat RSA PRD §4.2). Markdown (README, HANTAR): hanya blok
-  `<!-- izin mula -->` … `<!-- izin akhir -->` boleh memakai `markdown_izin`. Ujian membuktikan perkataan sama di kunci lain ditolak.
+  `<!-- izin mula -->` … `<!-- izin akhir -->` boleh memakai `markdown_izin` (HRV, medical, diagnose, diagnosis, health test: salinan teks izin §4.6 dan ayat tetap §4.2). Ujian membuktikan perkataan sama di kunci lain ditolak.
 - **Sebab:** teks izin wajib PRD §4.6 dan ayat RSA bertembung dengan senarai larangan §4.8; arahan projek menuntut senarai benar sempit.
 - **Undur:** buang kunci dari senarai benar bila teks wajib berubah; menambah kunci = D-n baharu.
 

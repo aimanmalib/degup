@@ -3,8 +3,11 @@
 Can you feel your own heartbeat?
 
 Degup is a three-minute desktop game for adults. Your webcam sees your heartbeat through the Presage SmartSpectra SDK. Then the
-game checks whether you can feel that beat yourself, and shows how your breathing bends it. It is a body-awareness game, not a
-health test.
+game checks whether you can feel that beat yourself, and shows how your breathing bends it.
+
+<!-- izin mula -->
+A body-awareness game, not a health test.
+<!-- izin akhir -->
 
 Built for the Presage SmartSpectra SDK Challenge on DEV (November 2026). First commit: `50def1be6dd669eac62371ec66c7c7c72d9648e3`
 (9 Nov 2026).
