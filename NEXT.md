@@ -2,7 +2,8 @@
 
 Keadaan penuh: blok ⭐ dalam `docs/PELAN-presage-2026.md`.
 
-- **Seterusnya: P3a** (agen): cangkerang Electron (`src/main/`, `src/preload/`, `src/renderer/`): izin §4.6, tetapan §4.7, panel Data,
-  petunjuk kamera, esbuild + Playwright `_electron` asap dalam `DEGUP_SUMBER=sim`. Potongan UI pertama = pintu rupa pemilik.
-  Teras sedia: beats, score, rsa, fixture, i18n; sumber sim + replay (`fixtures/sim-contoh.json`).
+- **Seterusnya: P3b** (agen): LIHAT penuh (pelita berdenyut 120 ms setiap degupan, BPM + cincin keyakinan, "Sedia" selepas 15 s stabil),
+  RASA (Space/klik/sentuh, µs epoch, bunyi, 40 s), pendedahan (garis masa, skor, jalur), jeda petunjuk `validationStatus`.
+  Cangkerang sedia: `src/renderer/app.ts` (`Ruang.pergi`, `mulaBabak`, `berhenti`), `skrin/lihat.ts` keadaan awal, `skrin/pelita.ts`.
+- Pintu rupa: pemilik melihat tangkapan P3a (arah "pelita", D9) melalui pelari.
 - Pemilik (Baki KAU, `entri.json`): kunci Presage + jawapan S1 hingga S8 ≤ 10 Nov 22:00 MYT; dua video ujian ≤ 12 Nov.

@@ -8,11 +8,16 @@
     "simulasi": "Simulation",
     "main_semula": "Replay: {sesi}",
     "teruskan": "Continue",
-    "kembali": "Back"
+    "kembali": "Back",
+    "tutup": "Close",
+    "pilihan": "Options"
   },
   "kamera": {
     "hidup": "Camera on",
-    "matikan": "Turn camera off"
+    "matikan": "Turn camera off",
+    "simulasi": "Simulation: no camera in use",
+    "ralat": "The camera could not open. Check it is connected and no other app is using it.",
+    "pratonton": "Your camera preview"
   },
   "izin": {
     "tajuk": "Before the camera turns on",
@@ -50,7 +55,10 @@
     "pautan_dasar": "Presage privacy policy",
     "umur_kotak": "I am 18 or older",
     "hidupkan": "Turn on camera",
-    "tidak_sekarang": "Not now"
+    "tidak_sekarang": "Not now",
+    "terma_presage": "Presage terms",
+    "umur_perlu": "Tick the age box first to turn on the camera.",
+    "baca_dahulu": "Read first"
   },
   "babak": {
     "lihat": "See",
@@ -61,7 +69,8 @@
   "lihat": {
     "membaca": "Reading your pulse…",
     "arahan": "This is your heartbeat, seen by the camera. Watch it for 30 seconds.",
-    "sedia": "Ready"
+    "sedia": "Ready",
+    "esc": "Press Esc to stop. The camera turns off at once."
   },
   "rasa": {
     "arahan": "Press Space (or click) every time you FEEL your heart beat. Do not touch your pulse, do not hold your breath.",
@@ -81,5 +90,75 @@
     "ringkasan": "Your heart slowed by about {ms} ms on each exhale.",
     "nisbah": "About {prq} beats per breath.",
     "penerangan": "This is normal. It is called respiratory sinus arrhythmia: the heart follows the breath. We name it, we do not judge it."
+  },
+  "bahasa": {
+    "label": "Language",
+    "ms": "BM",
+    "en": "EN",
+    "ms_penuh": "Bahasa Melayu",
+    "en_penuh": "English"
+  },
+  "nav": {
+    "tetapan": "Settings",
+    "data": "Data",
+    "utama": "Navigation"
+  },
+  "rehat": {
+    "tajuk": "The camera stays off.",
+    "teks": "Nothing is measured. When you are ready, read the seven points again and turn on the camera.",
+    "semula": "Read again"
+  },
+  "tetapan": {
+    "tajuk": "Settings",
+    "kamera": "Camera",
+    "kamera_lalai": "System default",
+    "kamera_tiada": "No camera found.",
+    "kamera_n": "Camera {n}",
+    "kunci": "Presage API key",
+    "kunci_bantuan": "Stored encrypted on this computer. Never shown again.",
+    "kunci_medan": "Paste API key",
+    "kunci_simpan": "Save key",
+    "kunci_ada": "Key saved, encrypted.",
+    "kunci_tukar": "Change key",
+    "kunci_padam": "Delete key",
+    "kunci_disimpan": "Key saved.",
+    "kunci_dipadam": "Key deleted.",
+    "kunci_kosong": "The field is empty. Paste a key first.",
+    "kunci_storan": "This computer has no encrypted storage. The key was not saved.",
+    "kunci_dapatkan": "Get a free key",
+    "sumber": "Signal source",
+    "sumber_live": "Camera",
+    "sumber_replay": "Replay",
+    "sumber_env": "Set when the app opened: {sumber}. Change it by opening the app without DEGUP_SUMBER.",
+    "fixture": "Session to replay",
+    "fixture_tiada": "No saved sessions.",
+    "fixture_label": "{label} ({tarikh})",
+    "sejarah": "History",
+    "sejarah_bantuan": "Scores only, in one local file. Off until you turn it on.",
+    "bunyi": "Tap sound",
+    "bunyi_bantuan": "A soft click each time you tap in FEEL.",
+    "padam": "Delete all Degup data",
+    "padam_bantuan": "Settings, key and history on this computer.",
+    "padam_sahkan": "Yes, delete everything",
+    "padam_siap": "Deleted: {n} files.",
+    "tentang": "About",
+    "versi": "Version {v}",
+    "repo": "Source code",
+    "lesen": "Licence {lesen}"
+  },
+  "data": {
+    "tajuk": "This session's data",
+    "pengenalan": "What actually happened in this session, counted by the app.",
+    "pengesahan": "API key validation with Presage",
+    "ya": "Yes",
+    "tidak": "No",
+    "belum": "Not yet",
+    "insight": "Automatic Insights received from Presage",
+    "telemetri": "SDK telemetry",
+    "mati": "Off",
+    "bingkai": "Video frames sent by Degup",
+    "fail": "Files written on this computer",
+    "fail_tiada": "None",
+    "simulasi": "Simulation: the SDK is not called in this session."
   }
 }

@@ -31,8 +31,11 @@ Electron and TypeScript, no UI framework. `@smartspectra/node-sdk` 3.4.0. esbuil
 ```bash
 nvm use            # Node 22
 npm ci
-npm run gerbang    # size limits, tsc, unit tests, banned words, BM/EN parity
+npm run gerbang    # size limits, tsc, unit tests, banned words, BM/EN parity, build, Electron flow tests
+DEGUP_SUMBER=sim npm start   # open the app with the synthetic signal (no camera, no key)
 ```
+
+Fonts: Bricolage Grotesque and Atkinson Hyperlegible Next (SIL Open Font License), bundled from `@fontsource`.
 
 The SDK key lives in `.env` (see `.env.example`). It is never committed.
 

@@ -14,8 +14,9 @@ besar=$(git ls-files -co --exclude-standard -- src tests scripts e2e config lang
 [ -z "$besar" ] || { echo "fail melebihi $MAKS_BARIS baris: $besar"; exit 1; }
 echo ok
 
-langkah "tsc --noEmit"
+langkah "tsc --noEmit (teras/main/ujian + renderer DOM)"
 npx --no-install tsc --noEmit -p tsconfig.json
+npx --no-install tsc --noEmit -p tsconfig.renderer.json
 echo ok
 
 langkah "vitest (unit + kata larangan + pariti lang)"

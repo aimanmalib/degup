@@ -8,11 +8,16 @@
     "simulasi": "Simulasi",
     "main_semula": "Main semula: {sesi}",
     "teruskan": "Teruskan",
-    "kembali": "Kembali"
+    "kembali": "Kembali",
+    "tutup": "Tutup",
+    "pilihan": "Pilihan"
   },
   "kamera": {
     "hidup": "Kamera hidup",
-    "matikan": "Matikan kamera"
+    "matikan": "Matikan kamera",
+    "simulasi": "Simulasi: tiada kamera dipakai",
+    "ralat": "Kamera tidak dapat dibuka. Semak kamera disambung dan tiada app lain memakainya.",
+    "pratonton": "Pratonton kamera kau"
   },
   "izin": {
     "tajuk": "Sebelum kamera hidup",
@@ -50,7 +55,10 @@
     "pautan_dasar": "Dasar privasi Presage",
     "umur_kotak": "Saya berumur 18 tahun ke atas",
     "hidupkan": "Hidupkan kamera",
-    "tidak_sekarang": "Tidak sekarang"
+    "tidak_sekarang": "Tidak sekarang",
+    "terma_presage": "Terma Presage",
+    "umur_perlu": "Tanda kotak umur dahulu untuk menghidupkan kamera.",
+    "baca_dahulu": "Baca dahulu"
   },
   "babak": {
     "lihat": "Lihat",
@@ -61,7 +69,8 @@
   "lihat": {
     "membaca": "Membaca nadi…",
     "arahan": "Ini degupan jantung kau, dilihat kamera. Perhatikan 30 saat.",
-    "sedia": "Sedia"
+    "sedia": "Sedia",
+    "esc": "Tekan Esc untuk berhenti. Kamera mati serta-merta."
   },
   "rasa": {
     "arahan": "Tekan Space (atau klik) setiap kali kau RASA jantung berdegup. Jangan sentuh nadi, jangan tahan nafas.",
@@ -81,5 +90,75 @@
     "ringkasan": "Jantung kau melambat kira-kira {ms} ms setiap kali hembus.",
     "nisbah": "Kira-kira {prq} degupan setiap nafas.",
     "penerangan": "Ini normal. Namanya aritmia sinus pernafasan: jantung mengikut nafas. Kami menamakannya, tidak menilainya."
+  },
+  "bahasa": {
+    "label": "Bahasa",
+    "ms": "BM",
+    "en": "EN",
+    "ms_penuh": "Bahasa Melayu",
+    "en_penuh": "English"
+  },
+  "nav": {
+    "tetapan": "Tetapan",
+    "data": "Data",
+    "utama": "Navigasi"
+  },
+  "rehat": {
+    "tajuk": "Kamera kekal mati.",
+    "teks": "Tiada apa-apa diukur. Bila kau sedia, baca semula tujuh perkara dan hidupkan kamera.",
+    "semula": "Baca semula"
+  },
+  "tetapan": {
+    "tajuk": "Tetapan",
+    "kamera": "Kamera",
+    "kamera_lalai": "Lalai sistem",
+    "kamera_tiada": "Tiada kamera dijumpai.",
+    "kamera_n": "Kamera {n}",
+    "kunci": "Kunci API Presage",
+    "kunci_bantuan": "Disimpan terenkripsi dalam komputer ini. Tidak pernah dipaparkan semula.",
+    "kunci_medan": "Tampal kunci API",
+    "kunci_simpan": "Simpan kunci",
+    "kunci_ada": "Kunci disimpan, terenkripsi.",
+    "kunci_tukar": "Tukar kunci",
+    "kunci_padam": "Padam kunci",
+    "kunci_disimpan": "Kunci disimpan.",
+    "kunci_dipadam": "Kunci dipadam.",
+    "kunci_kosong": "Medan kosong. Tampal kunci dahulu.",
+    "kunci_storan": "Komputer ini tiada storan terenkripsi. Kunci tidak disimpan.",
+    "kunci_dapatkan": "Dapatkan kunci percuma",
+    "sumber": "Sumber isyarat",
+    "sumber_live": "Kamera",
+    "sumber_replay": "Main semula",
+    "sumber_env": "Ditetapkan semasa app dibuka: {sumber}. Tukar dengan membuka app tanpa DEGUP_SUMBER.",
+    "fixture": "Sesi untuk dimain semula",
+    "fixture_tiada": "Tiada sesi tersimpan.",
+    "fixture_label": "{label} ({tarikh})",
+    "sejarah": "Sejarah",
+    "sejarah_bantuan": "Skor sahaja, dalam satu fail tempatan. Mati sehingga kau hidupkan.",
+    "bunyi": "Bunyi ketukan",
+    "bunyi_bantuan": "Klik lembut setiap kali kau ketuk dalam RASA.",
+    "padam": "Padam semua data Degup",
+    "padam_bantuan": "Tetapan, kunci dan sejarah dalam komputer ini.",
+    "padam_sahkan": "Ya, padam semuanya",
+    "padam_siap": "Dipadam: {n} fail.",
+    "tentang": "Tentang",
+    "versi": "Versi {v}",
+    "repo": "Kod sumber",
+    "lesen": "Lesen {lesen}"
+  },
+  "data": {
+    "tajuk": "Data sesi ini",
+    "pengenalan": "Apa yang benar-benar berlaku dalam sesi ini, dikira oleh app.",
+    "pengesahan": "Pengesahan kunci API dengan Presage",
+    "ya": "Ya",
+    "tidak": "Tidak",
+    "belum": "Belum berlaku",
+    "insight": "Insights automatik diterima dari Presage",
+    "telemetri": "Telemetri SDK",
+    "mati": "Mati",
+    "bingkai": "Bingkai video dihantar oleh Degup",
+    "fail": "Fail ditulis dalam komputer ini",
+    "fail_tiada": "Tiada",
+    "simulasi": "Simulasi: SDK tidak dipanggil dalam sesi ini."
   }
 }

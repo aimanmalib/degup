@@ -98,3 +98,24 @@ Format D-n: keputusan · sebab · undur. D-K1 hingga D-K15 = salinan PRD §5 (di
 - **`fixtures/sim-contoh.json`** dijana `node scripts/jana-fixture-sim.mjs`; `meta.jana` menyimpan semua parameter dan ujian menjana
   semula dan membanding tepat (perubahan penjana tanpa jana semula = merah).
 - **Undur:** setiap nilai dalam config; skema naik ke 2 bila medan berubah (pengesah menolak skema lain).
+
+### D9 (P3a) Cangkerang Electron, arah visual "pelita", kunci API dan ujian
+- **Arah visual "pelita dalam bilik gelap":** latar dakwat biru malam (`#0f1626`), SATU aksen amber pelita (`#f4b860`); merah hanya
+  untuk petunjuk kamera hidup (semantik, bukan aksen). Bulatan cahaya §4.2 = "pelita" (gradien berlapis, skala/kelegapan sahaja).
+  Tipografi: Bricolage Grotesque (paparan; tanda kata "Degup" besar) + Atkinson Hyperlegible Next (badan, kebolehbacaan teks izin
+  panjang). Fon OFL dibundel dari `@fontsource` (tiada rangkaian; CSP `font-src 'self'`). Token dalam `src/renderer/gaya.css :root`.
+  Belum diluluskan pemilik (pintu rupa pelari). Undur: tukar token `:root`.
+- **Tetapan dan Data = helaian sisi `<dialog>` modal** (fokus terkurung, Esc menutup) di atas skrin semasa, supaya ia boleh dibuka
+  dari mana-mana babak tanpa kehilangan keadaan. Esc tanpa helaian = berhenti (kamera mati, kembali ke izin).
+- **"Rakam demo" (§4.7, §4.9) ditambah bersama perakam dalam P4a**, bukan butang kosong dalam P3a. Pilihan "Sumber isyarat" dalam
+  tetapan = Kamera / Main semula; `sim` hanya melalui `DEGUP_SUMBER` (ujian), dipaparkan sebagai lencana "Simulasi".
+- **Kunci API:** `safeStorage` sahaja; bila storan terenkripsi tiada (Linux tanpa keyring) app MENOLAK menyimpan dan berkata begitu,
+  tidak menulis teks biasa. Ujian Electron di xvfb memakai `--password-store=basic` + `DEGUP_UJI_STORAN_ASAS=1`
+  (`setUsePlainTextEncryption`, Linux sahaja). Kunci tidak pernah dihantar balik ke renderer dalam P3a; P4a memberinya kepada SDK.
+- **Keselamatan tetingkap:** `contextIsolation`, `sandbox`, tiada `nodeIntegration`; preload mendedahkan 7 fungsi sahaja
+  (`src/preload/api.ts`); kebenaran `media` video sahaja untuk tetingkap app; navigasi dan `window.open` disekat; pautan luar hanya id
+  dalam `config.pautan` (https).
+- **Folder data:** `app.getPath("userData")`; env `DEGUP_DATA` menindih (ujian). "Padam semua data Degup" membuang `tetapan.json`,
+  `kunci.bin`, `sejarah.json` sahaja. Panel Data menyenaraikan fail yang ditulis sesi ini (dikira proses main).
+- **TypeScript dua projek:** `tsconfig.json` (teras, sumber, main, preload, ujian, tanpa DOM: teras kekal tulen) +
+  `tsconfig.renderer.json` (DOM). Binaan `esbuild.config.mjs` → `dist/` (main/preload CJS, renderer IIFE).
