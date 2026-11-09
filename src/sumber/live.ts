@@ -2,7 +2,7 @@
 // renderer memiliki kamera (`getUserMedia`) dan menyerahkannya kepada SDK renderer melalui `useMediaStream`.
 // SDK disuntik melalui `KilangSdk` supaya modul ini boleh diuji tanpa pakej asli (ujian memakai SDK tiruan).
 // Konfigurasi dikunci: cardio + breathing sahaja, telemetri MATI, output terkumpul MATI, SATU pendengar `metrics`
-// (Exhale: pendengar kedua menggantikan yang pertama), TIADA `requestInsight` (K6/K7).
+// (Exhale: pendengar kedua menggantikan yang pertama), TIADA permintaan Insight atas arahan (K6/K7).
 import type { MetrikSdk } from "../core/metrik.js";
 import type { Sumber } from "./jenis.js";
 import { Pemancar } from "./pemancar.js";
@@ -15,7 +15,7 @@ export interface OpsyenSdk {
   enableAccumulatedOutput: false;
 }
 
-/** Subset SDK renderer yang Degup pakai (`@smartspectra/node-sdk/renderer`). Sengaja tiada `requestInsight`. */
+/** Subset SDK renderer yang Degup pakai (`@smartspectra/node-sdk/renderer`). Sengaja tiada kaedah permintaan Insight. */
 export interface SdkRenderer {
   useMediaStream(strim: unknown): unknown;
   start(): Promise<void>;
@@ -64,7 +64,7 @@ export interface KiraanLive {
   metrik: number;
   /** true bila SDK mencapai kRunning (kunci diterima pelayan); false bila pengesahan gagal. */
   pengesahan: boolean | null;
-  /** Peristiwa `insight` automatik (dikira sahaja; kandungan tidak dibaca, tiada `requestInsight`). */
+  /** Peristiwa `insight` automatik (dikira sahaja; kandungan tidak dibaca, tiada permintaan Insight). */
   insight: number;
 }
 
