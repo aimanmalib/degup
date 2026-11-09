@@ -70,7 +70,11 @@
     "membaca": "Membaca nadi…",
     "arahan": "Ini degupan jantung kau, dilihat kamera. Perhatikan 30 saat.",
     "sedia": "Sedia",
-    "esc": "Tekan Esc untuk berhenti. Kamera mati serta-merta."
+    "esc": "Tekan Esc untuk berhenti. Kamera mati serta-merta.",
+    "stabil": "Nadi dikesan. Setiap denyut pelita = satu degupan.",
+    "unit": "degupan seminit",
+    "sedia_dalam": "Sedia dalam {s} saat.",
+    "belum_stabil": "Bacaan kamera belum stabil. Kau boleh teruskan, tetapi skor mungkin tak cukup data."
   },
   "rasa": {
     "arahan": "Tekan Space (atau klik) setiap kali kau RASA jantung berdegup. Jangan sentuh nadi, jangan tahan nafas.",
@@ -81,7 +85,10 @@
     },
     "tak_cukup": "Tak cukup data: cuba lagi dengan cahaya depan.",
     "kiraan": "Kamera nampak {N} degupan. Kau ketuk {n}.",
-    "cuba_lagi": "Cuba lagi"
+    "cuba_lagi": "Cuba lagi",
+    "diulang": "Jeda melebihi {s} saat. Pusingan bermula semula bila bacaan sambung.",
+    "mengira": "Mengira…",
+    "pembilang": "Masa pusingan, {s} saat"
   },
   "lentur": {
     "tarik": "Tarik",
@@ -160,5 +167,42 @@
     "fail": "Fail ditulis dalam komputer ini",
     "fail_tiada": "Tiada",
     "simulasi": "Simulasi: SDK tidak dipanggil dalam sesi ini."
+  },
+  "dedah": {
+    "tajuk": "Pendedahan",
+    "skor_label": "Skor keselarasan",
+    "daripada": "/100",
+    "tiada_skor": "Tiada skor",
+    "garis_label": "Garis masa {s} saat: tanda menegak ialah degupan yang kamera nampak, titik ialah ketukan kau.",
+    "kunci_degup": "Degupan dilihat kamera",
+    "kunci_ketuk": "Ketukan kau",
+    "kunci_lorek": "Bacaan lemah, tidak dikira",
+    "saat": "{s} saat",
+    "sama": "Ketukan kau jatuh pada bahagian kitaran yang sama {x} kali daripada 10.",
+    "kebetulan": "Corak sebegitu boleh berlaku secara kebetulan.",
+    "bukan_kebetulan": "Itu bukan kebetulan.",
+    "sesaran": "Kau rasa degupan kira-kira {ms} ms selepas kamera melihatnya. Sesaran tetap itu tidak penting; yang dikira ialah ketekalan.",
+    "sebab_ketukan": "Hanya {n} ketukan jatuh antara dua degupan yang jelas. Perlu sekurang-kurangnya 10.",
+    "sebab_kualiti": "Bacaan kamera lemah untuk sebahagian besar pusingan."
+  },
+  "petunjuk": {
+    "dijeda": "Dijeda.",
+    "ok": "Bacaan baik.",
+    "tiada_muka": "Muka tidak kelihatan. Pandang kamera.",
+    "banyak_muka": "Satu muka sahaja dalam bingkai.",
+    "muka_tengah": "Alihkan muka ke tengah bingkai.",
+    "jarak": "Ubah jarak dari kamera.",
+    "gelap": "Terlalu gelap. Tambah cahaya dari depan.",
+    "terang": "Terlalu terang. Kurangkan cahaya.",
+    "dada": "Dada atas perlu kelihatan.",
+    "kamera_tala": "Kamera sedang menyesuaikan cahaya. Tunggu sebentar.",
+    "bingkai": "Kamera terlalu perlahan. Tutup app lain yang memakai kamera.",
+    "gerak": "Duduk diam.",
+    "dekat": "Terlalu dekat. Undur sedikit.",
+    "jauh": "Terlalu jauh. Dekat sedikit.",
+    "tinggi": "Muka terlalu tinggi dalam bingkai.",
+    "rendah": "Muka terlalu rendah dalam bingkai.",
+    "hadap": "Pandang terus ke kamera.",
+    "lain": "Bacaan terganggu. Duduk diam dan pandang kamera."
   }
 }

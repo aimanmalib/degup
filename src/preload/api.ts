@@ -26,6 +26,8 @@ export interface Permulaan {
   /** Nilai DEGUP_SUMBER bila ditetapkan (live | replay | sim); menindih tetapan. */
   sumberEnv: string | null;
   fixtures: FixtureSedia[];
+  /** Pendarab tempoh babak (ujian, sim sahaja); 1 dalam app sebenar. */
+  skalaMasa: number;
   kunciAda: boolean;
   failDitulis: string[];
 }
@@ -40,6 +42,8 @@ export interface DegupApi {
   padamSemua(): Promise<string[]>;
   failDitulis(): Promise<string[]>;
   bukaPautan(id: string): Promise<void>;
+  /** Kandungan fixture yang sah (nama dari `Permulaan.fixtures` sahaja); null bila tiada/rosak. */
+  bacaFixture(fail: string): Promise<unknown>;
 }
 
 export const SALURAN = {
@@ -50,4 +54,5 @@ export const SALURAN = {
   padamSemua: "degup:padam-semua",
   failDitulis: "degup:fail-ditulis",
   bukaPautan: "degup:buka-pautan",
+  bacaFixture: "degup:baca-fixture",
 } as const;

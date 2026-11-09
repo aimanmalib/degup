@@ -38,6 +38,24 @@ function fixtureSedia(): FixtureSedia[] {
   return hasil;
 }
 
+/** Skala masa ujian: hanya untuk sumber sim (Playwright), tidak pernah untuk live/replay. */
+function skalaMasa(): number {
+  if (process.env[konfig.sumber_env] !== "sim") return 1;
+  const x = Number(process.env[konfig.uji.skala_masa_env]);
+  return x > 0 && x <= 1 ? x : 1;
+}
+
+/** Baca fixture ikut nama yang disenaraikan sahaja (tiada laluan dari renderer). */
+function bacaFixture(fail: unknown): unknown {
+  if (typeof fail !== "string" || !fixtureSedia().some((f) => f.fail === fail)) return null;
+  try {
+    const sah = sahkanFixture(JSON.parse(readFileSync(join(AKAR, "fixtures", fail), "utf8")), konfig.replay.skema);
+    return sah.ok ? sah.fixture : null;
+  } catch {
+    return null;
+  }
+}
+
 function daftarIpc(simpanan: Simpanan): void {
   const pautan = konfig.pautan as Record<string, string>;
   ipcMain.handle(SALURAN.mula, (): Permulaan => ({
@@ -45,6 +63,7 @@ function daftarIpc(simpanan: Simpanan): void {
     versi: app.getVersion(),
     sumberEnv: process.env[konfig.sumber_env] ?? null,
     fixtures: fixtureSedia(),
+    skalaMasa: skalaMasa(),
     kunciAda: simpanan.kunciAda(),
     failDitulis: simpanan.failDitulis(),
   }));
@@ -53,6 +72,7 @@ function daftarIpc(simpanan: Simpanan): void {
   ipcMain.handle(SALURAN.padamKunci, () => simpanan.padamKunci());
   ipcMain.handle(SALURAN.padamSemua, () => simpanan.padamSemua());
   ipcMain.handle(SALURAN.failDitulis, () => simpanan.failDitulis());
+  ipcMain.handle(SALURAN.bacaFixture, (_e, fail: unknown) => bacaFixture(fail));
   // Hanya pautan bernama dalam config.pautan, hanya https: renderer tidak boleh membuka URL sewenang-wenang.
   ipcMain.handle(SALURAN.bukaPautan, async (_e, id: unknown) => {
     const url = typeof id === "string" ? pautan[id] : undefined;

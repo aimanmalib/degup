@@ -2,17 +2,39 @@
 import { h, kosongkan } from "./dom.js";
 import { Kamera } from "./kamera.js";
 import { Keadaan } from "./keadaan.js";
+import { SesiUkur } from "./sesi.js";
 import { panelData } from "./skrin/data.js";
+import { babakDedah } from "./skrin/dedah.js";
 import { skrinIzin } from "./skrin/izin.js";
-import { skrinLihat } from "./skrin/lihat.js";
+import { babakLihat } from "./skrin/lihat.js";
+import { babakRasa } from "./skrin/rasa.js";
 import { skrinRehat } from "./skrin/rehat.js";
 import { panelTetapan } from "./skrin/tetapan.js";
+import { pasangCangkukUji } from "./uji.js";
 
-export type NamaSkrin = "izin" | "rehat" | "lihat";
+export type NamaSkrin = "izin" | "rehat" | "lihat" | "rasa" | "dedah";
+type NamaBabak = Extract<NamaSkrin, "lihat" | "rasa" | "dedah">;
+
+/** Babak berkeadaan: pemasa + langganan hidup di sini; `el()` membina DOM semula (cth tukar bahasa) tanpa menetap semula keadaan. */
+export interface Babak {
+  el(): HTMLElement;
+  buang(): void;
+}
+
+/** Hasil tetingkap RASA untuk pendedahan (µs epoch). */
+export interface HasilRasa {
+  mula: number;
+  akhir: number;
+  ketukan: number[];
+}
 
 export interface Ruang {
   k: Keadaan;
   kamera: Kamera;
+  /** Sesi ukur aktif (LIHAT hingga pendedahan); null di luar babak. */
+  sesi: SesiUkur | null;
+  hasilRasa: HasilRasa | null;
+  readonly skrin: NamaSkrin;
   pergi(skrin: NamaSkrin): void;
   /** Hidupkan sumber: kamera (live) atau tiada kamera (sim/replay), kemudian LIHAT. */
   mulaBabak(): Promise<void>;
@@ -30,12 +52,22 @@ async function utama(): Promise<void> {
   akar.append(bar, pentas, dialog);
   let skrin: NamaSkrin = "izin";
   let ralatKamera = false;
+  let babak: Babak | null = null;
+  const BABAK: Record<NamaBabak, (r: Ruang) => Babak> = { lihat: babakLihat, rasa: babakRasa, dedah: babakDedah };
 
   const ruang: Ruang = {
     k,
     kamera,
+    sesi: null,
+    hasilRasa: null,
+    get skrin() {
+      return skrin;
+    },
     pergi(s) {
+      babak?.buang();
+      babak = null;
       skrin = s;
+      if (s in BABAK && ruang.sesi) babak = BABAK[s as NamaBabak](ruang);
       lukis();
       pentas.focus({ preventScroll: true });
     },
@@ -50,10 +82,16 @@ async function utama(): Promise<void> {
           return;
         }
       }
+      void ruang.sesi?.henti();
+      ruang.sesi = await SesiUkur.cipta(k);
+      ruang.hasilRasa = null;
       ruang.pergi("lihat");
     },
     berhenti() {
       kamera.tutup();
+      void ruang.sesi?.henti();
+      ruang.sesi = null;
+      ruang.hasilRasa = null;
       ruang.pergi("izin");
     },
   };
@@ -124,7 +162,7 @@ async function utama(): Promise<void> {
   function lukis(): void {
     lukisBar();
     pentas.dataset.skrin = skrin;
-    const isi = skrin === "izin" ? skrinIzin(ruang, ralatKamera) : skrin === "rehat" ? skrinRehat(ruang) : skrinLihat(ruang);
+    const isi = babak ? babak.el() : skrin === "rehat" ? skrinRehat(ruang) : skrinIzin(ruang, ralatKamera);
     kosongkan(pentas, isi);
   }
 
@@ -132,12 +170,13 @@ async function utama(): Promise<void> {
   kamera.dengar(lukisBar);
   document.addEventListener("keydown", (e) => {
     if (e.key !== "Escape" || dialog.open) return;
-    if (kamera.hidup || skrin === "lihat") {
+    if (kamera.hidup || babak) {
       e.preventDefault();
       ruang.berhenti();
     }
   });
   window.addEventListener("beforeunload", () => kamera.tutup());
+  pasangCangkukUji(ruang);
   k.maklum();
 }
 

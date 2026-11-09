@@ -1,10 +1,18 @@
 {
   "_nota": "Semua nilai yang munasabah berubah (PRD §4.1 hingga §4.5, §4.7, §4.9, §4.10). Kod membaca; kod tidak menyimpan. Ubah di sini, bukan dalam src/.",
   "bahasa_lalai": "ms",
-  "bahasa": ["ms", "en"],
+  "bahasa": [
+    "ms",
+    "en"
+  ],
   "sumber_lalai": "live",
   "sumber_env": "DEGUP_SUMBER",
-  "tetingkap": { "lebar": 1280, "tinggi": 800, "min_lebar": 1024, "min_tinggi": 640 },
+  "tetingkap": {
+    "lebar": 1280,
+    "tinggi": 800,
+    "min_lebar": 1024,
+    "min_tinggi": 640
+  },
   "aliran": {
     "lihat_s": 30,
     "lihat_maks_s": 90,
@@ -13,7 +21,11 @@
     "lentur_s": 60,
     "jeda_ulang_pusingan_s": 20
   },
-  "lihat": { "denyut_ms": 120 },
+  "lihat": {
+    "denyut_ms": 120,
+    "denyut_skala": 1.09,
+    "kemas_ms": 250
+  },
   "beats": {
     "buffer_s": 12,
     "kadar_hz": 30,
@@ -56,10 +68,27 @@
     "kualiti_saat_min": 0.5,
     "ayat_separuh_kitaran": 0.25,
     "jalur": [
-      { "id": "selaras", "r_min": 0.6, "p_bawah": 0.01 },
-      { "id": "ada_rasa", "p_bawah": 0.05 },
-      { "id": "meneka" }
-    ]
+      {
+        "id": "selaras",
+        "r_min": 0.6,
+        "p_bawah": 0.01
+      },
+      {
+        "id": "ada_rasa",
+        "p_bawah": 0.05
+      },
+      {
+        "id": "meneka"
+      }
+    ],
+    "kemas_ms": 100,
+    "tunggu_akhir_ms": 1500,
+    "bunyi": {
+      "hz": 540,
+      "ms": 45,
+      "gain": 0.06
+    },
+    "riak_ms": 420
   },
   "lentur": {
     "tarik_s": 4,
@@ -91,7 +120,10 @@
   "sdk": {
     "pakej": "@smartspectra/node-sdk",
     "versi": "3.4.0",
-    "metrik": ["cardio", "breathing"],
+    "metrik": [
+      "cardio",
+      "breathing"
+    ],
     "telemetri": false,
     "output_terkumpul": false,
     "vulkan_icd_linux": "/usr/share/vulkan/icd.d/lvp_icd.json"
@@ -102,5 +134,15 @@
     "terma_presage": "https://presagetech.com/legal/terms-of-service",
     "repo": "https://github.com/aimanmalib/degup",
     "lesen": "MIT"
+  },
+  "dedah": {
+    "_nota": "Pendedahan RASA (PRD §4.2): garis masa SVG (unit viewBox) dan tempoh animasi kiraan skor.",
+    "lebar": 1000,
+    "tinggi": 120,
+    "kiraan_ms": 900
+  },
+  "uji": {
+    "_nota": "Ujian Playwright sahaja: skala masa babak (0 < x ≤ 1) dipakai HANYA bila DEGUP_SUMBER=sim. Live/replay sentiasa 1.",
+    "skala_masa_env": "DEGUP_SKALA_MASA"
   }
 }

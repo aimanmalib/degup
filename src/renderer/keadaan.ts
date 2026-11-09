@@ -32,6 +32,11 @@ export class Keadaan {
 
   t = (kunci: string, nilai?: Record<string, string | number>) => this.i18n.t(kunci, nilai);
 
+  /** Tempoh babak (s) dari config × skala ujian (1 dalam app sebenar). */
+  masaS(s: number): number {
+    return s * this.mula.skalaMasa;
+  }
+
   get tetapan(): Tetapan {
     return this.mula.tetapan;
   }

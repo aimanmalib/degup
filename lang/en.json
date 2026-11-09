@@ -70,7 +70,11 @@
     "membaca": "Reading your pulse…",
     "arahan": "This is your heartbeat, seen by the camera. Watch it for 30 seconds.",
     "sedia": "Ready",
-    "esc": "Press Esc to stop. The camera turns off at once."
+    "esc": "Press Esc to stop. The camera turns off at once.",
+    "stabil": "Pulse found. Every pulse of the lamp is one heartbeat.",
+    "unit": "beats per minute",
+    "sedia_dalam": "Ready in {s} seconds.",
+    "belum_stabil": "The camera reading is not steady yet. You can go on, but there may not be enough data for a score."
   },
   "rasa": {
     "arahan": "Press Space (or click) every time you FEEL your heart beat. Do not touch your pulse, do not hold your breath.",
@@ -81,7 +85,10 @@
     },
     "tak_cukup": "Not enough data: try again with light in front of you.",
     "kiraan": "The camera saw {N} beats. You tapped {n}.",
-    "cuba_lagi": "Try again"
+    "cuba_lagi": "Try again",
+    "diulang": "Paused for more than {s} seconds. The round starts again when the reading resumes.",
+    "mengira": "Counting…",
+    "pembilang": "Round time, {s} seconds"
   },
   "lentur": {
     "tarik": "Breathe in",
@@ -160,5 +167,42 @@
     "fail": "Files written on this computer",
     "fail_tiada": "None",
     "simulasi": "Simulation: the SDK is not called in this session."
+  },
+  "dedah": {
+    "tajuk": "The reveal",
+    "skor_label": "Sync score",
+    "daripada": "/100",
+    "tiada_skor": "No score",
+    "garis_label": "{s} second timeline: vertical marks are beats the camera saw, dots are your taps.",
+    "kunci_degup": "Beat seen by the camera",
+    "kunci_ketuk": "Your tap",
+    "kunci_lorek": "Weak reading, not counted",
+    "saat": "{s} seconds",
+    "sama": "Your taps landed on the same part of the cycle {x} times out of 10.",
+    "kebetulan": "A pattern like that can happen by chance.",
+    "bukan_kebetulan": "That is not chance.",
+    "sesaran": "You felt the beat about {ms} ms after the camera saw it. That fixed offset does not matter; consistency is what counts.",
+    "sebab_ketukan": "Only {n} taps fell between two clear beats. At least 10 are needed.",
+    "sebab_kualiti": "The camera reading was weak for most of the round."
+  },
+  "petunjuk": {
+    "dijeda": "Paused.",
+    "ok": "Good reading.",
+    "tiada_muka": "No face in view. Look at the camera.",
+    "banyak_muka": "Only one face in the frame.",
+    "muka_tengah": "Move your face to the centre of the frame.",
+    "jarak": "Change your distance from the camera.",
+    "gelap": "Too dark. Add light from the front.",
+    "terang": "Too bright. Reduce the light.",
+    "dada": "Your upper chest needs to be visible.",
+    "kamera_tala": "The camera is adjusting to the light. One moment.",
+    "bingkai": "The camera is too slow. Close other apps using the camera.",
+    "gerak": "Sit still.",
+    "dekat": "Too close. Move back a little.",
+    "jauh": "Too far. Come a little closer.",
+    "tinggi": "Your face is too high in the frame.",
+    "rendah": "Your face is too low in the frame.",
+    "hadap": "Look straight at the camera.",
+    "lain": "Reading interrupted. Sit still and look at the camera."
   }
 }

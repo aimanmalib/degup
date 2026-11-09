@@ -112,10 +112,34 @@ Format D-n: keputusan · sebab · undur. D-K1 hingga D-K15 = salinan PRD §5 (di
 - **Kunci API:** `safeStorage` sahaja; bila storan terenkripsi tiada (Linux tanpa keyring) app MENOLAK menyimpan dan berkata begitu,
   tidak menulis teks biasa. Ujian Electron di xvfb memakai `--password-store=basic` + `DEGUP_UJI_STORAN_ASAS=1`
   (`setUsePlainTextEncryption`, Linux sahaja). Kunci tidak pernah dihantar balik ke renderer dalam P3a; P4a memberinya kepada SDK.
-- **Keselamatan tetingkap:** `contextIsolation`, `sandbox`, tiada `nodeIntegration`; preload mendedahkan 7 fungsi sahaja
+- **Keselamatan tetingkap:** `contextIsolation`, `sandbox`, tiada `nodeIntegration`; preload mendedahkan 7 fungsi sahaja (8 sejak P3b, D10: `bacaFixture`)
   (`src/preload/api.ts`); kebenaran `media` video sahaja untuk tetingkap app; navigasi dan `window.open` disekat; pautan luar hanya id
   dalam `config.pautan` (https).
 - **Folder data:** `app.getPath("userData")`; env `DEGUP_DATA` menindih (ujian). "Padam semua data Degup" membuang `tetapan.json`,
   `kunci.bin`, `sejarah.json` sahaja. Panel Data menyenaraikan fail yang ditulis sesi ini (dikira proses main).
 - **TypeScript dua projek:** `tsconfig.json` (teras, sumber, main, preload, ujian, tanpa DOM: teras kekal tulen) +
   `tsconfig.renderer.json` (DOM). Binaan `esbuild.config.mjs` → `dist/` (main/preload CJS, renderer IIFE).
+
+### D10 (P3b) LIHAT, RASA, pendedahan: butiran yang PRD tidak putuskan
+
+- **Babak berkeadaan:** setiap babak (`src/renderer/skrin/lihat.ts`, `rasa.ts`, `dedah.ts`) memegang pemasa dan langganannya sendiri;
+  tukar bahasa membina DOM semula tanpa menetap semula masa, ketukan atau skor. Satu `SesiUkur` (`src/renderer/sesi.ts`) memegang SATU
+  pendengar metrik sumber, pengesan degupan, penjejak nadi dan penjejak jeda; babak melanggan di situ.
+- **LIHAT tidak maju sendiri.** "Sedia" dibuka bila jejak stabil ≥ `lihat_sedia_selepas_stabil_s` tanpa jeda; selepas `lihat_s` butang
+  ditonjolkan; bila `lihat_maks_s` berlalu tanpa stabil, "Sedia" dibuka dengan nota jujur (skor mungkin tak cukup data). Sebab: RASA
+  menuntut perhatian penuh, jadi pengguna memilih bila mula. Stabil = ukuran nadi `stable` DAN keyakinan ≥ `beats.keyakinan_stabil`.
+  Pelita berdenyut (`denyut_ms`, `denyut_skala`, transform sahaja; kurang gerak = kelegapan) hanya bila stabil dan tidak dijeda.
+- **Petunjuk SDK:** teks dari `lang/` ikut KOD `ValidationCode` 3.4.0 (`src/core/petunjuk.ts`), bukan `hint` Inggeris SDK (BM perlu
+  terjemahan). Sebarang kod bukan OK = jeda. RASA: masa pusingan beku semasa jeda, ketukan semasa jeda tidak dikira; jeda >
+  `jeda_ulang_pusingan_s` membuang ketukan dan pusingan bermula semula bila petunjuk OK. Jeda menetap semula kiraan stabil LIHAT.
+- **Ketukan:** cap masa = `performance.timeOrigin + event.timeStamp` (masa peristiwa, bukan masa pengendali) → µs. Space (bukan ulang
+  autokekunci), `pointerdown` (tetikus + sentuh). Bunyi = satu nada pendek Web Audio (`rasa.bunyi`), ikut tetapan Bunyi. Riak pada
+  ketukan sahaja; tiada maklum balas tentang degupan. Skor dikira `tunggu_akhir_ms` selepas tetingkap tamat (puncak terakhir disahkan).
+- **Pendedahan:** ayat sesaran fasa hanya dipapar bila jalur bukan "Meneka" (purata fasa rawak ialah hingar). Saat tanpa sampel = berlorek.
+- **"Teruskan" sementara:** sehingga LENTUR (P3c), "Teruskan" menamatkan sesi (kamera mati) dan kembali ke izin.
+- **Main semula dalam renderer:** IPC baharu `bacaFixture(nama)`; main hanya membaca nama yang tersenarai dalam `fixtures/` dan
+  mengesahkannya dengan pengesah P2b. Sumber `live` disambung dalam P4a (sehingga itu LIHAT live kekal "Membaca nadi…").
+- **Cangkuk ujian (`src/renderer/uji.ts`):** `window.degupUji` (petunjuk tiruan, ketukan sefasa / fasa tersebar ikut degupan dikesan)
+  dan skala masa `DEGUP_SKALA_MASA` HANYA bila `DEGUP_SUMBER=sim` (main memaksa 1 untuk sumber lain). Ketukan Playwright masa nyata
+  tidak boleh mendahului degupan yang belum dikesan, jadi jalur diuji dengan ketukan bertulis; Space sebenar diuji untuk kiraan.
+  Undur: buang `uji.ts` + `uji` dalam config; ujian jalur kembali ke vitest sahaja.
