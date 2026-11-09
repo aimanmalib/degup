@@ -3,10 +3,12 @@
 import type { Ruang } from "../app.js";
 import { h } from "../dom.js";
 import { pelita } from "./pelita.js";
+import { butangRakam } from "./rakam.js";
 
 export const BILANGAN_PERKARA = 7;
 
-export function skrinIzin(r: Ruang, ralatKamera: boolean): HTMLElement {
+/** @param ralat kunci lang ralat mula (kamera tidak dibuka, kunci tiada/ditolak, SDK gagal); null = tiada. */
+export function skrinIzin(r: Ruang, ralat: string | null): HTMLElement {
   const { t } = r.k;
   const nota = h("p", { class: "nota", id: "nota-umur", "aria-live": "polite" }, t("izin.umur_perlu"));
   const hidupkan = h(
@@ -58,7 +60,7 @@ export function skrinIzin(r: Ruang, ralatKamera: boolean): HTMLElement {
       h(
         "div",
         { class: "izin-tindakan" },
-        ralatKamera ? h("p", { class: "ralat", role: "alert" }, t("kamera.ralat")) : null,
+        ralat ? h("p", { class: "ralat", role: "alert", "data-uji": "ralat-mula" }, t(ralat)) : null,
         h("label", { class: "kotak-umur", for: "umur" }, kotak, h("span", {}, t("izin.umur_kotak"))),
         nota,
         h(
@@ -66,6 +68,7 @@ export function skrinIzin(r: Ruang, ralatKamera: boolean): HTMLElement {
           { class: "butang-baris" },
           hidupkan,
           h("button", { class: "butang hantu", type: "button", "data-uji": "tidak-sekarang", onclick: () => r.pergi("rehat") }, t("izin.tidak_sekarang")),
+          butangRakam(r),
         ),
         h("p", { class: "penafian" }, t("umum.penafian")),
       ),

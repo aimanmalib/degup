@@ -61,8 +61,11 @@ button, input, select { font: inherit; color: inherit; }
   max-width: 22rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .nav { display: flex; align-items: center; gap: var(--j-2); }
-.kamera-hidup { display: flex; align-items: center; gap: var(--j-2); font-weight: 700; color: var(--tulang); }
-.kamera-hidup .titik { width: 0.7rem; height: 0.7rem; border-radius: 50%; background: var(--merah); animation: kelip 1.4s ease-in-out infinite; }
+.kamera-hidup, .rakam-hidup { display: flex; align-items: center; gap: var(--j-2); font-weight: 700; color: var(--tulang); }
+.rakam-hidup { padding: 0.1rem 0.2rem 0.1rem 0.6rem; border: 1px solid var(--merah); border-radius: var(--bucu-pil); }
+.rakam-label { letter-spacing: 0.12em; font-size: 0.85rem; color: var(--merah); }
+.rakam-mesej { margin: 0; font-size: 0.85rem; color: var(--kabus); max-width: 24rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.kamera-hidup .titik, .rakam-hidup .titik { width: 0.7rem; height: 0.7rem; border-radius: 50%; background: var(--merah); animation: kelip 1.4s ease-in-out infinite; }
 @keyframes kelip { 50% { opacity: 0.35; } }
 
 .suis-bahasa { display: inline-flex; border: 1px solid var(--garis); border-radius: var(--bucu-pil); padding: 2px; margin-right: var(--j-2); }

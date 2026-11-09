@@ -112,7 +112,7 @@ Format D-n: keputusan · sebab · undur. D-K1 hingga D-K15 = salinan PRD §5 (di
 - **Kunci API:** `safeStorage` sahaja; bila storan terenkripsi tiada (Linux tanpa keyring) app MENOLAK menyimpan dan berkata begitu,
   tidak menulis teks biasa. Ujian Electron di xvfb memakai `--password-store=basic` + `DEGUP_UJI_STORAN_ASAS=1`
   (`setUsePlainTextEncryption`, Linux sahaja). Kunci tidak pernah dihantar balik ke renderer dalam P3a; P4a memberinya kepada SDK.
-- **Keselamatan tetingkap:** `contextIsolation`, `sandbox`, tiada `nodeIntegration`; preload mendedahkan 7 fungsi sahaja (8 sejak P3b, D10: `bacaFixture`)
+- **Keselamatan tetingkap:** `contextIsolation`, `sandbox`, tiada `nodeIntegration`; preload mendedahkan 7 fungsi sahaja (8 sejak P3b, D10: `bacaFixture`; 15 sejak P4a, D13)
   (`src/preload/api.ts`); kebenaran `media` video sahaja untuk tetingkap app; navigasi dan `window.open` disekat; pautan luar hanya id
   dalam `config.pautan` (https).
 - **Folder data:** `app.getPath("userData")`; env `DEGUP_DATA` menindih (ujian). "Padam semua data Degup" membuang `tetapan.json`,
@@ -169,3 +169,38 @@ Format D-n: keputusan · sebab · undur. D-K1 hingga D-K15 = salinan PRD §5 (di
 - **Skala masa ujian untuk replay juga** (meminda D10): `DEGUP_SKALA_MASA` kini dipakai bila sumber `sim` ATAU `replay` (H3 menuntut
   aliran penuh replay di Depot setiap push; 1× = > 2 min). Data replay tetap masa nyata; hanya tempoh babak dipendekkan. Live = 1 sentiasa.
   Cangkuk `window.degupUji` kekal sim sahaja.
+
+### D13 (P4a) Sumber live, perakam demo, perakam fixture: butiran yang PRD tidak putuskan
+
+- **SDK disuntik:** `src/sumber/live.ts` (`SumberLive`) menerima `KilangSdk` (pembina + `decodeMetrics` + kod kumpulan metrik);
+  kilang sebenar `src/renderer/sdk-live.ts` mengimport `@smartspectra/node-sdk/renderer` + `/messages`. Sebab: sumber diuji vitest dengan
+  SDK tiruan (`tests/live.test.ts`) tanpa jambatan preload atau pustaka asli. Opsyen dibina `opsyenSdk` dari `config.sdk.metrik`;
+  kumpulan selain `cardio`/`breathing` = ralat (bukan diabaikan). `cardioMetrics` SDK 3.4.0 termasuk kod HRV (17): diminta kerana PRD
+  §4.11 menamakan `cardioMetrics`, tetapi tidak dibaca atau dipapar (HRV bukan skor, §3).
+- **Strim kamera dimiliki renderer:** `Kamera.buka` (ideal `config.sdk.kamera` 1280×720/30) → strim yang sama ke pratonton dan
+  `useMediaStream` sebelum `start()`. Ujian memastikan urutan, SATU pendengar `metrics`, tiada `requestInsight`, `stop`+`destroy` bila
+  henti (destroy tetap bila stop gagal), dan carian teks dalam `src/` (tiada `requestInsight(`, tiada telemetri/output terkumpul hidup,
+  tepat satu `.on("metrics"`).
+- **Main memuat SDK MALAS:** `bindSmartSpectraIpc(win)` hanya bila renderer meminta `sediaLive` (pakej SDK memuat pustaka asli semasa
+  `require`; sim/replay, Depot CI dan juri tanpa kunci tidak menyentuhnya). Sebelum muat: `VK_ICD_FILENAMES` lavapipe (Linux, bila
+  fail wujud dan pengguna belum menetapkan) dan `SMARTSPECTRA_CAPI_PATH` = pakej platform dalam `app.asar.unpacked` bila dipakej
+  (P4b mesti `asarUnpack` pakej `@smartspectra/*`). esbuild main: SDK + `koffi` external; preload membundel jambatan rasmi SDK.
+- **Kunci ke renderer:** `sediaLive` memulangkan kunci yang dibuka `safeStorage` kepada renderer (pembina SDK renderer memerlukannya;
+  ia kembali ke main melalui jambatan SDK). App tidak dipakej boleh memakai env `SMARTSPECTRA_API_KEY` (pembangunan); app dipakej tidak.
+  Tiada kunci = ralat "kunci" di skrin izin tanpa memuat SDK (diuji e2e dengan kamera tiruan Chromium).
+- **Ralat SDK:** `SmartSpectraErrorCode` → kategori UI (kunci, kredit, rangkaian, kamera, sdk); semasa babak = berhenti (kamera mati) +
+  ayat jujur di skrin izin yang menunjuk ke Main semula. Panel Data: pengesahan = ya bila `processingStatus` kRunning, tidak bila
+  kAuthenticationFailed; peristiwa `insight` automatik DIKIRA sahaja (kandungan tidak dibaca; K7 pendedahan).
+- **Perakam demo:** main memberi ID media tetingkap Degup (`win.getMediaSourceId()`, format desktopCapturer) bersama nama fail;
+  renderer `getUserMedia` `chromeMediaSource: desktop` ikut ID itu (tiada pemilih skrin, tiada audio, tiada tetingkap lain). Diukur
+  9 Nov: `desktopCapturer.getSources` di xvfb tanpa pengurus tetingkap TIDAK menyenaraikan tetingkap (hanya skrin), jadi corak
+  "senarai + padan" gagal di CI; ID terus berfungsi. Kebenaran `display-capture` dibenarkan untuk tetingkap app sahaja.
+  `MediaRecorder` (`config.perakam.mime`, sandaran `video/webm`) ketul setiap `ketul_ms` → IPC → main menambah `.<nama>.part`, dinamakan
+  `degup-demo-YYYYMMDD-HHMMSS.webm` bila tamat; had ketul + jumlah dalam config; rakaman kosong dibuang. Petunjuk merah "RAKAM" + henti
+  di bar atas; butang dalam Tetapan dan skrin izin; berhenti sendiri `henti_selepas_keputusan_ms` selepas skrin keputusan (kad kelihatan
+  dalam video). Fail dicatat panel Data; tidak dipadam "Padam semua" (sama seperti kad PNG). `DEGUP_DATA` memindah Video dan Dokumen.
+  Sandaran OS (Win+G / QuickTime) = README §Rakam dalam P4b.
+- **Perakam fixture:** hanya bila `config.rakam_fixture` DAN sumber live; `SesiUkur` mengumpul payload dengan `PengumpulFixture` +
+  ketukan RASA + `meta.babak` (masa babak µs → saat relatif). Jenis `ujian`, label `<label_awalan><tarikh>`; P6b melabel semula pemilik.
+  Main menulis ke `Dokumen/Degup/fixtures/degup-fixture-<masa>.json` HANYA bila lulus `sahkanFixture` (angka sahaja).
+- **Undur:** `DEGUP_SUMBER=replay` atau tetapan Main semula memintas semua di atas; perakam boleh diganti perakam OS (D-K15 undur).

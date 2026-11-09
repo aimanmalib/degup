@@ -234,5 +234,22 @@
     "main_lagi": "Play again",
     "tempatan": "The card is saved on this computer only. Nothing is shared automatically.",
     "kad_kredit": "Built on the Presage SmartSpectra SDK"
+  },
+  "rakam": {
+    "tajuk": "Record demo",
+    "bantuan": "Records the Degup window only (including the camera preview), without sound, to the Videos/Degup folder on this computer. Recording stops by itself after the results screen.",
+    "mula": "Record demo",
+    "henti": "Stop recording",
+    "tunggu": "One moment…",
+    "petunjuk": "REC",
+    "disimpan": "Recording saved: {nama}",
+    "gagal": "Recording could not start. Use your system screen recorder (see README)."
+  },
+  "live": {
+    "ralat_kunci": "The Presage API key is missing or was rejected. Enter a key in Settings, or choose Replay.",
+    "ralat_kredit": "This Presage key has run out of credit for now. Try again later, or choose Replay in Settings.",
+    "ralat_rangkaian": "The SDK could not reach the Presage server. Check your internet connection and try again.",
+    "ralat_kamera": "The SDK is not receiving video from the camera. Choose another camera in Settings.",
+    "ralat_sdk": "The Presage SDK could not start on this computer. Choose Replay in Settings to see every scene."
   }
 }

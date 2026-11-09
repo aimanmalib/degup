@@ -1,8 +1,9 @@
 // Panel Tetapan (PRD §4.7): bahasa, kamera, kunci API (safeStorage), sumber isyarat, sejarah, bunyi, padam semua, tentang.
-// "Rakam demo" ditambah bersama perakam (P4a, D9).
+// "Rakam demo" (§4.9) dari ./rakam.ts (P4a, D13).
 import type { Ruang } from "../app.js";
 import { h } from "../dom.js";
 import { senaraiKamera } from "../kamera.js";
+import { bahagianRakam } from "./rakam.js";
 
 const bahagian = (tajuk: string, ...isi: Array<Node | null>) =>
   h("section", { class: "bahagian" }, h("h3", {}, tajuk), ...isi);
@@ -187,6 +188,7 @@ export async function panelTetapan(r: Ruang, tutup: () => void): Promise<HTMLEle
       await bahagianKamera(r),
       bahagianKunci(r),
       bahagianSumber(r),
+      bahagianRakam(r),
       h(
         "section",
         { class: "bahagian" },

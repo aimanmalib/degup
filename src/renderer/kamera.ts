@@ -1,5 +1,11 @@
-// Kamera dimiliki renderer (corak electron-quickstart). P3a: pratonton + petunjuk sahaja; SDK disambung P4a (useMediaStream).
-// Mod sim/replay tidak membuka kamera langsung.
+// Kamera dimiliki renderer (corak electron-quickstart): strim yang sama dipakai pratonton dan SDK (`useMediaStream`).
+// Mod sim/replay tidak membuka kamera langsung. Saiz/fps ideal dari config.sdk.kamera (lalai SDK 1280×720 / 30 fps).
+export interface IdealKamera {
+  lebar: number;
+  tinggi: number;
+  fps: number;
+}
+
 export class Kamera {
   private strim: MediaStream | null = null;
   private pendengar: Array<() => void> = [];
@@ -12,11 +18,16 @@ export class Kamera {
     return this.strim;
   }
 
-  async buka(deviceId: string | null): Promise<MediaStream> {
+  async buka(deviceId: string | null, ideal: IdealKamera): Promise<MediaStream> {
     this.tutup();
     this.strim = await navigator.mediaDevices.getUserMedia({
       audio: false,
-      video: deviceId ? { deviceId: { exact: deviceId } } : true,
+      video: {
+        ...(deviceId ? { deviceId: { exact: deviceId } } : {}),
+        width: { ideal: ideal.lebar },
+        height: { ideal: ideal.tinggi },
+        frameRate: { ideal: ideal.fps },
+      },
     });
     this.maklum();
     return this.strim;

@@ -12,13 +12,17 @@ export function pngSah(b: Uint8Array): boolean {
   return b.length > TANDATANGAN_PNG.length && TANDATANGAN_PNG.every((x, i) => b[i] === x);
 }
 
-/** Nama fail dari masa tempatan: <awalan>YYYYMMDD-HHMMSS[-n].png; `-n` bila nama sudah wujud (dua simpanan dalam saat sama). */
-export function namaKad(awalan: string, d: Date, wujud: (nama: string) => boolean = () => false): string {
+/** Nama fail dari masa tempatan: <awalan>YYYYMMDD-HHMMSS[-n].<ext>; `-n` bila nama sudah wujud (dua simpanan dalam saat sama). */
+export function namaIkutMasa(awalan: string, d: Date, ext: string, wujud: (nama: string) => boolean = () => false): string {
   const p = (x: number) => String(x).padStart(2, "0");
   const asas = `${awalan}${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}`;
-  let nama = `${asas}.png`;
-  for (let n = 2; wujud(nama); n++) nama = `${asas}-${n}.png`;
+  let nama = `${asas}.${ext}`;
+  for (let n = 2; wujud(nama); n++) nama = `${asas}-${n}.${ext}`;
   return nama;
+}
+
+export function namaKad(awalan: string, d: Date, wujud: (nama: string) => boolean = () => false): string {
+  return namaIkutMasa(awalan, d, "png", wujud);
 }
 
 export function simpanKad(folder: string, awalan: string, bait: unknown, maksBait: number, kini: Date): HasilKad {

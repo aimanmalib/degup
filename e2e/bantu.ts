@@ -11,7 +11,7 @@ export interface Lancar {
   tutup(): Promise<void>;
 }
 
-export async function lancar(sumber = "sim", envTambahan: Record<string, string> = {}): Promise<Lancar> {
+export async function lancar(sumber = "sim", envTambahan: Record<string, string> = {}, argTambahan: string[] = []): Promise<Lancar> {
   const data = mkdtempSync(join(tmpdir(), "degup-e2e-"));
   const env: Record<string, string> = {};
   for (const [k, v] of Object.entries(process.env)) if (v !== undefined) env[k] = v;
@@ -19,9 +19,11 @@ export async function lancar(sumber = "sim", envTambahan: Record<string, string>
   env.DEGUP_DATA = data;
   env.DEGUP_UJI_STORAN_ASAS = "1";
   Object.assign(env, envTambahan);
+  delete env.SMARTSPECTRA_API_KEY; // ujian tidak pernah memakai kunci sebenar
+
   // --no-sandbox: pelari CI (Ubuntu 24.04 AppArmor) tiada chrome-sandbox SUID. --password-store=basic + DEGUP_UJI_STORAN_ASAS:
   // xvfb tiada keyring, jadi safeStorage Linux menolak (app sebenar memaparkan "tiada storan terenkripsi"; diuji unit tests/simpanan.test.ts).
-  const app = await electron.launch({ args: ["--no-sandbox", "--password-store=basic", "."], env });
+  const app = await electron.launch({ args: ["--no-sandbox", "--password-store=basic", ...argTambahan, "."], env });
   const win = await app.firstWindow();
   // xvfb tanpa pengurus tetingkap boleh memberi saiz minimum; paksa saiz lalai config (1280×800) supaya bukti sama dengan app.
   await app.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows()[0]?.setContentSize(1280, 800));

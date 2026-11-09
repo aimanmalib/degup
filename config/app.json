@@ -121,13 +121,27 @@
   },
   "sejarah_lalai": false,
   "rakam_fixture": false,
+  "fixture_rakaman": {
+    "_nota": "PRD §4.10: bila rakam_fixture hidup dan sumber live, angka sesi (tiada imej) → Dokumen/<folder>/<subfolder>. Jenis 'ujian'; P6b melabel semula.",
+    "folder": "Degup",
+    "subfolder": "fixtures",
+    "awalan_fail": "degup-fixture-",
+    "label_awalan": "sesi "
+  },
   "perakam": {
+    "_nota": "PRD §4.9: tetingkap app sendiri (desktopCapturer) → MediaRecorder webm dalam Video/<folder>. Main mengehadkan saiz ketul dan jumlah.",
     "fps": 30,
     "lebar": 1920,
     "tinggi": 1080,
     "mime": "video/webm;codecs=vp9",
     "folder": "Degup",
-    "awalan_fail": "degup-demo-"
+    "awalan_fail": "degup-demo-",
+    "ketul_ms": 1000,
+    "bitrate": 8000000,
+    "ketul_maks_bait": 16000000,
+    "jumlah_maks_bait": 3000000000,
+    "henti_selepas_keputusan_ms": 4000,
+    "mesej_ms": 6000
   },
   "sdk": {
     "pakej": "@smartspectra/node-sdk",
@@ -138,7 +152,12 @@
     ],
     "telemetri": false,
     "output_terkumpul": false,
-    "vulkan_icd_linux": "/usr/share/vulkan/icd.d/lvp_icd.json"
+    "vulkan_icd_linux": "/usr/share/vulkan/icd.d/lvp_icd.json",
+    "kamera": {
+      "lebar": 1280,
+      "tinggi": 720,
+      "fps": 30
+    }
   },
   "pautan": {
     "kunci_percuma": "https://physiology.presagetech.com/auth/register",

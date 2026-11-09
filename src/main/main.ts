@@ -1,5 +1,5 @@
 // Proses main Degup (PRD §4.11, corak electron-quickstart): tetingkap, kebenaran kamera, safeStorage, fail tempatan.
-// Renderer memiliki kamera; main tidak pernah melihat bingkai video.
+// Renderer memiliki kamera; main tidak pernah melihat bingkai video (SDK main menerimanya melalui jambatan rasmi bila live).
 import { app, BrowserWindow, ipcMain, safeStorage, session, shell } from "electron";
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -7,6 +7,8 @@ import konfig from "../../config/app.json";
 import { sahkanFixture } from "../core/fixture.js";
 import { SALURAN, type FixtureSedia, type Permulaan, type Tetapan } from "../preload/api.js";
 import { simpanKad } from "./kad.js";
+import { PenulisRakaman, simpanFixtureRakaman } from "./rakaman.js";
+import { PengikatSdk, sediaPersekitaran, wujudFail } from "./sdk.js";
 import { Simpanan, tetapanLalai, type Penyulit } from "./simpanan.js";
 
 const AKAR = join(__dirname, "..");
@@ -15,8 +17,13 @@ if (folderData) {
   app.setPath("userData", folderData);
   // Mudah alih/ujian: kad PNG juga di bawah folder data, bukan Gambar pengguna (D12).
   app.setPath("pictures", join(folderData, "gambar"));
+  app.setPath("videos", join(folderData, "video"));
+  app.setPath("documents", join(folderData, "dokumen"));
 }
 const folderKad = () => join(app.getPath("pictures"), konfig.kad.folder);
+const folderVideo = () => join(app.getPath("videos"), konfig.perakam.folder);
+const folderFixture = () => join(app.getPath("documents"), konfig.fixture_rakaman.folder, konfig.fixture_rakaman.subfolder);
+const perakam = new PenulisRakaman(folderVideo, konfig.perakam.awalan_fail, konfig.perakam);
 
 const penyulit: Penyulit = {
   boleh: () => safeStorage.isEncryptionAvailable(),
@@ -63,7 +70,55 @@ function bacaFixture(fail: unknown): unknown {
   }
 }
 
-function daftarIpc(simpanan: Simpanan): void {
+/** Kunci untuk SDK: simpanan safeStorage; app tidak dipakej (pembangunan) boleh memakai env SMARTSPECTRA_API_KEY. */
+function kunciLive(simpanan: Simpanan): string | null {
+  const k = simpanan.bacaKunci();
+  if (k) return k;
+  return app.isPackaged ? null : (process.env.SMARTSPECTRA_API_KEY?.trim() || null);
+}
+
+function daftarIpc(simpanan: Simpanan, tetingkap: () => BrowserWindow | null): void {
+  const pengikat = new PengikatSdk<BrowserWindow>(
+    // Dimuat malas: pakej SDK memuat pustaka asli semasa require (sim/replay tidak pernah sampai di sini).
+    () => require("@smartspectra/node-sdk/main") as { bindSmartSpectraIpc(w: BrowserWindow): void },
+    () => kunciLive(simpanan),
+    () =>
+      void sediaPersekitaran(process.env, {
+        dipakej: app.isPackaged,
+        resources: process.resourcesPath,
+        pakej: konfig.sdk.pakej,
+        platform: process.platform,
+        arch: process.arch,
+        vulkanIcdLinux: konfig.sdk.vulkan_icd_linux,
+        wujud: wujudFail,
+      }),
+  );
+  ipcMain.handle(SALURAN.sediaLive, (e) => {
+    const win = tetingkap();
+    if (!win || e.sender !== win.webContents) return { ok: false, sebab: "sdk" };
+    return pengikat.sedia(win);
+  });
+  // Sumber tangkapan = ID media tetingkap Degup sendiri (format desktopCapturer); renderer tidak boleh memilih skrin/tetingkap lain.
+  ipcMain.handle(SALURAN.rakamMula, (e) => {
+    const win = tetingkap();
+    if (!win || e.sender !== win.webContents) return { ok: false };
+    const h = perakam.mula(new Date());
+    return h.ok ? { ok: true, nama: h.nama, sumber: win.getMediaSourceId() } : { ok: false };
+  });
+  ipcMain.handle(SALURAN.rakamTulis, (_e, bait: unknown) => perakam.tulis(bait));
+  ipcMain.handle(SALURAN.rakamTamat, () => {
+    const h = perakam.tamat();
+    if (!h.ok) return { ok: false };
+    simpanan.catat(h.laluan);
+    return { ok: true, nama: h.nama };
+  });
+  ipcMain.handle(SALURAN.simpanFixture, (_e, data: unknown) => {
+    if (!konfig.rakam_fixture) return { ok: false };
+    const h = simpanFixtureRakaman(folderFixture(), konfig.fixture_rakaman.awalan_fail, data, konfig.replay.skema, new Date());
+    if (!h.ok) return { ok: false };
+    simpanan.catat(h.laluan);
+    return { ok: true, nama: h.nama };
+  });
   const pautan = konfig.pautan as Record<string, string>;
   ipcMain.handle(SALURAN.mula, (): Permulaan => ({
     tetapan: simpanan.bacaTetapan(),
@@ -96,7 +151,7 @@ function daftarIpc(simpanan: Simpanan): void {
   });
 }
 
-function cipta(): void {
+function cipta(): BrowserWindow {
   const t = konfig.tetingkap;
   const win = new BrowserWindow({
     width: t.lebar,
@@ -113,9 +168,10 @@ function cipta(): void {
       nodeIntegration: false,
     },
   });
-  // Kamera sahaja (bukan mikrofon), sahaja untuk tetingkap ini.
+  // Video sahaja, sahaja untuk tetingkap ini: kamera ("media") dan perakam demo ("display-capture"; main memberi ID tetingkap
+  // sendiri sahaja). Bukan mikrofon.
   const bolehKamera = (wc: Electron.WebContents | null, izin: string, jenis?: string[]) =>
-    wc === win.webContents && izin === "media" && (jenis ?? ["video"]).every((m) => m === "video");
+    wc === win.webContents && (izin === "media" || izin === "display-capture") && (jenis ?? ["video"]).every((m) => m === "video");
   session.defaultSession.setPermissionRequestHandler((wc, izin, cb, butiran) =>
     cb(bolehKamera(wc, izin, "mediaTypes" in butiran ? (butiran.mediaTypes as string[] | undefined) : undefined)),
   );
@@ -125,13 +181,16 @@ function cipta(): void {
   win.removeMenu();
   win.once("ready-to-show", () => win.show());
   void win.loadFile(join(__dirname, "renderer", "index.html"));
+  win.on("closed", () => void perakam.tamat());
+  return win;
 }
 
 void app.whenReady().then(() => {
   // Ujian sahaja (xvfb tiada keyring): benarkan backend basic_text Linux. App sebenar tanpa keyring menolak menyimpan kunci.
   if (process.env.DEGUP_UJI_STORAN_ASAS === "1" && process.platform === "linux") safeStorage.setUsePlainTextEncryption(true);
   const lalai = tetapanLalai(konfig.bahasa_lalai, konfig.sejarah_lalai, konfig.rasa.bunyi_lalai);
-  daftarIpc(new Simpanan(app.getPath("userData"), lalai, konfig.bahasa, penyulit));
-  cipta();
+  let win: BrowserWindow | null = null;
+  daftarIpc(new Simpanan(app.getPath("userData"), lalai, konfig.bahasa, penyulit), () => win);
+  win = cipta();
 });
 app.on("window-all-closed", () => app.quit());

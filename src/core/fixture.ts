@@ -113,6 +113,20 @@ export function masaMula(f: Fixture): number {
   return Math.min(f.jejak[0]?.t ?? Infinity, f.nadi[0]?.t ?? Infinity, f.nafas[0]?.t ?? Infinity);
 }
 
+/** Babak µs epoch → saat relatif `t0` (meta.babak); julat kosong/terbalik dibuang. null = tiada babak sah. */
+export function babakRelatif(
+  babakUs: Partial<Record<"lihat" | "rasa" | "lentur", [number, number]>>,
+  t0: number,
+): MetaFixture["babak"] | null {
+  const out: NonNullable<MetaFixture["babak"]> = {};
+  for (const [k, j] of Object.entries(babakUs) as Array<["lihat" | "rasa" | "lentur", [number, number]]>) {
+    const a = bulat((j[0] - t0) / 1e6, 2);
+    const b = bulat((j[1] - t0) / 1e6, 2);
+    if (b > a) out[k] = [a, b];
+  }
+  return Object.keys(out).length ? out : null;
+}
+
 /**
  * Fixture → payload berbentuk `decodeMetrics`, dikelompok `kelompok_ms`, cap masa dianjak `anjakUs`.
  * `stable` = keyakinan ≥ `keyakinanStabil` (config.beats.keyakinan_stabil).
@@ -155,7 +169,7 @@ export function fixtureKeMetrik(
 
 const bulat = (x: number, dp: number) => Math.round(x * 10 ** dp) / 10 ** dp;
 
-/** Pengumpul fixture dari aliran payload (penjana sim sekarang; perakam fixture P4a kemudian). Angka sahaja. */
+/** Pengumpul fixture dari aliran payload (penjana sim; perakam fixture sumber live, sesi.ts). Angka sahaja. */
 export class PengumpulFixture {
   private readonly f: Omit<Fixture, "meta"> = { jejak: [], nadi: [], nafas: [], prq: [], ketukan: [] };
 

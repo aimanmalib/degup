@@ -2,7 +2,8 @@
 import { h, kosongkan } from "./dom.js";
 import { Kamera } from "./kamera.js";
 import { Keadaan } from "./keadaan.js";
-import { SesiUkur } from "./sesi.js";
+import { PerakamDemo } from "./perakam.js";
+import { RalatMulaLive, SesiUkur } from "./sesi.js";
 import { panelData } from "./skrin/data.js";
 import { babakDedah } from "./skrin/dedah.js";
 import { skrinKeputusan } from "./skrin/keputusan.js";
@@ -11,10 +12,12 @@ import { skrinIzin } from "./skrin/izin.js";
 import { babakLihat } from "./skrin/lihat.js";
 import { babakRasa } from "./skrin/rasa.js";
 import { skrinRehat } from "./skrin/rehat.js";
+import { petunjukRakam } from "./skrin/rakam.js";
 import { panelTetapan } from "./skrin/tetapan.js";
 import { pasangCangkukUji } from "./uji.js";
 import type { Keputusan } from "../core/lentur.js";
 import type { HasilSkor } from "../core/score.js";
+import type { RalatLive } from "../sumber/live.js";
 
 export type NamaSkrin = "izin" | "rehat" | "lihat" | "rasa" | "dedah" | "lentur" | "keputusan";
 type NamaBabak = Extract<NamaSkrin, "lihat" | "rasa" | "dedah" | "lentur">;
@@ -35,6 +38,8 @@ export interface HasilRasa {
 export interface Ruang {
   k: Keadaan;
   kamera: Kamera;
+  /** Perakam demo §4.9 (Tetapan, skrin izin, bar atas); berhenti sendiri selepas skrin keputusan. */
+  perakam: PerakamDemo;
   /** Sesi ukur aktif (LIHAT hingga pendedahan); null di luar babak. */
   sesi: SesiUkur | null;
   hasilRasa: HasilRasa | null;
@@ -56,19 +61,25 @@ export interface Ruang {
 async function utama(): Promise<void> {
   const k = new Keadaan(await window.degup.mula());
   const kamera = new Kamera();
+  const perakam = new PerakamDemo(k.api, k.konfig.perakam);
   const akar = document.getElementById("app")!;
   const bar = h("header", { class: "bar" });
   const pentas = h("main", { class: "pentas", id: "pentas", tabindex: "-1" });
   const dialog = h("dialog", { class: "helaian" });
   akar.append(bar, pentas, dialog);
   let skrin: NamaSkrin = "izin";
-  let ralatKamera = false;
+  /** Kunci lang ralat mula (kamera / SDK) yang dipapar skrin izin; null = tiada. */
+  let ralatMula: string | null = null;
+  let mesejRakam: string | null = null;
+  let pemasaMesej: ReturnType<typeof setTimeout> | undefined;
+  let pemasaRakam: ReturnType<typeof setTimeout> | undefined;
   let babak: Babak | null = null;
   const BABAK: Record<NamaBabak, (r: Ruang) => Babak> = { lihat: babakLihat, rasa: babakRasa, dedah: babakDedah, lentur: babakLentur };
 
   const ruang: Ruang = {
     k,
     kamera,
+    perakam,
     sesi: null,
     hasilRasa: null,
     hasilSkor: null,
@@ -80,23 +91,32 @@ async function utama(): Promise<void> {
       babak?.buang();
       babak = null;
       skrin = s;
+      ruang.sesi?.tandaBabak(s === "lihat" || s === "rasa" || s === "lentur" ? s : null);
       if (s in BABAK && ruang.sesi) babak = BABAK[s as NamaBabak](ruang);
       lukis();
       pentas.focus({ preventScroll: true });
     },
     async mulaBabak() {
-      ralatKamera = false;
+      ralatMula = null;
       if (k.sumber === "live") {
         try {
-          await kamera.buka(k.tetapan.kamera);
+          await kamera.buka(k.tetapan.kamera, k.konfig.sdk.kamera);
         } catch {
-          ralatKamera = true;
+          ralatMula = "kamera.ralat";
           lukis();
           return;
         }
       }
       void ruang.sesi?.henti();
-      ruang.sesi = await SesiUkur.cipta(k);
+      ruang.sesi = null;
+      try {
+        ruang.sesi = await SesiUkur.cipta(k, kamera.media, ralatLive);
+      } catch (e) {
+        kamera.tutup();
+        ralatMula = `live.ralat_${e instanceof RalatMulaLive ? e.sebab : "sdk"}`;
+        lukis();
+        return;
+      }
       ruang.hasilRasa = null;
       ruang.hasilSkor = null;
       ruang.keputusan = null;
@@ -112,14 +132,47 @@ async function utama(): Promise<void> {
       ruang.pergi("izin");
     },
     keKeputusan(data) {
+      simpanFixture();
       kamera.tutup();
       void ruang.sesi?.henti();
       ruang.sesi = null;
       ruang.keputusan = { data, disimpan: null, gagal: false };
       ruang.pergi("keputusan");
+      // §4.9: rakaman berhenti sendiri selepas kad keputusan kelihatan seketika.
+      clearTimeout(pemasaRakam);
+      if (perakam.aktif) pemasaRakam = setTimeout(() => void perakam.henti(), k.konfig.perakam.henti_selepas_keputusan_ms);
     },
     bukaPanel: (jenis) => bukaPanel(jenis),
   };
+
+  /** Ralat SDK semasa babak (kunci ditolak, kredit habis, rangkaian, kamera): berhenti dan terangkan di skrin izin. */
+  function ralatLive(r: RalatLive): void {
+    if (!ruang.sesi) return;
+    ruang.berhenti();
+    ralatMula = `live.ralat_${r}`;
+    lukis();
+  }
+
+  /** Perakam fixture §4.10 (live + config.rakam_fixture): angka sesi → main (pengesah skema) → Dokumen/Degup/fixtures. */
+  function simpanFixture(): void {
+    const d = new Date();
+    const p = (x: number) => String(x).padStart(2, "0");
+    const tarikh = `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+    const f = ruang.sesi?.fixtureRakaman(ruang.hasilRasa?.ketukan ?? [], k.konfig.replay.skema, `${k.konfig.fixture_rakaman.label_awalan}${tarikh}`, tarikh);
+    if (f) void k.api.simpanFixture(f);
+  }
+
+  perakam.dengar(() => {
+    if (perakam.keadaan === "rehat" && (perakam.terakhir || perakam.gagal)) {
+      mesejRakam = perakam.terakhir ? k.t("rakam.disimpan", { nama: perakam.terakhir }) : k.t("rakam.gagal");
+      clearTimeout(pemasaMesej);
+      pemasaMesej = setTimeout(() => {
+        mesejRakam = null;
+        lukisBar();
+      }, k.konfig.perakam.mesej_ms);
+    } else if (perakam.aktif) mesejRakam = null;
+    lukisBar();
+  });
 
   const bukaPanel = (jenis: "tetapan" | "data") => {
     const lukisPanel = async () => {
@@ -173,6 +226,8 @@ async function utama(): Promise<void> {
       h("span", { class: "tanda", "aria-hidden": "true" }, h("span", { class: "tanda-titik" }), t("app.nama")),
       lencana,
       h("div", { class: "ruang-isi" }),
+      petunjukRakam(ruang),
+      mesejRakam ? h("p", { class: "rakam-mesej", role: "status", "data-uji": "rakam-mesej" }, mesejRakam) : null,
       petunjuk,
       h(
         "nav",
@@ -193,7 +248,7 @@ async function utama(): Promise<void> {
         ? skrinRehat(ruang)
         : skrin === "keputusan" && ruang.keputusan
           ? skrinKeputusan(ruang)
-          : skrinIzin(ruang, ralatKamera);
+          : skrinIzin(ruang, ralatMula);
     kosongkan(pentas, isi);
   }
 
@@ -206,7 +261,10 @@ async function utama(): Promise<void> {
       ruang.berhenti();
     }
   });
-  window.addEventListener("beforeunload", () => kamera.tutup());
+  window.addEventListener("beforeunload", () => {
+    kamera.tutup();
+    void perakam.henti();
+  });
   pasangCangkukUji(ruang);
   k.maklum();
 }

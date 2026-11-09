@@ -14,7 +14,7 @@ mkdirSync(`${KELUAR}/renderer/fon`, { recursive: true });
 
 const sama = { bundle: true, sourcemap: false, logLevel: "warning", target: "es2022" };
 await Promise.all([
-  build({ ...sama, entryPoints: ["src/main/main.ts"], outfile: `${KELUAR}/main.cjs`, platform: "node", format: "cjs", external: ["electron"] }),
+  build({ ...sama, entryPoints: ["src/main/main.ts"], outfile: `${KELUAR}/main.cjs`, platform: "node", format: "cjs", external: ["electron", "@smartspectra/node-sdk", "@smartspectra/node-sdk/main", "koffi"] }),
   build({ ...sama, entryPoints: ["src/preload/preload.ts"], outfile: `${KELUAR}/preload.cjs`, platform: "node", format: "cjs", external: ["electron"] }),
   build({ ...sama, entryPoints: ["src/renderer/app.ts"], outfile: `${KELUAR}/renderer/app.js`, platform: "browser", format: "iife" }),
 ]);

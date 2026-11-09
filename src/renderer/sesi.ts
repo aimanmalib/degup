@@ -1,15 +1,27 @@
-// Sesi ukur renderer: SATU sumber (sim | replay; live = P4a) → pengesan degupan, penjejak nadi, penjejak jeda petunjuk.
+// Sesi ukur renderer: SATU sumber (live | replay | sim) → pengesan degupan, penjejak nadi, penjejak jeda petunjuk.
 // Babak (LIHAT, RASA, pendedahan) melanggan di sini; satu pendengar metrik sahaja dipasang pada sumber (perangkap SDK).
+// Live + `config.rakam_fixture`: angka sesi dikumpul untuk perakam fixture (§4.10; tiada imej).
 import { PengesanDegupan, type Degupan } from "../core/beats.js";
-import { sahkanFixture } from "../core/fixture.js";
+import { babakRelatif, masaMula, PengumpulFixture, sahkanFixture, type Fixture } from "../core/fixture.js";
 import { PengumpulLentur } from "../core/lentur.js";
 import type { MetrikSdk } from "../core/metrik.js";
 import { PenjejakJeda } from "../core/petunjuk.js";
 import { PenjejakStabil } from "../core/stabil.js";
 import type { Sumber } from "../sumber/jenis.js";
+import { opsyenSdk, SumberLive, type RalatLive } from "../sumber/live.js";
 import { SumberReplay } from "../sumber/replay.js";
 import { SumberSim } from "../sumber/sim.js";
 import type { Keadaan } from "./keadaan.js";
+import { kilangSdk } from "./sdk-live.js";
+
+/** Sumber live tidak dapat dimulakan: tiada kunci, SDK gagal dimuat, atau ralat SDK semasa mula. */
+export class RalatMulaLive extends Error {
+  constructor(readonly sebab: RalatLive) {
+    super(sebab);
+  }
+}
+
+export type NamaBabakUkur = "lihat" | "rasa" | "lentur";
 
 /** Masa sekarang µs epoch, asas sama dengan cap masa SDK (PRD §4.2). */
 export function kiniUs(): number {
@@ -27,7 +39,12 @@ export interface TetingkapRasa {
   ketuk(t: number): void;
 }
 
-async function buatSumber(k: Keadaan): Promise<Sumber | null> {
+async function buatSumber(k: Keadaan, strim: MediaStream | null): Promise<Sumber | null> {
+  if (k.sumber === "live") {
+    const s = await k.api.sediaLive();
+    if (!s.ok) throw new RalatMulaLive(s.sebab);
+    return new SumberLive(kilangSdk, opsyenSdk(s.kunci, k.konfig.sdk, kilangSdk.kumpulan), strim);
+  }
   if (k.sumber === "sim") return new SumberSim(k.konfig.sim);
   if (k.sumber === "replay") {
     const fail = k.tetapan.fixture ?? k.mula.fixtures[0]?.fail;
@@ -36,7 +53,7 @@ async function buatSumber(k: Keadaan): Promise<Sumber | null> {
     if (!sah?.ok) return null;
     return new SumberReplay(sah.fixture, { kelompok_ms: k.konfig.replay.kelompok_ms, keyakinan_stabil: k.konfig.beats.keyakinan_stabil });
   }
-  return null; // live: @smartspectra/node-sdk renderer, P4a
+  return null;
 }
 
 export class SesiUkur {
@@ -48,6 +65,11 @@ export class SesiUkur {
   /** Masa sesi dicipta (µs epoch): nadi purata keputusan dikira dari sini. */
   readonly mulaUs = kiniUs();
   rasa: TetingkapRasa | null = null;
+  /** Perakam fixture (live + config.rakam_fixture); null = tidak merakam. */
+  readonly rakaman: PengumpulFixture | null;
+  /** Masa babak µs epoch [mula, akhir) untuk `meta.babak` fixture. */
+  private readonly babakUs: Partial<Record<NamaBabakUkur, [number, number]>> = {};
+  private babakKini: NamaBabakUkur | null = null;
   private readonly dengarDegupan = new Set<(d: Degupan) => void>();
   private readonly dengarJeda = new Set<() => void>();
   private lepas: Array<() => void> = [];
@@ -59,19 +81,61 @@ export class SesiUkur {
     this.pengesan = new PengesanDegupan(k.konfig.beats);
     this.nadi = new PenjejakStabil(k.konfig.beats.keyakinan_stabil);
     this.lentur = new PengumpulLentur(k.konfig.beats.keyakinan_stabil, k.konfig.lentur.simpan_s);
+    this.rakaman = k.konfig.rakam_fixture && sumber?.jenis === "live" ? new PengumpulFixture() : null;
   }
 
-  static async cipta(k: Keadaan): Promise<SesiUkur> {
-    const s = new SesiUkur(k, await buatSumber(k));
+  /**
+   * @param strim kamera (live sahaja). @param ralat ralat SDK selepas mula (kunci ditolak, kredit habis): app berhenti + memaparkan.
+   * Mula gagal = `RalatMulaLive`; sumber sudah dihentikan.
+   */
+  static async cipta(k: Keadaan, strim: MediaStream | null = null, ralat: (r: RalatLive) => void = () => {}): Promise<SesiUkur> {
+    const s = new SesiUkur(k, await buatSumber(k, strim));
     if (s.sumber) {
       s.lepas.push(s.sumber.onMetrik((m) => s.terimaMetrik(m)));
       s.lepas.push(s.sumber.onPetunjuk((kod, t) => s.terimaPetunjuk(kod, t)));
-      await s.sumber.mula();
+      if (s.sumber instanceof SumberLive) {
+        const live = s.sumber;
+        s.lepas.push(live.onRalat(ralat));
+        s.lepas.push(
+          live.onKiraan((c) => {
+            k.sesi.pengesahan = c.pengesahan;
+            k.sesi.insight = c.insight;
+          }),
+        );
+      }
+      try {
+        await s.sumber.mula();
+      } catch (e) {
+        await s.henti();
+        if (e instanceof RalatMulaLive) throw e;
+        throw new RalatMulaLive("sdk");
+      }
     }
     return s;
   }
 
+  /** Tanda babak bermula (dan tutup babak sebelumnya) untuk `meta.babak` fixture. */
+  tandaBabak(nama: NamaBabakUkur | null): void {
+    const kini = kiniUs();
+    if (this.babakKini) this.babakUs[this.babakKini]![1] = kini;
+    this.babakKini = nama;
+    if (nama) this.babakUs[nama] = [kini, kini];
+  }
+
+  /** Fixture angka sesi ini (perakam §4.10). null = tidak merakam / tiada jejak. */
+  fixtureRakaman(ketukan: number[], skema: number, label: string, tarikh: string): Fixture | null {
+    if (!this.rakaman) return null;
+    this.tandaBabak(null);
+    for (const t of ketukan) this.rakaman.tambahKetukan(t);
+    const f = this.rakaman.keFixture({ skema, jenis: "ujian", label, tarikh });
+    if (f.jejak.length === 0) return null;
+    const babak = babakRelatif(this.babakUs, masaMula(f));
+    if (babak) f.meta.babak = babak;
+    return f;
+  }
+
   private terimaMetrik(m: MetrikSdk): void {
+    this.rakaman?.tambahMetrik(m);
     this.nadi.tambahMetrik(m);
     this.lentur.tambahMetrik(m);
     if (this.jeda.dijeda) this.nadi.putus();

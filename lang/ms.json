@@ -234,5 +234,22 @@
     "main_lagi": "Main lagi",
     "tempatan": "Kad disimpan dalam komputer ini sahaja. Tiada perkongsian automatik.",
     "kad_kredit": "Dibina atas Presage SmartSpectra SDK"
+  },
+  "rakam": {
+    "tajuk": "Rakam demo",
+    "bantuan": "Merakam tetingkap Degup sahaja (termasuk pratonton kamera), tanpa bunyi, ke folder Video/Degup dalam komputer ini. Rakaman berhenti sendiri selepas skrin keputusan.",
+    "mula": "Rakam demo",
+    "henti": "Henti rakaman",
+    "tunggu": "Sebentar…",
+    "petunjuk": "RAKAM",
+    "disimpan": "Rakaman disimpan: {nama}",
+    "gagal": "Rakaman tidak dapat dimulakan. Guna perakam skrin sistem (lihat README)."
+  },
+  "live": {
+    "ralat_kunci": "Kunci API Presage tiada atau ditolak. Masukkan kunci dalam Tetapan, atau pilih Main semula.",
+    "ralat_kredit": "Kredit kunci Presage ini sudah habis buat masa ini. Cuba lagi kemudian, atau pilih Main semula dalam Tetapan.",
+    "ralat_rangkaian": "SDK tidak dapat menghubungi pelayan Presage. Semak sambungan internet dan cuba lagi.",
+    "ralat_kamera": "SDK tidak menerima video dari kamera. Pilih kamera lain dalam Tetapan.",
+    "ralat_sdk": "SDK Presage tidak dapat dimulakan pada komputer ini. Pilih Main semula dalam Tetapan untuk melihat semua babak."
   }
 }
