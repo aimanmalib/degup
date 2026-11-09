@@ -259,6 +259,12 @@ export class PengesanDegupan {
     return jumlah === 0 ? null : baik / jumlah;
   }
 
+  /** Kualiti saat yang mengandungi t (µs): pecahan sampel berkeyakinan ≥ ambang; null jika tiada sampel. */
+  kualitiPada(t: number): number | null {
+    const k = this.kualiti.get(Math.floor(t / US));
+    return k ? k.baik / k.jumlah : null;
+  }
+
   /** Kualiti setiap saat (saat epoch → pecahan), untuk jalur kualiti pendedahan. */
   kualitiSetiapSaat(): Map<number, number> {
     const m = new Map<number, number>();

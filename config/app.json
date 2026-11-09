@@ -53,13 +53,31 @@
     "bunyi_lalai": true,
     "n_min": 10,
     "kualiti_min": 0.6,
+    "kualiti_saat_min": 0.5,
+    "ayat_separuh_kitaran": 0.25,
     "jalur": [
       { "id": "selaras", "r_min": 0.6, "p_bawah": 0.01 },
       { "id": "ada_rasa", "p_bawah": 0.05 },
       { "id": "meneka" }
     ]
   },
-  "lentur": { "tarik_s": 4, "hembus_s": 6, "min_degupan_kitaran": 4 },
+  "lentur": {
+    "tarik_s": 4,
+    "hembus_s": 6,
+    "min_degupan_kitaran": 4,
+    "julat_kaedah": "sinus",
+    "nafas_kadar_hz": 10,
+    "nafas_licin_s": 1.0,
+    "nafas_sela_min_s": 2.0,
+    "nafas_stabil_min": 0.8,
+    "nafas_kitaran_min": 2
+  },
+  "replay": {
+    "_nota": "PRD §4.10: fixture angka sahaja (tiada imej). Main semula dianjak ke jam semasa.",
+    "skema": 1,
+    "kelompok_ms": 200,
+    "contoh": "fixtures/sim-contoh.json"
+  },
   "sejarah_lalai": false,
   "rakam_fixture": false,
   "perakam": {

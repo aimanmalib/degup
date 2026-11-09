@@ -71,3 +71,30 @@ Format D-n: keputusan · sebab · undur. D-K1 hingga D-K15 = salinan PRD §5 (di
 - **Sebab:** §4.3 menuntut ralat median < 40 ms dan penapis kausal; kelewatan ini hampir malar dalam julat 55–95 BPM tetapi bukan sifar.
   Diukur: 72 kes (55–95 BPM × 8 benih, 60 s) = 100% dikesan, median terburuk 15.8 ms.
 - **Undur:** buang penolakan `kelewatanUs()` dalam `beats.ts` (fasa RASA tetap konsisten; hanya ralat masa mutlak naik).
+
+### D7 (P2b) Julat LENTUR setiap kitaran = puncak-ke-lembah sinus muat
+- **Keputusan:** `config.lentur.julat_kaedah = "sinus"`: dalam setiap kitaran nafas, IBI dimuat kuasa dua terkecil kepada
+  a + b·cos(ωt) + c·sin(ωt) (ω = 2π / tempoh kitaran), julat = 2·√(b² + c²). Syarat ≥ `min_degupan_kitaran` degupan sah dan
+  ringkasan = median kitaran kekal ikut PRD §4.5. `"maks_min"` = IBI maks − min mentah (bacaan literal PRD) masih tersedia.
+- **Sebab:** hingar masa degupan (sisihan ~10 ms pada `sim.hingar` 0.15) menaikkan maks − min secara sistematik: diukur +20% hingga +34%
+  atas sim RSA diketahui (72±4, 85±3 BPM). Purata bergerak 3 degupan mengecilkan RSA sebenar −15% pada 60 BPM. Sinus muat: −9.7% hingga
+  +5.9% berbanding nilai analitik atas 25 kes (55–95 BPM, RSA 3–6 BPM, 5 benih).
+- **Undur:** `julat_kaedah: "maks_min"` dalam config.
+
+### D8 (P2b) Skor, fixture dan sumber replay: butiran yang PRD tidak putuskan
+- **Degupan sah (§4.4 "kualiti ≥ 40"):** saat yang mengandungi degupan mesti mempunyai pecahan sampel berkeyakinan ≥ 40 sekurang-kurangnya
+  `rasa.kualiti_saat_min` (0.5). Ketukan dikira hanya antara dua degupan sah BERTURUT-TURUT dalam tetingkap.
+- **p Rayleigh = exp(−nR²)** seperti PRD; n < `n_min` tidak diskor jadi pembetulan sampel kecil tidak dipakai.
+- **Fasa min → ms** = sudut min ([0, 2π)) × median IBI sah dalam tetingkap. Ayat statistik memakai `samaDaripada10` = ketukan dalam
+  ± `rasa.ayat_separuh_kitaran` (0.25) kitaran dari fasa min, dibulatkan per 10.
+- **Kitaran jejak nafas** (§4.5 "detrend yang sama"): jejak atas disampel semula 10 Hz, dilicin purata berpusat 1 s, min ditolak, puncak
+  > 0 dengan sela ≥ 2 s; dipakai hanya bila ≥ 80% sampel stabil dan ≥ 2 kitaran, jika tidak panduan 4 + 6 s. Detrend 1 s §4.3 memadam
+  gelombang nafas 0.1 Hz, jadi tidak dipakai di sini. Nilai dalam `config.lentur.nafas_*`.
+- **Skema fixture 1** (`src/core/fixture.ts`): `prq` = [{t, v, c}]; `nafas` boleh ada `s` (stabil, boolean); `meta` = {skema, jenis
+  simulasi|pemilik|ujian, label ≤ 60, tarikh YYYY-MM-DD, babak? (saat relatif), jana? (nombor sahaja)}. Pengesah menolak kunci asing dan
+  rentetan dalam data (tiada imej/laluan). Main semula menganjak cap masa supaya sampel pertama = jam semasa.
+- **`pulse.pulseRespirationQuotient`** dibaca sebagai satu ukuran ATAU senarai sehingga P1 mengukur bentuk sebenar. Sim kini menghantar
+  PRQ = nadi purata / nafas per minit supaya replay dan sim menunjukkan nisbah.
+- **`fixtures/sim-contoh.json`** dijana `node scripts/jana-fixture-sim.mjs`; `meta.jana` menyimpan semua parameter dan ujian menjana
+  semula dan membanding tepat (perubahan penjana tanpa jana semula = merah).
+- **Undur:** setiap nilai dalam config; skema naik ke 2 bila medan berubah (pengesah menolak skema lain).

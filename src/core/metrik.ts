@@ -23,6 +23,8 @@ export interface MetrikSdk {
   pulse?: {
     rate?: UkuranKeyakinan[] | null;
     trace?: Ukuran[] | null;
+    /** Nisbah nadi-nafas (FAKTA §4.2, mesej `Pulse`). Bentuk sebenar disahkan P1: satu ukuran atau senarai. */
+    pulseRespirationQuotient?: UkuranKeyakinan | UkuranKeyakinan[] | null;
   } | null;
   breathing?: {
     rate?: UkuranKeyakinan[] | null;
@@ -40,4 +42,10 @@ export interface Sampel {
   t: number;
   v: number;
   c: number;
+}
+
+/** Ukuran tunggal atau senarai → senarai (medan yang bentuknya belum diukur atas SDK sebenar). */
+export function senarai<T>(x: T | T[] | null | undefined): T[] {
+  if (x === null || x === undefined) return [];
+  return Array.isArray(x) ? x : [x];
 }
