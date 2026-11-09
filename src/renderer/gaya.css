@@ -1,5 +1,5 @@
 /* Degup: "pelita dalam bilik gelap". Satu aksen (pelita amber); merah hanya untuk petunjuk kamera hidup.
-   Animasi: transform/opacity sahaja (perangkap WebKit/GPU: tiada filter/backdrop-filter beranimasi). */
+   Animasi: transform/opacity sahaja (perangkap WebKit/GPU rumah, lihat CLAUDE.md). */
 @font-face { font-family: "Bricolage"; src: url("fon/bricolage.woff2") format("woff2"); font-weight: 200 800; font-display: swap; }
 @font-face { font-family: "Atkinson"; src: url("fon/atkinson-400.woff2") format("woff2"); font-weight: 400; font-display: swap; }
 @font-face { font-family: "Atkinson"; src: url("fon/atkinson-700.woff2") format("woff2"); font-weight: 700; font-display: swap; }
