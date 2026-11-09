@@ -102,7 +102,7 @@ describe("pengesah fixture menolak", () => {
 });
 
 describe("SumberReplay", () => {
-  it("menghantar kelompok ikut jam dengan cap masa dianjak, kemudian selesai", async () => {
+  it("menghantar kelompok ikut jam dengan cap masa dianjak, kemudian bermula semula dari jam semasa", async () => {
     let jam = 5_000_000_000_000_000;
     const r = new SumberReplay(contoh, { kelompok_ms: app.replay.kelompok_ms, keyakinan_stabil: STABIL }, () => jam);
     const diterima: MetrikSdk[] = [];
@@ -121,9 +121,17 @@ describe("SumberReplay", () => {
     expect(r.masaRelatif(30)).toBe(mulaJam + 30e6);
     jam += 1e9;
     r.pam();
-    expect(r.selesai()).toBe(true);
-    const n = diterima.reduce((a, m) => a + (m.cardio?.arterialPressureTrace?.length ?? 0), 0);
-    expect(n).toBe(contoh.jejak.length);
+    expect(r.pusingan()).toBe(1);
+    const jejakSemua = () => diterima.flatMap((m) => m.cardio?.arterialPressureTrace ?? []);
+    expect(jejakSemua()).toHaveLength(contoh.jejak.length);
+    const tAkhir = Number(jejakSemua().at(-1)!.timestamp);
+    // Pusingan kedua: sampel pertama dianjak ke jam semasa, cap masa terus menaik (pengesan tidak nampak masa mundur).
+    jam += 1e6;
+    r.pam();
+    const kedua = jejakSemua().slice(contoh.jejak.length);
+    expect(kedua.length).toBeGreaterThan(0);
+    expect(Number(kedua[0]!.timestamp)).toBeGreaterThan(tAkhir);
+    expect(r.pusingan()).toBe(1);
     await r.henti();
   });
 });

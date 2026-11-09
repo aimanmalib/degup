@@ -96,7 +96,17 @@
     "sela": "Sela degupan: {dari} → {ke} ms",
     "ringkasan": "Jantung kau melambat kira-kira {ms} ms setiap kali hembus.",
     "nisbah": "Kira-kira {prq} degupan setiap nafas.",
-    "penerangan": "Ini normal. Namanya aritmia sinus pernafasan: jantung mengikut nafas. Kami menamakannya, tidak menilainya."
+    "penerangan": "Ini normal. Namanya aritmia sinus pernafasan: jantung mengikut nafas. Kami menamakannya, tidak menilainya.",
+    "arahan": "Ikut pelita. Tarik nafas bila ia membesar, hembus perlahan bila ia mengecil.",
+    "menunggu": "Menunggu degupan yang jelas…",
+    "jalur_label": "Sela antara degupan sepanjang {s} saat, dilorek ikut tarik dan hembus.",
+    "fasa_panduan": "Lorek ikut panduan nafas.",
+    "fasa_jejak": "Lorek ikut nafas kau, dilihat kamera.",
+    "pembilang": "Masa babak, {s} saat",
+    "tajuk_hujung": "Jantung kau ikut nafas",
+    "tak_cukup": "Tak cukup degupan jelas untuk mengira. Cuba lagi dengan cahaya depan.",
+    "ke_keputusan": "Lihat keputusan",
+    "mengira": "Mengira…"
   },
   "bahasa": {
     "label": "Bahasa",
@@ -204,5 +214,25 @@
     "rendah": "Muka terlalu rendah dalam bingkai.",
     "hadap": "Pandang terus ke kamera.",
     "lain": "Bacaan terganggu. Duduk diam dan pandang kamera."
+  },
+  "keputusan": {
+    "tajuk": "Keputusan",
+    "skor": "Skor keselarasan",
+    "tiada": "Tiada",
+    "kiraan": "Degupan dan ketukan",
+    "kiraan_nilai": "{N} dilihat, {n} diketuk",
+    "lambat": "Melambat setiap hembus",
+    "ms": "{ms} ms",
+    "prq": "Degupan setiap nafas",
+    "prq_nilai": "kira-kira {prq}",
+    "nadi": "Nadi purata",
+    "bpm": "{bpm} seminit",
+    "simpan": "Simpan kad PNG",
+    "disimpan": "Kad disimpan: {nama}",
+    "gagal": "Kad tidak dapat disimpan. Cuba lagi.",
+    "buka_folder": "Buka folder",
+    "main_lagi": "Main lagi",
+    "tempatan": "Kad disimpan dalam komputer ini sahaja. Tiada perkongsian automatik.",
+    "kad_kredit": "Dibina atas Presage SmartSpectra SDK"
   }
 }

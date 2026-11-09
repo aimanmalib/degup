@@ -99,7 +99,19 @@
     "nafas_licin_s": 1.0,
     "nafas_sela_min_s": 2.0,
     "nafas_stabil_min": 0.8,
-    "nafas_kitaran_min": 2
+    "nafas_kitaran_min": 2,
+    "kemas_ms": 100,
+    "simpan_s": 240,
+    "pelita_skala_tarik": 1.06,
+    "pelita_skala_hembus": 0.8,
+    "jalur": {
+      "lebar": 1000,
+      "tinggi": 160,
+      "julat_min_ms": 160,
+      "pad_ms": 30,
+      "titik_r": 3.5
+    },
+    "tunggu_akhir_ms": 1500
   },
   "replay": {
     "_nota": "PRD §4.10: fixture angka sahaja (tiada imej). Main semula dianjak ke jam semasa.",
@@ -140,6 +152,14 @@
     "lebar": 1000,
     "tinggi": 120,
     "kiraan_ms": 900
+  },
+  "kad": {
+    "_nota": "Kad keputusan PNG (PRD §4.2): saiz kanvas (piksel), folder dalam Gambar pengguna, awalan nama fail, had saiz yang main terima.",
+    "lebar": 1200,
+    "tinggi": 630,
+    "folder": "Degup",
+    "awalan_fail": "degup-kad-",
+    "maks_bait": 4000000
   },
   "uji": {
     "_nota": "Ujian Playwright sahaja: skala masa babak (0 < x ≤ 1) dipakai HANYA bila DEGUP_SUMBER=sim. Live/replay sentiasa 1.",

@@ -90,10 +90,15 @@ export function fasaPanduan(t: number, mula: number, kfg: KonfigLentur): "tarik"
 }
 
 /**
- * Kitaran dari jejak nafas atas (puncak ke puncak): sampel semula seragam, licin purata bergerak berpusat, tolak min,
- * puncak > 0 dengan sela ≥ `nafas_sela_min_s`. Null bila jejak tidak cukup stabil atau kitaran terlalu sedikit.
+ * Jejak nafas atas dilicinkan: sampel semula seragam (`nafas_kadar_hz`), purata bergerak berpusat (`nafas_licin_s`), tolak min.
+ * Null bila sampel terlalu sedikit atau pecahan stabil < `nafas_stabil_min`. Dikongsi kitaran (puncak) dan lorek fasa (cerun).
  */
-export function kitaranJejak(nafas: readonly SampelNafas[], mula: number, akhir: number, kfg: KonfigLentur): Kitaran[] | null {
+export function licinNafas(
+  nafas: readonly SampelNafas[],
+  mula: number,
+  akhir: number,
+  kfg: KonfigLentur,
+): { t: number[]; y: number[] } | null {
   const s = nafas.filter((x) => x.t >= mula && x.t < akhir).sort((a, b) => a.t - b.t);
   if (s.length < 2) return null;
   if (s.filter((x) => x.stabil).length / s.length < kfg.nafas_stabil_min) return null;
@@ -122,8 +127,17 @@ export function kitaranJejak(nafas: readonly SampelNafas[], mula: number, akhir:
     return jum / n;
   });
   const min = licin.reduce((a, b) => a + b, 0) / licin.length;
-  const y = licin.map((v) => v - min);
+  return { t: gt, y: licin.map((v) => v - min) };
+}
 
+/**
+ * Kitaran dari jejak nafas atas (puncak ke puncak) atas jejak dilicinkan (`licinNafas`): puncak > 0 dengan sela ≥
+ * `nafas_sela_min_s`. Null bila jejak tidak cukup stabil atau kitaran terlalu sedikit.
+ */
+export function kitaranJejak(nafas: readonly SampelNafas[], mula: number, akhir: number, kfg: KonfigLentur): Kitaran[] | null {
+  const l = licinNafas(nafas, mula, akhir, kfg);
+  if (!l) return null;
+  const { t: gt, y } = l;
   const selaMin = kfg.nafas_sela_min_s * US;
   const puncak: number[] = [];
   for (let i = 1; i + 1 < y.length; i++) {

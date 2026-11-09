@@ -108,6 +108,11 @@ export class Simpanan {
     return dibuang;
   }
 
+  /** Fail yang Degup tulis di LUAR folder data (kad PNG pengguna): dicatat untuk panel Data, tidak dipadam "Padam semua". */
+  catat(laluan: string): void {
+    this.ditulis.add(laluan);
+  }
+
   /** Fail yang Degup tulis dalam sesi ini (panel Data §4.6: egress yang diukur, bukan dakwaan). */
   failDitulis(): string[] {
     return [...this.ditulis].sort();

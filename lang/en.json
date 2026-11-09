@@ -96,7 +96,17 @@
     "sela": "Beat interval: {dari} → {ke} ms",
     "ringkasan": "Your heart slowed by about {ms} ms on each exhale.",
     "nisbah": "About {prq} beats per breath.",
-    "penerangan": "This is normal. It is called respiratory sinus arrhythmia: the heart follows the breath. We name it, we do not judge it."
+    "penerangan": "This is normal. It is called respiratory sinus arrhythmia: the heart follows the breath. We name it, we do not judge it.",
+    "arahan": "Follow the lamp. Breathe in as it grows, breathe out slowly as it shrinks.",
+    "menunggu": "Waiting for clear beats…",
+    "jalur_label": "Time between beats over {s} seconds, shaded by breathing in and out.",
+    "fasa_panduan": "Shading follows the breathing guide.",
+    "fasa_jejak": "Shading follows your breath, seen by the camera.",
+    "pembilang": "Scene time, {s} seconds",
+    "tajuk_hujung": "Your heart follows your breath",
+    "tak_cukup": "Not enough clear beats to work it out. Try again with light in front of you.",
+    "ke_keputusan": "See result",
+    "mengira": "Counting…"
   },
   "bahasa": {
     "label": "Language",
@@ -204,5 +214,25 @@
     "rendah": "Your face is too low in the frame.",
     "hadap": "Look straight at the camera.",
     "lain": "Reading interrupted. Sit still and look at the camera."
+  },
+  "keputusan": {
+    "tajuk": "Result",
+    "skor": "Sync score",
+    "tiada": "None",
+    "kiraan": "Beats and taps",
+    "kiraan_nilai": "{N} seen, {n} tapped",
+    "lambat": "Slowing on each exhale",
+    "ms": "{ms} ms",
+    "prq": "Beats per breath",
+    "prq_nilai": "about {prq}",
+    "nadi": "Average pulse",
+    "bpm": "{bpm} per minute",
+    "simpan": "Save PNG card",
+    "disimpan": "Card saved: {nama}",
+    "gagal": "The card could not be saved. Try again.",
+    "buka_folder": "Open folder",
+    "main_lagi": "Play again",
+    "tempatan": "The card is saved on this computer only. Nothing is shared automatically.",
+    "kad_kredit": "Built on the Presage SmartSpectra SDK"
   }
 }

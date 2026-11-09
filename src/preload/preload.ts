@@ -11,6 +11,8 @@ const api: DegupApi = {
   failDitulis: () => ipcRenderer.invoke(SALURAN.failDitulis),
   bukaPautan: (id) => ipcRenderer.invoke(SALURAN.bukaPautan, id),
   bacaFixture: (fail) => ipcRenderer.invoke(SALURAN.bacaFixture, fail),
+  simpanKad: (png) => ipcRenderer.invoke(SALURAN.simpanKad, png),
+  bukaFolderKad: () => ipcRenderer.invoke(SALURAN.bukaFolderKad),
 };
 
 contextBridge.exposeInMainWorld("degup", api);

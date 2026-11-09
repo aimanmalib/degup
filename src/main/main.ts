@@ -6,11 +6,17 @@ import { join } from "node:path";
 import konfig from "../../config/app.json";
 import { sahkanFixture } from "../core/fixture.js";
 import { SALURAN, type FixtureSedia, type Permulaan, type Tetapan } from "../preload/api.js";
+import { simpanKad } from "./kad.js";
 import { Simpanan, tetapanLalai, type Penyulit } from "./simpanan.js";
 
 const AKAR = join(__dirname, "..");
 const folderData = process.env.DEGUP_DATA;
-if (folderData) app.setPath("userData", folderData);
+if (folderData) {
+  app.setPath("userData", folderData);
+  // Mudah alih/ujian: kad PNG juga di bawah folder data, bukan Gambar pengguna (D12).
+  app.setPath("pictures", join(folderData, "gambar"));
+}
+const folderKad = () => join(app.getPath("pictures"), konfig.kad.folder);
 
 const penyulit: Penyulit = {
   boleh: () => safeStorage.isEncryptionAvailable(),
@@ -38,9 +44,10 @@ function fixtureSedia(): FixtureSedia[] {
   return hasil;
 }
 
-/** Skala masa ujian: hanya untuk sumber sim (Playwright), tidak pernah untuk live/replay. */
+/** Skala masa ujian: hanya untuk sumber sim/replay (Playwright, D12), tidak pernah untuk live. */
 function skalaMasa(): number {
-  if (process.env[konfig.sumber_env] !== "sim") return 1;
+  const sumber = process.env[konfig.sumber_env];
+  if (sumber !== "sim" && sumber !== "replay") return 1;
   const x = Number(process.env[konfig.uji.skala_masa_env]);
   return x > 0 && x <= 1 ? x : 1;
 }
@@ -73,6 +80,15 @@ function daftarIpc(simpanan: Simpanan): void {
   ipcMain.handle(SALURAN.padamSemua, () => simpanan.padamSemua());
   ipcMain.handle(SALURAN.failDitulis, () => simpanan.failDitulis());
   ipcMain.handle(SALURAN.bacaFixture, (_e, fail: unknown) => bacaFixture(fail));
+  ipcMain.handle(SALURAN.simpanKad, (_e, png: unknown) => {
+    const h = simpanKad(folderKad(), konfig.kad.awalan_fail, png, konfig.kad.maks_bait, new Date());
+    if (!h.ok) return { ok: false };
+    simpanan.catat(h.laluan);
+    return { ok: true, nama: h.nama };
+  });
+  ipcMain.handle(SALURAN.bukaFolderKad, async () => {
+    await shell.openPath(folderKad());
+  });
   // Hanya pautan bernama dalam config.pautan, hanya https: renderer tidak boleh membuka URL sewenang-wenang.
   ipcMain.handle(SALURAN.bukaPautan, async (_e, id: unknown) => {
     const url = typeof id === "string" ? pautan[id] : undefined;

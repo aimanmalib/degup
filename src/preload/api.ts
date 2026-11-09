@@ -26,11 +26,13 @@ export interface Permulaan {
   /** Nilai DEGUP_SUMBER bila ditetapkan (live | replay | sim); menindih tetapan. */
   sumberEnv: string | null;
   fixtures: FixtureSedia[];
-  /** Pendarab tempoh babak (ujian, sim sahaja); 1 dalam app sebenar. */
+  /** Pendarab tempoh babak (ujian, sim/replay sahaja); 1 dalam app sebenar. */
   skalaMasa: number;
   kunciAda: boolean;
   failDitulis: string[];
 }
+
+export type HasilSimpanKad = { ok: true; nama: string } | { ok: false };
 
 export type HasilKunci = { ok: true } | { ok: false; sebab: "kosong" | "storan" };
 
@@ -44,6 +46,10 @@ export interface DegupApi {
   bukaPautan(id: string): Promise<void>;
   /** Kandungan fixture yang sah (nama dari `Permulaan.fixtures` sahaja); null bila tiada/rosak. */
   bacaFixture(fail: string): Promise<unknown>;
+  /** Simpan kad keputusan PNG ke folder Gambar/Degup; main menamakan fail. */
+  simpanKad(png: Uint8Array): Promise<HasilSimpanKad>;
+  /** Buka folder kad dalam pengurus fail sistem. */
+  bukaFolderKad(): Promise<void>;
 }
 
 export const SALURAN = {
@@ -55,4 +61,6 @@ export const SALURAN = {
   failDitulis: "degup:fail-ditulis",
   bukaPautan: "degup:buka-pautan",
   bacaFixture: "degup:baca-fixture",
+  simpanKad: "degup:simpan-kad",
+  bukaFolderKad: "degup:buka-folder-kad",
 } as const;
