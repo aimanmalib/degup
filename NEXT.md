@@ -2,8 +2,8 @@
 
 Keadaan penuh: blok ⭐ dalam `docs/PELAN-presage-2026.md`.
 
-- **Seterusnya: P3c** (agen): LENTUR (panduan nafas 4/6 s, jalur IBI dilorek fasa, ringkasan ms + PRQ) + keputusan + "Simpan kad PNG"
-  + "Main lagi"; sambung butang "Teruskan" pendedahan (`src/renderer/skrin/dedah.ts`, kini tamat sesi, D10) ke LENTUR.
-  H3: Playwright aliran penuh dalam `sim` DAN `replay`. Cangkuk ujian + skala masa: `src/renderer/uji.ts`, `e2e/babak.spec.ts`.
+- **Seterusnya: P4a** (agen): sumber `live` (`src/sumber/live.ts`: `getUserMedia` → `useMediaStream`, cardio + breathing, telemetri
+  mati, SATU pendengar `metrics`), kunci `safeStorage` → SDK, perakam demo (berhenti auto di skrin keputusan, `app.ts keKeputusan`),
+  perakam fixture bila `config.rakam_fixture`. Ujian unit dengan SDK tiruan. P3c (LENTUR + keputusan + kad PNG) siap (D12).
 - Pintu rupa P3a: diluluskan pemilik 9 Nov ("ok, teruskan rupa ini").
 - Pemilik (Baki KAU, `entri.json`): kunci Presage + jawapan S1 hingga S8 ≤ 10 Nov 22:00 MYT; dua video ujian ≤ 12 Nov.

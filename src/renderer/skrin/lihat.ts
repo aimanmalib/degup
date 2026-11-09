@@ -24,7 +24,8 @@ function cincin(): { el: SVGSVGElement; isi: SVGCircleElement } {
   return { el, isi };
 }
 
-function pratonton(r: Ruang): HTMLElement {
+/** Pratonton kamera dicermin (LIHAT, LENTUR; PRD §4.9: rakaman menunjukkan manusia + isyarat). Sim/replay = kotak label. */
+export function pratonton(r: Ruang): HTMLElement {
   const { t } = r.k;
   if (r.kamera.media) {
     const v = h("video", { class: "pratonton", autoplay: true, muted: true, playsinline: true, "aria-label": t("kamera.pratonton") });

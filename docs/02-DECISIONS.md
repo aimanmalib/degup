@@ -143,3 +143,29 @@ Format D-n: keputusan · sebab · undur. D-K1 hingga D-K15 = salinan PRD §5 (di
   dan skala masa `DEGUP_SKALA_MASA` HANYA bila `DEGUP_SUMBER=sim` (main memaksa 1 untuk sumber lain). Ketukan Playwright masa nyata
   tidak boleh mendahului degupan yang belum dikesan, jadi jalur diuji dengan ketukan bertulis; Space sebenar diuji untuk kiraan.
   Undur: buang `uji.ts` + `uji` dalam config; ujian jalur kembali ke vitest sahaja.
+
+### D12 (P3c) LENTUR, keputusan, kad PNG: butiran yang PRD tidak putuskan
+
+- **Panduan nafas = pelita** (mod `nafas`): Web Animations `transform: scale` (`lentur.pelita_skala_hembus` → `pelita_skala_tarik`
+  dalam `tarik_s`, kembali dalam `hembus_s`); kurang gerak = kelegapan. Rentak nafas TIDAK diskala oleh `DEGUP_SKALA_MASA` (fisiologi);
+  hanya tempoh babak diskala. Label "Tarik"/"Hembus" dari `fasaPanduan`. Bina semula DOM (tukar bahasa) menetapkan `currentTime`
+  animasi supaya kekal sefasa dengan panduan yang dipakai `kiraLentur`.
+- **Jeda petunjuk dalam LENTUR:** masa babak beku, panduan nafas terus berjalan (orang terus bernafas; kitaran panduan kekal berlabuh
+  pada `mula`). Tiada ulang pusingan (PRD hanya menuntutnya untuk RASA). Degupan semasa jeda ditapis oleh kualiti seperti biasa.
+- **Lorek jalur IBI:** `segmenFasa` (`src/core/lentur.ts`) memilih jejak nafas atas bila `licinNafas` lulus syarat stabil
+  (`nafas_stabil_min`): cerun jejak dilicinkan naik = tarik, turun = hembus; jika tidak, segmen panduan. `licinNafas` diekstrak dari
+  `kitaranJejak` (satu pelicin untuk kitaran dan lorek). Jalur = lorek lembut penuh tinggi + bar fasa di dasar (tarik = warna pelita).
+- **Hujung LENTUR:** `kiraLentur` dijalankan `lentur.tunggu_akhir_ms` selepas masa tamat (degupan terakhir disahkan), kemudian babak
+  yang sama melukis ringkasan (ms besar, ayat ringkasan, nisbah PRQ bila ada, ayat RSA tetap, penafian) dan butang "Lihat keputusan".
+- **Keputusan:** kamera + sesi ditutup sebaik masuk skrin keputusan (babak ukur sudah tamat; perakam demo P4a berhenti di sini).
+  Kad skrin dan PNG dibina dari `barisKad` yang sama. Nadi purata = purata ukuran nadi stabil dari mula sesi hingga akhir LENTUR.
+  Esc dari keputusan kembali ke izin.
+- **Kad PNG:** dilukis renderer di kanvas (`kad.lebar`×`kad.tinggi`, warna dari token CSS, fon app); bait ke main melalui IPC
+  `simpanKad`; main menyemak tandatangan PNG + `kad.maks_bait`, menamakan fail sendiri `<awalan>YYYYMMDD-HHMMSS[-n].png` (tiada tindih)
+  dalam `Gambar/<kad.folder>`, tulis atomik; laluan dicatat dalam panel Data (fail ditulis sesi ini). Tiada dialog simpan (satu klik,
+  boleh diuji); "Buka folder" = `shell.openPath`. `DEGUP_DATA` (mudah alih/ujian) juga memindah Gambar ke `<DEGUP_DATA>/gambar`.
+- **Replay berulang:** fixture habis = pusingan baharu disauh pada jam semasa (cap masa terus menaik). Sebab: fixture contoh 130 s;
+  pengguna/juri yang lama di LIHAT akan tiba di LENTUR tanpa data. Undur: kembalikan `henti()` bila `pusingan() > 0`.
+- **Skala masa ujian untuk replay juga** (meminda D10): `DEGUP_SKALA_MASA` kini dipakai bila sumber `sim` ATAU `replay` (H3 menuntut
+  aliran penuh replay di Depot setiap push; 1× = > 2 min). Data replay tetap masa nyata; hanya tempoh babak dipendekkan. Live = 1 sentiasa.
+  Cangkuk `window.degupUji` kekal sim sahaja.

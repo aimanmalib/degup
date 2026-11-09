@@ -106,6 +106,7 @@ export function babakDedah(r: Ruang): Babak {
     },
     kfg.rasa,
   );
+  r.hasilSkor = hasil;
   const garis = garisMasa({
     mula: rasa.mula,
     akhir: rasa.akhir,
@@ -229,14 +230,13 @@ export function babakDedah(r: Ruang): Babak {
               },
               t("rasa.cuba_lagi"),
             ),
-            // LENTUR = P3c (D10): sehingga itu "Teruskan" menamatkan sesi dengan kamera mati.
             h(
               "button",
               {
                 class: "butang utama",
                 type: "button",
                 "data-uji": "teruskan",
-                onclick: () => r.berhenti(),
+                onclick: () => r.pergi("lentur"),
               },
               t("umum.teruskan"),
             ),

@@ -93,8 +93,10 @@ test("aliran: LIHAT berdenyut + Sedia → RASA sefasa → Selaras; Cuba lagi →
   await win.locator("[data-uji=teruskan]").scrollIntoViewIfNeeded();
   await bukti(win, "dedah-meneka-1024", "p3b");
 
-  // Teruskan (sehingga LENTUR P3c, D10): sesi tamat, kembali ke izin.
+  // Teruskan → LENTUR (P3c); Esc menamatkan sesi dan kembali ke izin.
   await win.locator("[data-uji=teruskan]").click();
+  await expect(win.locator("[data-uji=lentur]")).toBeVisible();
+  await win.keyboard.press("Escape");
   await expect(win.locator("[data-uji=senarai-izin]")).toBeVisible();
 });
 

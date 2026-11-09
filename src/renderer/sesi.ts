@@ -2,6 +2,7 @@
 // Babak (LIHAT, RASA, pendedahan) melanggan di sini; satu pendengar metrik sahaja dipasang pada sumber (perangkap SDK).
 import { PengesanDegupan, type Degupan } from "../core/beats.js";
 import { sahkanFixture } from "../core/fixture.js";
+import { PengumpulLentur } from "../core/lentur.js";
 import type { MetrikSdk } from "../core/metrik.js";
 import { PenjejakJeda } from "../core/petunjuk.js";
 import { PenjejakStabil } from "../core/stabil.js";
@@ -42,6 +43,10 @@ export class SesiUkur {
   readonly pengesan: PengesanDegupan;
   readonly nadi: PenjejakStabil;
   readonly jeda = new PenjejakJeda();
+  /** Nafas, PRQ dan nadi untuk LENTUR + kad keputusan. */
+  readonly lentur: PengumpulLentur;
+  /** Masa sesi dicipta (µs epoch): nadi purata keputusan dikira dari sini. */
+  readonly mulaUs = kiniUs();
   rasa: TetingkapRasa | null = null;
   private readonly dengarDegupan = new Set<(d: Degupan) => void>();
   private readonly dengarJeda = new Set<() => void>();
@@ -53,6 +58,7 @@ export class SesiUkur {
   ) {
     this.pengesan = new PengesanDegupan(k.konfig.beats);
     this.nadi = new PenjejakStabil(k.konfig.beats.keyakinan_stabil);
+    this.lentur = new PengumpulLentur(k.konfig.beats.keyakinan_stabil, k.konfig.lentur.simpan_s);
   }
 
   static async cipta(k: Keadaan): Promise<SesiUkur> {
@@ -67,6 +73,7 @@ export class SesiUkur {
 
   private terimaMetrik(m: MetrikSdk): void {
     this.nadi.tambahMetrik(m);
+    this.lentur.tambahMetrik(m);
     if (this.jeda.dijeda) this.nadi.putus();
     for (const d of this.pengesan.tambahMetrik(m)) for (const f of this.dengarDegupan) f(d);
   }
