@@ -3,6 +3,7 @@
 // jadi masa degupan sebenar = masa φ(t) melintasi integer. Nadi = asas + hanyut + RSA (nafas/min).
 import type { MetrikSdk, UkuranKeyakinan, Ukuran } from "../core/metrik.js";
 import type { Sumber } from "./jenis.js";
+import { Pemancar } from "./pemancar.js";
 
 export interface KonfigSim {
   nadi_bpm: number;
@@ -162,7 +163,10 @@ export class PenjanaSim {
 /** Sumber `sim` masa nyata: satu kelompok setiap `kelompok_ms` (UI dan Playwright). */
 export class SumberSim implements Sumber {
   readonly jenis = "sim" as const;
-  private pendengar: ((m: MetrikSdk) => void) | null = null;
+  private readonly metrik = new Pemancar<[MetrikSdk]>();
+  private readonly petunjuk = new Pemancar<[number, number]>();
+  readonly onMetrik = this.metrik.dengar;
+  readonly onPetunjuk = this.petunjuk.dengar;
   private pemasa: ReturnType<typeof setInterval> | null = null;
 
   constructor(
@@ -170,18 +174,16 @@ export class SumberSim implements Sumber {
     private readonly jam: () => number = () => Date.now() * 1000,
   ) {}
 
-  onMetrik(f: (m: MetrikSdk) => void): () => void {
-    this.pendengar = f;
-    return () => {
-      if (this.pendengar === f) this.pendengar = null;
-    };
+  /** Ujian/demo: petunjuk SDK tiruan (cth 1 = tiada muka, 0 = OK) seolah-olah dari `validationStatus`. */
+  suntikPetunjuk(kod: number): void {
+    this.petunjuk.pancar(kod, this.jam());
   }
 
   async mula(): Promise<void> {
     if (this.pemasa) return;
     const penjana = new PenjanaSim(this.kfg, this.jam());
     this.pemasa = setInterval(() => {
-      while (penjana.masaSeterusnya() < this.jam()) this.pendengar?.(penjana.seterusnya());
+      while (penjana.masaSeterusnya() < this.jam()) this.metrik.pancar(penjana.seterusnya());
     }, this.kfg.kelompok_ms);
   }
 

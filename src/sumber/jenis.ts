@@ -7,6 +7,8 @@ export interface Sumber {
   readonly jenis: JenisSumber;
   /** Daftar SATU pendengar payload metrik; pulangkan fungsi nyahdaftar. */
   onMetrik(f: (m: MetrikSdk) => void): () => void;
+  /** Petunjuk kesediaan (`validationStatus` SDK: kod, cap masa µs). sim/replay: hanya bila disuntik ujian. */
+  onPetunjuk(f: (kod: number, t: number) => void): () => void;
   mula(): Promise<void>;
   henti(): Promise<void>;
 }

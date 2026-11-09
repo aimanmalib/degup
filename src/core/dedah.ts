@@ -1,0 +1,65 @@
+// Pendedahan RASA (PRD §4.2, §4.4): garis masa (degupan, ketukan, jalur kualiti) sebagai kedudukan relatif 0..1, dan
+// ayat bahasa biasa sebagai kunci i18n + nilai. Tulen: tiada DOM, tiada SDK. Masa µs epoch.
+import type { Degupan } from "./beats.js";
+import { degupanSah, type HasilSkor } from "./score.js";
+
+const US = 1e6;
+
+export interface InputGaris {
+  mula: number;
+  akhir: number;
+  degupan: readonly Degupan[];
+  ketukan: readonly number[];
+  /** Saat epoch → pecahan sampel berkeyakinan (PengesanDegupan.kualitiSetiapSaat). */
+  kualitiSaat: ReadonlyMap<number, number>;
+  kualitiSaatMin: number;
+}
+
+export interface GarisMasa {
+  /** x dalam [0, 1]; `dikira` = degupan sah §4.4 (selebihnya dilukis pudar). */
+  degupan: { x: number; dikira: boolean }[];
+  ketukan: number[];
+  /** Satu segmen setiap saat; `rendah` = bahagian berlorek, tidak dikira. Saat tanpa sampel = rendah. */
+  kualiti: { x: number; w: number; rendah: boolean }[];
+}
+
+export function garisMasa(i: InputGaris): GarisMasa {
+  const panjang = i.akhir - i.mula;
+  if (!(panjang > 0)) return { degupan: [], ketukan: [], kualiti: [] };
+  const x = (t: number) => (t - i.mula) / panjang;
+  const dalam = (t: number) => t >= i.mula && t < i.akhir;
+  const kualitiPada = (t: number) => i.kualitiSaat.get(Math.floor(t / US)) ?? null;
+  const kualiti: GarisMasa["kualiti"] = [];
+  for (let s = Math.floor(i.mula / US); s * US < i.akhir; s++) {
+    const a = Math.max(i.mula, s * US);
+    const b = Math.min(i.akhir, (s + 1) * US);
+    const q = i.kualitiSaat.get(s);
+    kualiti.push({ x: x(a), w: (b - a) / panjang, rendah: q === undefined || q < i.kualitiSaatMin });
+  }
+  return {
+    degupan: i.degupan.filter((d) => dalam(d.t)).map((d) => ({ x: x(d.t), dikira: degupanSah(d, kualitiPada, i.kualitiSaatMin) })),
+    ketukan: i.ketukan.filter(dalam).map(x),
+    kualiti,
+  };
+}
+
+export interface Ayat {
+  kunci: string;
+  nilai?: Record<string, string | number>;
+}
+
+/** Ayat pendedahan mengikut hasil: kiraan N/n, ayat statistik, sesaran (prinsip PAT), atau "tak cukup data". */
+export function ayatDedah(h: HasilSkor): Ayat[] {
+  const ayat: Ayat[] = [{ kunci: "rasa.kiraan", nilai: { N: h.N, n: h.n } }];
+  if (!h.cukup) {
+    ayat.push({ kunci: "rasa.tak_cukup" });
+    if (h.sebab.includes("ketukan")) ayat.push({ kunci: "dedah.sebab_ketukan", nilai: { n: h.nKetukanSah } });
+    if (h.sebab.includes("kualiti")) ayat.push({ kunci: "dedah.sebab_kualiti" });
+    return ayat;
+  }
+  if (h.samaDaripada10 !== null) ayat.push({ kunci: "dedah.sama", nilai: { x: h.samaDaripada10 } });
+  ayat.push({ kunci: h.jalur === "meneka" ? "dedah.kebetulan" : "dedah.bukan_kebetulan" });
+  // Sesaran hanya bermakna bila ketukan berkumpul pada satu fasa; bila meneka, purata fasa ialah hingar.
+  if (h.sesaranMs !== null && h.jalur !== "meneka") ayat.push({ kunci: "dedah.sesaran", nilai: { ms: h.sesaranMs } });
+  return ayat;
+}

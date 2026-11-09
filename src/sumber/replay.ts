@@ -3,6 +3,7 @@
 import { fixtureKeMetrik, masaMula, type Fixture } from "../core/fixture.js";
 import type { MetrikSdk } from "../core/metrik.js";
 import type { Sumber } from "./jenis.js";
+import { Pemancar } from "./pemancar.js";
 
 export interface KonfigReplay {
   kelompok_ms: number;
@@ -11,7 +12,10 @@ export interface KonfigReplay {
 
 export class SumberReplay implements Sumber {
   readonly jenis = "replay" as const;
-  private pendengar: ((m: MetrikSdk) => void) | null = null;
+  private readonly metrik = new Pemancar<[MetrikSdk]>();
+  private readonly petunjuk = new Pemancar<[number, number]>();
+  readonly onMetrik = this.metrik.dengar;
+  readonly onPetunjuk = this.petunjuk.dengar;
   private pemasa: ReturnType<typeof setInterval> | null = null;
   private anjakUs = 0;
   private baris: { tAkhir: number; m: MetrikSdk }[] = [];
@@ -23,11 +27,9 @@ export class SumberReplay implements Sumber {
     private readonly jam: () => number = () => Date.now() * 1000,
   ) {}
 
-  onMetrik(f: (m: MetrikSdk) => void): () => void {
-    this.pendengar = f;
-    return () => {
-      if (this.pendengar === f) this.pendengar = null;
-    };
+  /** Ujian/demo: petunjuk SDK tiruan (cth 1 = tiada muka, 0 = OK) seolah-olah dari `validationStatus`. */
+  suntikPetunjuk(kod: number): void {
+    this.petunjuk.pancar(kod, this.jam());
   }
 
   async mula(): Promise<void> {
@@ -41,7 +43,7 @@ export class SumberReplay implements Sumber {
   /** Hantar semua kelompok yang sudah "berlaku" mengikut jam. */
   pam(): void {
     const kini = this.jam();
-    while (this.i < this.baris.length && this.baris[this.i]!.tAkhir <= kini) this.pendengar?.(this.baris[this.i++]!.m);
+    while (this.i < this.baris.length && this.baris[this.i]!.tAkhir <= kini) this.metrik.pancar(this.baris[this.i++]!.m);
     if (this.selesai()) void this.henti();
   }
 
