@@ -61,3 +61,13 @@ Format D-n: keputusan · sebab · undur. D-K1 hingga D-K15 = salinan PRD §5 (di
   S8 lalai) dibina oleh cron `legasi segerak` dan pengesahan pemilik, tidak ditulis tangan.
 - **Sebab:** D24/D48 rumah; lejar ialah output mesin.
 - **Undur:** S8 = ya → berhenti, lapor pemilik (PRD §6).
+
+### D6 (P2a) Pembetulan kelewatan penapis dan bentuk sim
+- **Keputusan:** detrend PRD §4.3 = purata bergerak KAUSAL 1.0 s (bukan berpusat, supaya LIHAT tidak lewat 0.5 s). Kelewatan fasa rantai
+  detrend + biquad dikira secara analitik pada nadi semasa (`kelewatanFasa`, `src/core/isyarat.ts`) dan ditolak dari masa puncak.
+  Tanpa pembetulan masa puncak lewat ~60–80 ms (ralat median melepasi 40 ms §4.3). Nadi untuk pengiraan = `pulse_rate` stabil terkini,
+  kemudian terkini, kemudian `config.beats.nadi_lalai_bpm`. Penjana `sim` memakai cos(2πφ) + h·cos(4πφ) supaya degupan sebenar = φ
+  integer (masa rujukan tepat untuk ujian). Jurang mentah > `jurang_s` memulakan semula penapis (tiada interpolasi merentas jurang).
+- **Sebab:** §4.3 menuntut ralat median < 40 ms dan penapis kausal; kelewatan ini hampir malar dalam julat 55–95 BPM tetapi bukan sifar.
+  Diukur: 72 kes (55–95 BPM × 8 benih, 60 s) = 100% dikesan, median terburuk 15.8 ms.
+- **Undur:** buang penolakan `kelewatanUs()` dalam `beats.ts` (fasa RASA tetap konsisten; hanya ralat masa mutlak naik).

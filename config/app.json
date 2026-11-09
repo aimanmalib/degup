@@ -28,7 +28,26 @@
     "keyakinan_stabil": 40,
     "semak_kendiri_s": 10,
     "semak_kendiri_toleransi": 0.1,
-    "sandaran_pulse_trace_selepas_s": 5
+    "sandaran_pulse_trace_selepas_s": 5,
+    "nadi_lalai_bpm": 70
+  },
+  "sim": {
+    "_nota": "Penjana sintetik PRD §4.3/§4.10 (sinus + harmonik + hingar putih, hanyut, RSA). Ujian dan Playwright; UI menanda Simulasi.",
+    "nadi_bpm": 72,
+    "hanyut_bpm": 3,
+    "hanyut_tempoh_s": 45,
+    "rsa_bpm": 4,
+    "nafas_per_min": 6,
+    "harmonik": 0.3,
+    "hingar": 0.15,
+    "garis_dasar": 0.5,
+    "garis_dasar_tempoh_s": 20,
+    "kadar_hz": 30,
+    "jitter_ms": 4,
+    "keyakinan": 70,
+    "kelompok_ms": 200,
+    "kadar_nadi_setiap_s": 1,
+    "benih": 1
   },
   "rasa": {
     "bunyi_lalai": true,
