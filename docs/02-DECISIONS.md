@@ -204,3 +204,16 @@ Format D-n: keputusan · sebab · undur. D-K1 hingga D-K15 = salinan PRD §5 (di
   ketukan RASA + `meta.babak` (masa babak µs → saat relatif). Jenis `ujian`, label `<label_awalan><tarikh>`; P6b melabel semula pemilik.
   Main menulis ke `Dokumen/Degup/fixtures/degup-fixture-<masa>.json` HANYA bila lulus `sahkanFixture` (angka sahaja).
 - **Undur:** `DEGUP_SUMBER=replay` atau tetapan Main semula memintas semua di atas; perakam boleh diganti perakam OS (D-K15 undur).
+
+### D14 (O1, 10 Nov 2026) Kunci Presage diterima; jawapan S1 hingga S8 = lalai PRD §6
+
+- **Kunci:** jawapan pemilik 10 Nov 00:32 UTC: kunci dalam `~/degup/.env` (0600, gitignored), nota `presage key` portal sudah dipadam
+  pemilik. Diukur pembina 10 Nov: fail 0600, `SMARTSPECTRA_API_KEY` bukan kosong, `git check-ignore .env` padan, tiada nota
+  `presage key` dalam portal. Nilai tidak dicetak. Tiada larian SDK dalam O1 (kunci sudah ada, jadi langkah salin + sahkan baris O1
+  tidak terpakai); larian sebenar pertama (P1) menjadi pengesahan kunci dan direkod `docs/UKUR.md`. Kunci ditolak dalam P1 =
+  TERSEKAT (pemilik semak kunci di papan pemuka Presage).
+- **S1 hingga S8:** pemilik memilih lalai PRD §6: S1 Windows 10/11 x64 dengan kamera web (pemasang `nsis` + `portable` P4b; R1 F2 tidak
+  dicetus); S2 muka dalam video awam + publisiti MLH = ya; S3 narasi = klon ElevenLabs pemilik, diisytiharkan; S4 Real-World = tidak
+  (Creative + Overall); S5 pembuka pos = angka sesi sahaja; S7 sesi ejen = langkau; S8 lejar rahsia = tiada (lejar `dilepaskan`).
+- **Lejar:** dua tugas pemilik (kunci, S1 hingga S8) ditanda siap dalam `~/hackathon` (`entri.py pemilik --siap`).
+- **Undur:** pemilik boleh menukar jawapan S melalui flag sebelum potongan yang bergantung padanya (S1 sebelum P4b, S3 sebelum P8b).
