@@ -215,5 +215,7 @@ Format D-n: keputusan · sebab · undur. D-K1 hingga D-K15 = salinan PRD §5 (di
 - **S1 hingga S8:** pemilik memilih lalai PRD §6: S1 Windows 10/11 x64 dengan kamera web (pemasang `nsis` + `portable` P4b; R1 F2 tidak
   dicetus); S2 muka dalam video awam + publisiti MLH = ya; S3 narasi = klon ElevenLabs pemilik, diisytiharkan; S4 Real-World = tidak
   (Creative + Overall); S5 pembuka pos = angka sesi sahaja; S7 sesi ejen = langkau; S8 lejar rahsia = tiada (lejar `dilepaskan`).
-- **Lejar:** dua tugas pemilik (kunci, S1 hingga S8) ditanda siap dalam `~/hackathon` (`entri.py pemilik --siap`).
+- **Lejar:** dua tugas pemilik (kunci, S1 hingga S8) BELUM ditanda siap: `entri.py pemilik --siap` memindah baris ke
+  `pemilik_selesai`, dan gerbang projek mengira `pemilik` sahaja (≥ 6), jadi ia gagal (diukur 10 Nov; lejar dipulihkan). Kerja #1694
+  membaiki kiraan gerbang dan menanda kedua-duanya siap.
 - **Undur:** pemilik boleh menukar jawapan S melalui flag sebelum potongan yang bergantung padanya (S1 sebelum P4b, S3 sebelum P8b).
