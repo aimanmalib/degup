@@ -233,3 +233,15 @@ Format D-n: keputusan · sebab · undur. D-K1 hingga D-K15 = salinan PRD §5 (di
   ketukan DISKRIP sefasa (cangkuk ujian D11), jadi kapsyen README mesti menyebut "simulated signal, no camera" dan ketukan diskrip.
 - **Undur:** padam `docs/media/` + spec + skrip; README kembali tanpa gambar. Gambar `replay` atas fixture pemilik (bila wujud) menggantikan
   `feel-reveal.png` dalam R3.
+
+### D16 (README R2, 17 Nov 2026) README juri EN + README.ms.md, kata larangan BM dalam blok izin
+- **README.md** = sumber kebenaran (EN, juri); **README.ms.md** = terjemahan setia (acara tidak Inggeris-sahaja; produk dwibahasa).
+  Tertib PRD §8; kepala corak rumah (logo `docs/media/logo-512.png`, lencana statik, jenama, pautan BM dalam 30 baris).
+- **Mod live dan pemasang = Limits** sehingga `docs/UKUR.md` merekod larian sebenar / artifak wujud. Angka ujian dari larian Depot
+  `scripts/gerbang-ujian.sh` yang dinamakan dalam README (bahagian "README (angka diukur)" dalam `docs/UKUR.md`).
+- **`tests/kata-larangan.json`:** `README.ms.md` masuk `fail_markdown`; `markdown_izin` + `perubatan`, `mendiagnosis`,
+  `ujian kesihatan` kerana blok `<!-- izin mula -->…<!-- izin akhir -->` README.ms.md menyalin teks izin `lang/ms.json` (kunci yang
+  sudah dalam `senarai_benar`: `izin.perkara.6.*`, `umum.penafian`). Di luar blok perkataan itu tetap ditolak (ujian merah bila "stres"
+  ditambah ke README.ms.md, disemak 17 Nov). "Respiratory sinus arrhythmia" TIDAK ditulis dalam README (di luar blok); README
+  menerangkannya dengan ayat biasa.
+- **Undur:** padam `README.ms.md` + pautan kepala + tiga perkataan BM dari `markdown_izin` + entri `fail_markdown`.

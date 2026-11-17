@@ -1,0 +1,238 @@
+<p align="center"><img src="docs/media/logo-512.png" width="112" height="112" alt="Logo Degup: satu titik cahaya hangat"></p>
+
+<h1 align="center">Degup</h1>
+
+<p align="center"><img src="https://img.shields.io/badge/SmartSpectra%20SDK-3.4.0-f5b85c" alt="SmartSpectra SDK 3.4.0"> <img src="https://img.shields.io/badge/Electron-45-47848f" alt="Electron 45"> <img src="https://img.shields.io/badge/lesen-MIT-blue" alt="Lesen: MIT"> <img src="https://img.shields.io/badge/cabaran%20DEV-Nov%202026-0a0a0a" alt="Cabaran DEV, November 2026"></p>
+
+<p align="center"><b>Boleh kau rasa degupan jantung sendiri? Permainan kamera web tiga minit yang menyemaknya.</b> · <i>Can you feel your own heartbeat? A three-minute webcam game that checks.</i><br>
+<a href="#jalankan-dengan-satu-arahan">Jalankan</a> · <a href="#bagaimana-ia-memenuhi-kriteria-juri">Kriteria juri</a> · <a href="#ujian-dan-apa-yang-diukur">Ujian</a> · <a href="#had">Had</a> · <a href="#izin-dan-data">Izin dan data</a> · <a href="README.md">English</a><br>
+Dibina di Malaysia oleh <a href="https://aimanmalib.com">Aiman Malib</a> · <a href="https://sasateguh.com">Sasa Teguh</a></p>
+
+Ini terjemahan Bahasa Melayu. [README.md](README.md) dalam bahasa Inggeris ialah versi rujukan; Bahasa Melayu untuk pautan ini.
+
+Degup ialah permainan desktop untuk orang dewasa. Kamera web biasa dan Presage SmartSpectra SDK melihat nadi kau, kemudian
+permainan bertanya sama ada kau dapat merasa degupan yang sama itu sendiri.
+
+![Degup dalam mod simulasi: skrin Lihat, Rasa, pendedahan, Lentur dan keputusan berturut-turut, isyarat simulasi, tiada kamera](docs/media/flow.gif)
+
+*Setiap gambar dalam README ini ialah app sebenar dalam mod simulasi: isyarat simulasi, tiada kamera, tiada kunci. Label
+"Simulation" di atas setiap skrin dipaparkan oleh app sendiri. Gambar diambil dalam antara muka Inggeris.*
+
+## Masalah dan idea
+
+Kebanyakan orang tidak dapat berkata bila jantung mereka berdegup tanpa meletakkan jari di pergelangan tangan. Merasa badan
+sendiri dari dalam ada namanya, interosepsi, dan penyelidik sudah lama mengujinya dengan tugas mengetuk: kau mengetuk bila
+merasa degupan, dan sensor menyemak masanya. Itu memerlukan tali dada atau klip jari, jadi ia kekal di makmal.
+
+<!-- izin mula -->
+Permainan rasa tubuh, bukan ujian kesihatan.
+<!-- izin akhir -->
+
+Degup membawa semakan itu ke mana-mana komputer riba. SmartSpectra SDK membaca gelombang nadi dari kamera, Degup mencari setiap
+degupan dalam gelombang itu, dan ketukan kau diskor terhadapnya. Tiada jawapan betul untuk dikejar. Kau tahu sejauh mana kau
+merasa jantung sendiri hari ini, dan kau nampak pernafasan menarik degupan menjadi laju dan perlahan pada masa nyata.
+
+## Cara ia berfungsi
+
+Permainan ini ada tiga babak, kira-kira tiga minit semuanya. Tempoh datang dari `config/app.json` (`aliran`).
+
+1. **Lihat (30 s).** Pelita berdenyut sekali untuk setiap degupan yang kamera lihat. Degupan datang dari gelombang tekanan
+   arteri SDK (`cardio.arterial_pressure_trace`). Payload SDK tiada penanda degupan, jadi Degup mencarinya sendiri dalam
+   [`src/core/beats.ts`](src/core/beats.ts): buang aliran, penapis laluan rendah, ambang menyesuai, dan tetingkap refraktori
+   330 ms. Degupan dalam bacaan lemah ditanda dan tidak dikira.
+2. **Rasa (40 s).** Pelita padam. Kau menekan Space setiap kali merasa degupan, tanpa menyentuh nadi. Kemudian pendedahan
+   melukis ketukan kau di bawah degupan yang kamera lihat. Skor selaras ialah tentang ketekalan, bukan kelewatan: setiap ketukan
+   diberi kedudukan dalam kitaran degupannya, dan skor ialah betapa rapat kedudukan itu berkumpul (panjang resultan min, dengan
+   ujian Rayleigh untuk kebetulan; [`src/core/score.ts`](src/core/score.ts)). Kelewatan tetap 150 ms setiap kali tetap dikira
+   selaras.
+3. **Lentur (60 s).** Kau tarik nafas 4 saat dan hembus 6 saat, mengikut pelita. Jarak antara degupan dilukis hidup, berlorek
+   ikut nafas. Kebanyakan orang nampak degupan menjadi perlahan pada setiap hembusan. Degup melaporkan saiz ayunan itu dalam
+   milisaat dan angka degupan setiap nafas dari SDK ([`src/core/rsa.ts`](src/core/rsa.ts)).
+
+| Isyarat SDK (3.4.0) | Apa Degup buat dengannya |
+|---|---|
+| `cardio.arterial_pressure_trace` | Pengesanan degupan untuk pelita, pendedahan dan jarak degupan dalam Lentur |
+| `cardio.pulse_rate` | Semakan kendiri: jika kadar degupan yang dikesan berbeza lebih 10% dari SDK, degupan ditanda bising |
+| `pulse.trace` | Gelombang sandaran bila jejak arteri kosong lebih 5 s |
+| `breathing.upper_trace`, `breathing.rate` | Lorek nafas dalam Lentur, dari nafas sebenar kau bila jejaknya stabil |
+| `pulse.pulse_respiration_quotient` | "Kira-kira N degupan setiap nafas" pada skrin Lentur dan keputusan |
+| Keyakinan isyarat | Saat yang lemah dilorek pada garis masa dan tidak diskor |
+
+<p align="center"><img src="docs/media/see.png" width="49%" alt="Babak Lihat dalam mod simulasi: pelita berdenyut dengan setiap degupan simulasi, isyarat simulasi, tiada kamera"> <img src="docs/media/bend.png" width="49%" alt="Babak Lentur dalam mod simulasi: jarak degupan dilukis atas lorek nafas, isyarat simulasi, tiada kamera"></p>
+
+*Lihat (kiri) dan Lentur (kanan), isyarat simulasi, tiada kamera.*
+
+![Pendedahan dalam mod simulasi: 24 degupan dilihat, 21 ketukan, skor 100 daripada 100. Ketukan diskrip oleh ujian supaya jatuh sefasa dengan degupan simulasi, isyarat simulasi, tiada kamera](docs/media/feel-reveal.png)
+
+*Pendedahan, isyarat simulasi, tiada kamera. Skor 100/100 datang dari ketukan yang skrip tangkapan skrin letakkan sefasa dengan
+degupan simulasi dengan sengaja. Orang yang mengetuk ikut rasa mendapat skor lebih rendah.*
+
+Dibina untuk Presage SmartSpectra SDK Challenge di DEV (November 2026). Komit pertama:
+`50def1be6dd669eac62371ec66c7c7c72d9648e3` (9 Nov 2026).
+
+## Jalankan dengan satu arahan
+
+Jalan ini tidak memerlukan kamera atau kunci Presage. Ia menjalankan permainan penuh atas isyarat sintetik terbina (`sim`). Kau
+perlukan Git dan Node.js 22 (`.nvmrc`). `npm ci` memuat turun Electron dan pakej asli SDK untuk setiap platform, kira-kira 370 MB.
+
+Bash (Linux, macOS):
+
+```bash
+git clone https://github.com/aimanmalib/degup.git && cd degup && npm ci && DEGUP_SUMBER=sim npm start
+```
+
+PowerShell (Windows):
+
+```powershell
+git clone https://github.com/aimanmalib/degup.git; cd degup; npm ci; $env:DEGUP_SUMBER = "sim"; npm start
+```
+
+Tetingkap dibuka pada skrin izin dalam Bahasa Melayu. Tukar ke Inggeris dengan suis **BM / EN** di atas. Tanda kotak umur dan
+teruskan; dalam mod `sim` kamera tidak pernah dibuka. Space untuk mengetuk dalam Rasa. Esc menghentikan pusingan.
+
+Untuk memainkan semula sesi angka yang dirakam dan bukan penjana, guna `DEGUP_SUMBER=replay`. Repo membawa satu fixture contoh,
+`fixtures/sim-contoh.json`, yang juga sintetik. Fixture menyimpan angka sahaja, tiada imej.
+
+## Mod live dengan kunci Presage percuma kau sendiri
+
+Mod live ialah yang sebenar: kamera kau, SDK, nadi kau.
+
+1. Dapatkan kunci percuma di [physiology.presagetech.com](https://physiology.presagetech.com/auth/register).
+2. Buka app tanpa `DEGUP_SUMBER` (`npm start`). Buka **Pilihan**, tampal kunci dan simpan. Ia disimpan bersulit dengan Electron
+   `safeStorage` dalam folder pengguna kau. Bila dijalankan dari sumber, kau juga boleh menetapkan `SMARTSPECTRA_API_KEY` dalam
+   persekitaran shell (`.env.example` menunjukkan namanya; app tidak membaca `.env` sendiri).
+3. Duduk menghadap cahaya, seorang sahaja dalam bingkai, dan ikut skrin izin.
+
+Di Linux tanpa pemacu GPU Vulkan, Degup mengarahkan SDK ke Mesa lavapipe (`sdk.vulkan_icd_linux` dalam `config/app.json`).
+
+Status jujur: laluan kod live wujud ([`src/sumber/live.ts`](src/sumber/live.ts), kamera dimiliki renderer seperti sampel rasmi
+`electron-quickstart`) dan sambungannya diuji unit terhadap SDK tiruan. Ia belum diukur atas kamera atau video sebenar. Lihat
+[Had](#had).
+
+## Bagaimana ia memenuhi kriteria juri
+
+| Kriteria atau syarat | Di mana melihatnya |
+|---|---|
+| **Use of Underlying Technology** | SDK satu-satunya sumber nadi dan nafas. Degupan dicari dalam `arterial_pressure_trace` mentah ([`src/core/beats.ts`](src/core/beats.ts)), disemak dengan `pulse_rate`, dan diskor ([`src/core/score.ts`](src/core/score.ts)). Pernafasan menggerakkan Lentur ([`src/core/rsa.ts`](src/core/rsa.ts)). Persediaan SDK: [`src/sumber/live.ts`](src/sumber/live.ts) |
+| **Usability and User Experience** | Tiga babak pendek, satu kekunci untuk bermain. Dwibahasa dari hari pertama: setiap teks UI dalam [`lang/en.json`](lang/en.json) dan [`lang/ms.json`](lang/ms.json). Bacaan lemah ditunjukkan, tidak disorok. Panel Data mengira apa yang benar-benar keluar dari app dalam sesi ini ([`src/renderer/skrin/data.ts`](src/renderer/skrin/data.ts)) |
+| **Originality and Creativity** | Ia menukar tugas interosepsi makmal menjadi permainan kamera web, menskor rasa terhadap degupan dan bukan degupan itu sendiri, dan menjadikan nafas kelihatan ketika ia melentur rentak jantung |
+| SDK di teras, sekurang-kurangnya satu isyarat langsung | Gelombang nadi, kadar nadi dan pernafasan menggerakkan ketiga-tiga babak |
+| Repo awam dengan arahan pasang | [Jalankan dengan satu arahan](#jalankan-dengan-satu-arahan) (pemilik menjadikan repo awam sebelum tarikh tutup) |
+| Video demo | Belum dirakam, lihat [Had](#had) |
+| Izin kamera dan pengendalian data | [Izin dan data](#izin-dan-data), skrin izin ([`src/renderer/skrin/izin.ts`](src/renderer/skrin/izin.ts)) dan teksnya dalam [`lang/ms.json`](lang/ms.json) (`izin`) |
+
+![Skrin izin dalam mod simulasi: tujuh perkara dipaparkan sebelum kamera boleh dihidupkan, isyarat simulasi, tiada kamera](docs/media/consent.png)
+
+## Izin dan data
+
+Kamera kekal mati sehingga kau membaca skrin izin dan menanda "Saya berumur 18 tahun ke atas". Esc mematikannya serta-merta.
+SDK disediakan dalam [`src/sumber/live.ts`](src/sumber/live.ts) dengan kumpulan metrik cardio dan breathing sahaja,
+`enableTelemetry: false`, `enableAccumulatedOutput: false`, dan tepat satu pendengar `metrics`. Degup tidak pernah meminta
+Insights dari SDK. Panel Data menunjukkan, untuk sesi semasa, sama ada kunci disahkan, berapa peristiwa Insights automatik
+sampai, bahawa telemetri mati, bahawa Degup menghantar sifar bingkai video, dan fail mana yang ditulis.
+
+Ini teks izin yang app paparkan, disalin dari [`lang/ms.json`](lang/ms.json):
+
+<!-- izin mula -->
+> **Sebelum kamera hidup.** Degup memakai Presage SmartSpectra SDK untuk membaca nadi dan nafas dari kamera kau. Baca tujuh
+> perkara ini dahulu.
+>
+> 1. **Apa yang diukur.** Nadi dan gelombang nadi, kadar nafas dan gelombang nafas, dari video kamera. Tiada rakaman video
+>    disimpan.
+> 2. **Apa yang kekal dalam komputer ini.** Semua pemprosesan video berlaku dalam SDK di komputer ini. Video dan imej tidak
+>    dihantar ke mana-mana.
+> 3. **Apa yang dihantar keluar oleh SDK Presage.** (a) Pengesahan kunci API dan muat turun model ke Presage. (b) Ukuran
+>    terbitan (nadi, nafas, HRV) dan pengecam sesi dihantar automatik ke Presage untuk ciri Insights, yang dijana dengan
+>    Anthropic. Degup tidak boleh mematikan ini (Dasar Privasi SDK SmartSpectra, 3 Nov 2026, §4.2 dan §7.4). Degup tidak
+>    menghantar sebarang teks prompt. (c) Telemetri agregat SDK dimatikan.
+> 4. **Apa yang Degup simpan.** Tiada, melainkan kau hidupkan Sejarah (skor sahaja, fail tempatan, boleh dipadam dengan satu
+>    klik). Kunci API disimpan terenkripsi dengan safeStorage Electron dalam folder pengguna.
+> 5. **Untuk siapa.** Orang dewasa berumur 18 tahun ke atas. Satu orang sahaja dalam bingkai.
+> 6. **Bukan alat perubatan.** Ini permainan kesedaran tubuh. Ia tidak mendiagnosis, merawat atau memantau apa-apa keadaan.
+>    Ukuran SDK untuk tujuan kesejahteraan am dan tidak diluluskan FDA untuk diagnosis.
+> 7. **Terma ringkas.** Tiada waranti, bagi pihak Degup dan Presage. Dilarang membuat kejuruteraan terbalik ke atas SDK.
+>    Dilarang memakainya untuk diagnosis atau rawatan.
+<!-- izin akhir -->
+
+Dokumen Presage: [dasar privasi](https://presagetech.com/legal/privacy-policy) dan
+[terma perkhidmatan](https://presagetech.com/legal/terms-of-service). Kad keputusan (PNG) disimpan dalam komputer kau hanya bila
+kau menekan Simpan; tiada apa dikongsi secara automatik.
+
+![Skrin keputusan dalam mod simulasi: skor selaras, degupan dan ketukan, perlahan setiap hembusan dan degupan setiap nafas, isyarat simulasi, tiada kamera](docs/media/result.png)
+
+## Seni bina
+
+```text
+src/core/      TypeScript tulen: pengesan degupan, skor selaras, Lentur, fixture, i18n (tiada DOM, tiada SDK)
+src/sumber/    tiga sumber isyarat dengan satu antara muka: live (SDK) | replay (fixture) | sim (penjana)
+src/renderer/  renderer Electron: kamera, babak, izin, Pilihan, panel Data, perakam demo
+src/main/      main Electron: tetingkap, kunci safeStorage, fail tempatan, persekitaran SDK
+config/        setiap nilai yang mungkin berubah: tempoh babak, ambang, jalur skor, rentak nafas, pautan
+lang/          setiap teks UI, Bahasa Melayu dan Inggeris, kunci sama
+```
+
+Logik permainan tidak tahu dari mana angka datang. `sim` dan `replay` memancarkan bentuk payload yang sama dengan SDK, jadi ujian
+dan tangkapan skrin menjalankan laluan kod yang sama dengan sesi live, tolak kamera. Cap masa kekal dalam mikrosaat sejak epoch
+seperti SDK, dan ketukan dicap pada jam yang sama, jadi kependaman paip tidak menganjak skor.
+
+## Ujian dan apa yang diukur
+
+Gerbangnya [`scripts/gerbang-ujian.sh`](scripts/gerbang-ujian.sh): had saiz fail, `tsc` untuk main dan renderer, vitest, binaan
+esbuild, kemudian Playwright memandu app Electron yang dibina di bawah xvfb dalam mod `sim`. Pada 17 November 2026 ia lulus di Depot CI,
+larian `zgmnxvjc31`: 122 ujian unit dan 12 ujian Electron, dengan 1 dilangkau (skrip tangkapan skrin README ini).
+
+Apa yang ujian tegaskan, semuanya atas isyarat sintetik dengan jawapan yang diketahui:
+
+- **Pengesan degupan** ([`tests/beats.test.ts`](tests/beats.test.ts)): pada 55 hingga 95 degupan seminit merentas tujuh benih,
+  sekurang-kurangnya 95% degupan sebenar dijumpai, ralat masa median bawah 40 ms, tiada dua degupan dalam tetingkap refraktori.
+  Juga semakan kendiri kadar nadi, jejak sandaran, dan jurang.
+- **Skor selaras** ([`tests/score.test.ts`](tests/score.test.ts)): ketukan sefasa jatuh dalam "Selaras", ketukan rawak dalam
+  "Meneka" merentas beberapa benih, separuh-separuh dalam "Ada rasa", ketukan terlalu sedikit tiada skor.
+- **Lentur** ([`tests/rsa.test.ts`](tests/rsa.test.ts)): dengan ayunan nafas diketahui 3 hingga 6 degupan seminit, ayunan yang
+  dilaporkan dalam 10% dari rujukan.
+- **Persediaan SDK** ([`tests/live.test.ts`](tests/live.test.ts)): cardio dan breathing sahaja, telemetri mati, tepat satu
+  pendengar `metrics`, tiada permintaan Insights di mana-mana dalam `src/`, terhadap SDK tiruan.
+- **Perkataan** ([`tests/kata-larangan.test.ts`](tests/kata-larangan.test.ts)): teks UI dan kedua-dua README disemak untuk
+  senarai perkataan yang akan menukar permainan menjadi dakwaan kesihatan. Ia hanya boleh muncul dalam blok izin.
+- **Pariti bahasa** ([`tests/pariti-lang.test.ts`](tests/pariti-lang.test.ts)): kunci dan pemegang tempat sama dalam kedua-dua
+  bahasa.
+- **Aliran Electron** ([`e2e/`](e2e/)): permainan penuh dalam `sim` dan `replay`, jeda bila bacaan hilang, kad PNG, Main lagi,
+  tetapan dan perakam demo.
+
+## Had
+
+- **Mod live belum diukur.** Tiada larian atas kamera sebenar atau video sebenar direkod dalam [`docs/UKUR.md`](docs/UKUR.md).
+  Angka pengesan di atas atas isyarat sintetik sahaja, yang bukan fisiologi. Berapa degupan yang pengesan terlepas dalam cahaya
+  malap, dan pada kamera web mana, belum diketahui.
+- **Tiada pemasang.** Tiada binaan Windows atau macOS untuk dimuat turun. Jalankan dari sumber.
+- **Disemak di Linux sahaja.** Arahan di atas disemak dari klon bersih di Linux di bawah xvfb. Baris PowerShell dan macOS belum
+  dijalankan.
+- **Belum ada video demo.**
+- **Linux perlukan Vulkan** untuk SDK; tanpa pemacu GPU ia memakai Mesa lavapipe, yang lebih perlahan.
+- **SDK menghantar ukuran terbitan kepada Presage untuk Insights** dalam mod live, dan Degup tidak dapat mematikannya. Itu perkara
+  3 skrin izin.
+- Ini permainan. Ia tidak memberitahu apa-apa tentang jantung kau selain apa yang kau lihat di skrin.
+
+## Kredit
+
+- Renderer memiliki kamera dan menyerahkan strim kepada SDK, mengikut sampel rasmi `electron-quickstart` dalam
+  [Presage-Security/SmartSpectra](https://github.com/Presage-Security/SmartSpectra) (`nodejs/samples/electron-quickstart`).
+- Idea mengetuk diilhamkan oleh Phase Adjustment Task (Plans et al., 2021) dan PAT 2.0 (2026). Ilham sahaja; Degup bukan versi
+  yang disahkan bagi mana-mana satu.
+- Fon: Bricolage Grotesque dan Atkinson Hyperlegible Next (SIL Open Font License), dibundel dari `@fontsource`.
+
+## AI disclosure
+
+Aku membina Degup dengan Claude Code, alat pengekodan AI. Aku mengujinya dan membuat keputusan. App sendiri tidak memanggil
+model AI. Dalam mod live, SDK Presage menghantar ukuran terbitan kepada Presage untuk ciri Insights, yang Presage jana dengan
+Anthropic; Degup tidak dapat mematikannya dan menyatakannya pada skrin izin.
+
+## Lesen
+
+MIT, lihat [LICENSE](LICENSE). Presage SmartSpectra SDK ada lesen dan termanya sendiri.
+
+## Work with Sasa Teguh
+
+I built this project. I run [Sasa Teguh](https://sasateguh.com), a studio in Malaysia that builds websites found on Google and in AI answers, and sets up systems like this one for businesses.
+
+[Book a call](https://sasateguh.com/book) · hello@sasateguh.com · [More from Sasa Teguh](https://github.com/sasateguh)

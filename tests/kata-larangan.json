@@ -53,7 +53,8 @@
   },
   "fail_markdown": [
     "README.md",
-    "docs/hantar/HANTAR.md"
+    "docs/hantar/HANTAR.md",
+    "README.ms.md"
   ],
   "_nota_markdown": "Dalam fail_markdown, hanya blok antara <!-- izin mula --> dan <!-- izin akhir --> (salinan teks izin PRD §4.6) boleh memakai perkataan dalam markdown_izin.",
   "markdown_izin": [
@@ -61,6 +62,9 @@
     "medical",
     "diagnose",
     "diagnosis",
-    "health test"
+    "health test",
+    "perubatan",
+    "mendiagnosis",
+    "ujian kesihatan"
   ]
 }

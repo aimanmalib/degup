@@ -14,6 +14,7 @@
 - [ ] Repo: README menamakan acara, cara menjalankan, dan pengisytiharan AI; tiada rahsia dalam sejarah.
 - [ ] Tiada penanda tinggal: `[PEMILIK TULIS]`, TODO, TBD, lorem.
 - [ ] Setiap dakwaan dalam teks benar dan boleh disemak (apa yang TIDAK diuji = bahagian Limitations).
+- [ ] Nota dalaman BM dijejak (CLAUDE.md, NEXT.md, PRD, PELAN): putuskan sebelum repo awam (gilap ⚠ dalaman).
 - [ ] **Pemilik menekan Submit sendiri, dengan tangan** — tiada automasi borang, tiada orang lain menghantar bagi pihaknya.
 - [ ] Selepas Submit: `python3 ~/hackathon/entri.py status 2026-dev-presage-challenge-smartspectra-sdk dihantar --url-projek <url halaman projek>`.
 
