@@ -81,6 +81,9 @@ Bash (Linux, macOS):
 git clone https://github.com/aimanmalib/degup.git && cd degup && npm ci && DEGUP_SUMBER=sim npm start
 ```
 
+Di Linux, Electron yang dijalankan dari sumber boleh berhenti serta-merta dengan ralat "SUID sandbox helper" (ia berlaku pada
+hos Ubuntu tempat aku menguji). Mulakan dengan suis kotak pasir: `DEGUP_SUMBER=sim npm start -- --no-sandbox`.
+
 PowerShell (Windows):
 
 ```powershell
@@ -205,8 +208,9 @@ Apa yang ujian tegaskan, semuanya atas isyarat sintetik dengan jawapan yang dike
   Angka pengesan di atas atas isyarat sintetik sahaja, yang bukan fisiologi. Berapa degupan yang pengesan terlepas dalam cahaya
   malap, dan pada kamera web mana, belum diketahui.
 - **Tiada pemasang.** Tiada binaan Windows atau macOS untuk dimuat turun. Jalankan dari sumber.
-- **Disemak di Linux sahaja.** Arahan di atas disemak dari klon bersih di Linux di bawah xvfb. Baris PowerShell dan macOS belum
-  dijalankan.
+- **Disemak di Linux sahaja.** Arahan bash disemak dari klon bersih (`git archive`) di Linux di bawah xvfb pada 17 November
+  2026: `npm ci` lulus dan app berjalan dalam mod `sim`, dengan `--no-sandbox` kerana ralat kotak pasir Electron di atas. Baris
+  PowerShell dan macOS belum dijalankan.
 - **Belum ada video demo.**
 - **Linux perlukan Vulkan** untuk SDK; tanpa pemacu GPU ia memakai Mesa lavapipe, yang lebih perlahan.
 - **SDK menghantar ukuran terbitan kepada Presage untuk Insights** dalam mod live, dan Degup tidak dapat mematikannya. Itu perkara

@@ -78,6 +78,9 @@ Bash (Linux, macOS):
 git clone https://github.com/aimanmalib/degup.git && cd degup && npm ci && DEGUP_SUMBER=sim npm start
 ```
 
+On Linux, Electron run from source can stop at once with a "SUID sandbox helper" error (it did on the Ubuntu host I tested
+on). Start it with the sandbox switch instead: `DEGUP_SUMBER=sim npm start -- --no-sandbox`.
+
 PowerShell (Windows):
 
 ```powershell
@@ -200,8 +203,9 @@ What the tests assert, all on synthetic signals with a known answer:
   detector numbers above are on synthetic signals only, which are not physiology. How many beats the detector misses in dim
   light, and on which webcams, is unknown.
 - **No installer.** There is no Windows or macOS build to download. Run from source.
-- **Checked on Linux only.** The run commands above were checked from a clean clone on Linux under xvfb. The PowerShell line
-  and macOS have not been run.
+- **Checked on Linux only.** The bash command was checked from a clean clone (`git archive`) on Linux under xvfb on 17 November
+  2026: `npm ci` passed and the app ran in `sim` mode, with `--no-sandbox` because of the Electron sandbox error above. The
+  PowerShell line and macOS have not been run.
 - **No demo video yet.**
 - **Linux needs Vulkan** for the SDK; without a GPU driver it uses Mesa lavapipe, which is slower.
 - **The SDK sends derived measurements to Presage for Insights** in live mode, and Degup cannot switch that off. It is point 3
