@@ -219,3 +219,17 @@ Format D-n: keputusan · sebab · undur. D-K1 hingga D-K15 = salinan PRD §5 (di
   `pemilik_selesai`, dan gerbang projek mengira `pemilik` sahaja (≥ 6), jadi ia gagal (diukur 10 Nov; lejar dipulihkan). Kerja #1694
   membaiki kiraan gerbang dan menanda kedua-duanya siap.
 - **Undur:** pemilik boleh menukar jawapan S melalui flag sebelum potongan yang bergantung padanya (S1 sebelum P4b, S3 sebelum P8b).
+
+### D15 (README R1, 17 Nov 2026) Logo dan gambar README dalam `docs/media/`
+- **Tempat:** `docs/media/` (peraturan imej repo dalam `CLAUDE.md`; gerbang menolak imej di luar `docs/media/ build/ src/renderer/`), bukan
+  `brand/`. Laluan README relatif supaya ia berfungsi semasa repo private dan selepas awam.
+- **Logo:** `docs/media/logo.svg` ditulis tangan (bulatan + lingkaran separa, tiada teks), arah visual "pelita" yang diluluskan (D9),
+  warna `--pelita`, `--pelita-dalam`, `--pelita-tepi`, `--pelita-bara` dari `src/renderer/gaya.css`. PNG `logo-512.png` + `logo-64.png`
+  dijana `node scripts/media-readme.mjs logo` (Chromium Playwright, latar lutsinar).
+- **Gambar:** app SEBENAR dalam mod `sim` sahaja (tiada kamera, tiada wajah, tiada kunci; label "Simulation" kelihatan pada setiap skrin).
+  `e2e/media-readme.spec.ts` (dilangkau tanpa `DEGUP_MEDIA_README=1`, jadi gerbang biasa tidak menulis ke `docs/media/`) menangkap
+  `consent.png`, `see.png`, `feel-reveal.png`, `bend.png`, `result.png` dalam EN 1280×800, dan bingkai `flow.gif`
+  (`node scripts/media-readme.mjs gif test-results/media-readme-bingkai`, 800 px, 5 fps, had 3 MB). Skor RASA dalam gambar datang dari
+  ketukan DISKRIP sefasa (cangkuk ujian D11), jadi kapsyen README mesti menyebut "simulated signal, no camera" dan ketukan diskrip.
+- **Undur:** padam `docs/media/` + spec + skrip; README kembali tanpa gambar. Gambar `replay` atas fixture pemilik (bila wujud) menggantikan
+  `feel-reveal.png` dalam R3.

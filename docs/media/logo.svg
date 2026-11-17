@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <!-- Degup logo: the "pelita" light from the app (colours from src/renderer/gaya.css). Hand-written geometry, no text. -->
+  <defs>
+    <radialGradient id="halo" cx="128" cy="128" r="124" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f4b860" stop-opacity="0.34"/>
+      <stop offset="0.5" stop-color="#f4b860" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#f4b860" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="teras" cx="128" cy="128" r="76" fx="113" fy="107" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffe6b0"/>
+      <stop offset="0.38" stop-color="#f4b860"/>
+      <stop offset="0.72" stop-color="#c9702f"/>
+      <stop offset="1" stop-color="#6d2f22"/>
+    </radialGradient>
+  </defs>
+  <circle cx="128" cy="128" r="124" fill="url(#halo)"/>
+  <path d="M128 26 A102 102 0 0 1 230 128" fill="none" stroke="#f4b860" stroke-width="7" stroke-linecap="round"/>
+  <path d="M230 128 A102 102 0 0 1 200 200" fill="none" stroke="#f4b860" stroke-opacity="0.35" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="128" cy="128" r="76" fill="url(#teras)"/>
+</svg>
