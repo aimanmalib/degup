@@ -28,7 +28,8 @@ export async function lancar(sumber = "sim", envTambahan: Record<string, string>
   const app = await electron.launch({ args: ["--no-sandbox", "--password-store=basic", ...lang, ...argTambahan, "."], env });
   const win = await app.firstWindow();
   // xvfb tanpa pengurus tetingkap boleh memberi saiz minimum; paksa saiz lalai config (1280×800) supaya bukti sama dengan app.
-  await app.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows()[0]?.setContentSize(1280, 800));
+  // Tetingkap rakaman (DEGUP_TETINGKAP, J6a) diuji pada saiz yang app sendiri pilih.
+  if (!envTambahan.DEGUP_TETINGKAP) await app.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows()[0]?.setContentSize(1280, 800));
   await win.waitForSelector("[data-uji=senarai-izin]");
   return {
     app,

@@ -100,7 +100,10 @@ async function utama(): Promise<void> {
       ralatMula = null;
       if (k.sumber === "live") {
         try {
-          await kamera.buka(k.tetapan.kamera, k.konfig.sdk.kamera);
+          const strim = await kamera.buka(k.tetapan.kamera, k.konfig.sdk.kamera);
+          const trek = strim.getVideoTracks()[0];
+          const t = trek?.getSettings() ?? {};
+          k.api.diag({ jenis: "kamera", label: trek?.label ?? "", lebar: t.width ?? 0, tinggi: t.height ?? 0, fps: t.frameRate ?? 0 });
         } catch {
           ralatMula = "kamera.ralat";
           lukis();

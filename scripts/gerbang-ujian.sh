@@ -42,7 +42,8 @@ if [ -d e2e ] && [ -f playwright.config.ts ]; then
   # /tmp peribadi), jadi Xvfb gagal 10 kali dan xvfb-run keluar 1 walaupun ujian lulus. Pilih paparan yang tiada kunci DAN soket.
   paparan=99
   while [ -e "/tmp/.X${paparan}-lock" ] || [ -e "/tmp/.X11-unix/X${paparan}" ]; do paparan=$((paparan + 1)); done
-  DEGUP_SUMBER="${DEGUP_SUMBER:-sim}" xvfb-run -a -n "$paparan" npx --no-install playwright test --reporter=line
+  # Skrin 1920×1080 (lalai xvfb-run 1280×1024): tetingkap rakaman 1600×900 (J6a) mesti muat tanpa dikecilkan.
+  DEGUP_SUMBER="${DEGUP_SUMBER:-sim}" xvfb-run -a -n "$paparan" -s "-screen 0 1920x1080x24" npx --no-install playwright test --reporter=line
 else
   langkah "Playwright: dilangkau (e2e/ belum wujud; P3a)"
 fi

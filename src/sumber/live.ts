@@ -3,6 +3,7 @@
 // SDK disuntik melalui `KilangSdk` supaya modul ini boleh diuji tanpa pakej asli (ujian memakai SDK tiruan).
 // Konfigurasi dikunci: cardio + breathing sahaja, telemetri MATI, output terkumpul MATI, SATU pendengar `metrics`
 // (Exhale: pendengar kedua menggantikan yang pertama), TIADA permintaan Insight atas arahan (K6/K7).
+import { TapisUlang, type PeristiwaDiag } from "../core/diagnostik.js";
 import type { MetrikSdk } from "../core/metrik.js";
 import type { Sumber } from "./jenis.js";
 import { pasangPendengar } from "./pendengar.js";
@@ -82,12 +83,17 @@ export class SumberLive implements Sumber {
   private readonly petunjuk = new Pemancar<[number, number]>();
   private readonly ralat = new Pemancar<[RalatLive]>();
   private readonly kira = new Pemancar<[KiraanLive]>();
+  private readonly diag = new Pemancar<[PeristiwaDiag]>();
+  private readonly tapis = new TapisUlang();
+  private mulaMs = 0;
   readonly onMetrik = this.metrik.dengar;
   readonly onPetunjuk = this.petunjuk.dengar;
   /** Ralat SDK (kunci ditolak, kredit habis, rangkaian, kamera). */
   readonly onRalat = this.ralat.dengar;
   /** Kiraan peristiwa berubah (panel Data). */
   readonly onKiraan = this.kira.dengar;
+  /** Log diagnostik kit (J6a): perubahan kod status/pengesahan, kod ralat, masa ke metrik pertama. Tiada kunci, tiada mesej. */
+  readonly onDiag = this.diag.dengar;
   readonly kiraan: KiraanLive = { metrik: 0, pengesahan: null, insight: 0 };
   private sdk: SdkRenderer | null = null;
 
@@ -102,6 +108,7 @@ export class SumberLive implements Sumber {
     const sdk = this.kilang.cipta(this.opsyen);
     this.sdk = sdk;
     sdk.useMediaStream(this.strim);
+    this.mulaMs = performance.now();
     // SATU pendengar setiap peristiwa (`pasangPendengar`); sebaran ke sesi melalui Pemancar sendiri.
     pasangPendengar(sdk, {
       metrik: (buf) => {
@@ -111,11 +118,16 @@ export class SumberLive implements Sumber {
         } catch {
           return; // payload rosak dilangkau; pengesan menganggapnya jurang
         }
+        if (this.kiraan.metrik === 0) this.diag.pancar({ jenis: "metrik_pertama", ms: Math.round(performance.now() - this.mulaMs) });
         this.kiraan.metrik++;
         this.metrik.pancar(m);
       },
-      pengesahan: (kod, tUs) => this.petunjuk.pancar(kod, tUs),
+      pengesahan: (kod, tUs) => {
+        if (this.tapis.lulus("pengesahan", kod)) this.diag.pancar({ jenis: "pengesahan", kod });
+        this.petunjuk.pancar(kod, tUs);
+      },
       status: (s) => {
+        if (this.tapis.lulus("status", s)) this.diag.pancar({ jenis: "status", kod: s });
         if (s === STATUS_BERJALAN && this.kiraan.pengesahan !== true) {
           this.kiraan.pengesahan = true;
           this.kira.pancar(this.kiraan);
@@ -125,7 +137,8 @@ export class SumberLive implements Sumber {
         this.kiraan.insight++;
         this.kira.pancar(this.kiraan);
       },
-      ralat: (kod) => {
+      ralat: (kod, bolehUlang) => {
+        this.diag.pancar({ jenis: "ralat", kod, boleh_ulang: bolehUlang });
         const k = kategoriRalat(kod);
         if (k === "kunci") {
           this.kiraan.pengesahan = false;

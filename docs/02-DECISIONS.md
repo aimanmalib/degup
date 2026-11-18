@@ -329,3 +329,21 @@ Format D-n: keputusan · sebab · undur. D-K1 hingga D-K15 = salinan PRD §5 (di
   jadi JSON membawa medan `rc` sendiri; guna `-n <paparan bebas>`.
 - **Hasil:** semua lulus; kunci diterima; tiada pepijat integrasi ditemui. Angka awam: `docs/MEASUREMENTS.md`.
 - **Undur:** `git revert` komit P1a; tiada kod app berubah selain `kunciRalat`.
+
+### D22 (J6a, 19 Nov 2026) Kod kit laptop: tetingkap rakaman, log diagnostik, config kit, mula.bat, bina-kit.sh
+
+- **Tetingkap rakaman:** `config.tetingkap.rakam` 1600×900 (saiz KANDUNGAN, 16:9). Dipakai dari awal bila env `DEGUP_TETINGKAP=rakam`,
+  dan main menukar saiz sebaik IPC `rakamMula` (sebelum renderer meminta strim desktop). Skrin lebih kecil (laptop 1366×768) =
+  `saizRakam` mengecilkan dengan nisbah sama, tidak bawah `min_lebar/min_tinggi`. Xvfb gerbang kini 1920×1080 supaya 1600×900 muat.
+- **Log diagnostik:** `userData/logs/degup-YYYY-MM-DD.log`, JSON satu baris. Kepala sekali setiap proses (versi, komit kit dari
+  `KIT-COMMIT` atau "dev", OS, arch, Electron, sumber). Peristiwa: tetingkap, sdk_sedia, sesi mula/tamat, kamera (label + resolusi),
+  status, pengesahan (PERUBAHAN kod sahaja, `TapisUlang`; kod sama tiba puluhan kali sesaat), ralat (kod + boleh-ulang, TIADA mesej),
+  metrik_pertama (ms dari `start`). Renderer → `ipcRenderer.send` → main `sahkanDiag` (senarai putih bentuk) → `tapisRahsia` (kunci
+  tersimpan + env diganti `[redacted]`) → `appendFileSync` 0600. Had `log.maks_bait`; ralat fs ditelan.
+- **Config kit:** `config/kit.json` (bitrate 4 Mbps, `rakam_fixture` hidup) ditindih atas `config/app.json` dalam salinan zip SAHAJA oleh
+  `scripts/kit/gabung-config.mjs` (kunci tindihan yang tiada dalam asas = ralat). Lalai repo kekal (8 Mbps, fixture mati) supaya ujian
+  dan pengguna repo tidak menulis fixture tanpa diminta.
+- **`bina-kit.sh <ref> [keluar]`:** `git archive` → tindih config → `KIT-COMMIT` (sha + ref) → `mula.bat` (CRLF) di akar → pagar
+  (tiada `.env`, `node_modules`, `dist`, media) → zip `hackathon-degup-kit-<ref>.zip` + `.sha256`. `mula.bat`: Node ≥ 20 (pautan
+  nodejs.org), `npm ci` sekali (penanda `node_modules\.degup-ci-ok` selepas berjaya), `npm start`.
+- **Undur:** `git revert` komit J6a; kit lama tiada (J6b belum dibina).

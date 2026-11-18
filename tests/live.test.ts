@@ -191,3 +191,26 @@ describe("larangan SDK dalam kod sumber (K6, K7)", () => {
     expect(semua.match(/\.on\(\s*"metrics"/g) ?? []).toHaveLength(1);
   });
 });
+
+describe("SumberLive onDiag (log diagnostik kit, J6a)", () => {
+  it("hanya PERUBAHAN kod pengesahan/status, setiap kod ralat, metrik pertama sekali; tiada kunci dalam peristiwa", async () => {
+    const { sumber, dicipta } = bina();
+    const diag: unknown[] = [];
+    sumber.onDiag((p) => diag.push(p));
+    await sumber.mula();
+    const sdk = dicipta[0]!;
+    sdk.pancar("processingStatus", 3);
+    sdk.pancar("processingStatus", 3);
+    for (let i = 0; i < 5; i++) sdk.pancar("validationStatus", 1, i);
+    sdk.pancar("validationStatus", 0, 9);
+    sdk.pancar("metrics", bait({}), 1);
+    sdk.pancar("metrics", bait({}), 2);
+    sdk.pancar("error", 4, "mesej SDK dengan kunci-ujian", false);
+    const jenis = diag.map((p) => (p as { jenis: string }).jenis);
+    expect(jenis).toEqual(["status", "pengesahan", "pengesahan", "metrik_pertama", "ralat"]);
+    expect(diag[0]).toEqual({ jenis: "status", kod: 3 });
+    expect(diag[4]).toEqual({ jenis: "ralat", kod: 4, boleh_ulang: false });
+    expect((diag[3] as { ms: number }).ms).toBeGreaterThanOrEqual(0);
+    expect(JSON.stringify(diag)).not.toContain("kunci-ujian");
+  });
+});

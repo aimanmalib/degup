@@ -75,7 +75,7 @@ export class SesiUkur {
   private lepas: Array<() => void> = [];
 
   private constructor(
-    k: Keadaan,
+    private readonly k: Keadaan,
     readonly sumber: Sumber | null,
   ) {
     this.pengesan = new PengesanDegupan(k.konfig.beats);
@@ -89,6 +89,7 @@ export class SesiUkur {
    * Mula gagal = `RalatMulaLive`; sumber sudah dihentikan.
    */
   static async cipta(k: Keadaan, strim: MediaStream | null = null, ralat: (r: RalatLive) => void = () => {}): Promise<SesiUkur> {
+    k.api.diag({ jenis: "sesi", fasa: "mula", sumber: k.sumber });
     const s = new SesiUkur(k, await buatSumber(k, strim));
     if (s.sumber) {
       s.lepas.push(s.sumber.onMetrik((m) => s.terimaMetrik(m)));
@@ -96,6 +97,7 @@ export class SesiUkur {
       if (s.sumber instanceof SumberLive) {
         const live = s.sumber;
         s.lepas.push(live.onRalat(ralat));
+        s.lepas.push(live.onDiag((p) => k.api.diag(p)));
         s.lepas.push(
           live.onKiraan((c) => {
             k.sesi.pengesahan = c.pengesahan;
@@ -164,6 +166,7 @@ export class SesiUkur {
   }
 
   async henti(): Promise<void> {
+    if (this.lepas.length) this.k.api.diag({ jenis: "sesi", fasa: "tamat", sumber: this.k.sumber });
     for (const f of this.lepas) f();
     this.lepas = [];
     this.dengarDegupan.clear();

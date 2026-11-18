@@ -20,6 +20,7 @@ const api: DegupApi = {
   rakamTulis: (bait) => ipcRenderer.invoke(SALURAN.rakamTulis, bait),
   rakamTamat: () => ipcRenderer.invoke(SALURAN.rakamTamat),
   simpanFixture: (data) => ipcRenderer.invoke(SALURAN.simpanFixture, data),
+  diag: (p) => ipcRenderer.send(SALURAN.diag, p),
 };
 
 contextBridge.exposeInMainWorld("degup", api);

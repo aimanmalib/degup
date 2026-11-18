@@ -13,7 +13,14 @@
     "lebar": 1280,
     "tinggi": 800,
     "min_lebar": 1024,
-    "min_tinggi": 640
+    "min_tinggi": 640,
+    "rakam": {
+      "_nota": "PH§7.1: tetingkap rakaman 16:9 (kandungan). Dipakai bila perakam demo mula, atau dari awal bila env tetingkap_env = nilai_rakam. Skrin kecil = dikecilkan, nisbah kekal.",
+      "lebar": 1600,
+      "tinggi": 900
+    },
+    "env": "DEGUP_TETINGKAP",
+    "nilai_rakam": "rakam"
   },
   "aliran": {
     "lihat_s": 30,
@@ -142,6 +149,18 @@
     "jumlah_maks_bait": 3000000000,
     "henti_selepas_keputusan_ms": 4000,
     "mesej_ms": 6000
+  },
+  "log": {
+    "_nota": "PELAN J6a: log diagnostik setempat userData/<folder>/<awalan>YYYY-MM-DD.log (versi, komit kit, OS, kamera, kod SDK, masa ke metrik pertama). Tiada kunci, tiada imej.",
+    "folder": "logs",
+    "awalan_fail": "degup-",
+    "maks_bait": 5000000,
+    "teks_maks": 120
+  },
+  "kit": {
+    "_nota": "PELAN J6a/J6b: scripts/kit/bina-kit.sh menindih config/app.json dalam zip dengan config/kit.json; fail_komit = komit tag kit (dibaca log).",
+    "fail_komit": "KIT-COMMIT",
+    "tindih": "config/kit.json"
   },
   "sdk": {
     "pakej": "@smartspectra/node-sdk",

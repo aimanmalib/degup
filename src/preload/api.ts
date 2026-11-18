@@ -1,4 +1,5 @@
 // Kontrak jambatan preload ↔ renderer (contextBridge). Jenis sahaja; dikongsi main, preload, renderer.
+import type { PeristiwaDiag } from "../core/diagnostik.js";
 
 export type SumberTetapan = "live" | "replay";
 
@@ -65,6 +66,8 @@ export interface DegupApi {
   rakamTamat(): Promise<HasilFailDitulis>;
   /** Perakam fixture §4.10 (bila `config.rakam_fixture`): main menulis HANYA bila lulus pengesah skema. */
   simpanFixture(data: unknown): Promise<HasilFailDitulis>;
+  /** Log diagnostik setempat (J6a): kod dan angka sahaja; main mengesahkan bentuk dan menapis kunci. */
+  diag(p: PeristiwaDiag): void;
 }
 
 export const SALURAN = {
@@ -83,4 +86,5 @@ export const SALURAN = {
   rakamTulis: "degup:rakam-tulis",
   rakamTamat: "degup:rakam-tamat",
   simpanFixture: "degup:simpan-fixture",
+  diag: "degup:diag",
 } as const;

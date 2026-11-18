@@ -1,12 +1,15 @@
 // Proses main Degup (PRD §4.11, corak electron-quickstart): tetingkap, kebenaran kamera, safeStorage, fail tempatan.
 // Renderer memiliki kamera; main tidak pernah melihat bingkai video (SDK main menerimanya melalui jambatan rasmi bila live).
-import { app, BrowserWindow, ipcMain, safeStorage, session, shell } from "electron";
+import { app, BrowserWindow, ipcMain, safeStorage, screen, session, shell } from "electron";
 import { readdirSync, readFileSync } from "node:fs";
+import { arch, platform, release } from "node:os";
 import { join } from "node:path";
 import konfig from "../../config/app.json";
+import { sahkanDiag, saizRakam } from "../core/diagnostik.js";
 import { sahkanFixture } from "../core/fixture.js";
 import { SALURAN, type FixtureSedia, type Permulaan, type Tetapan } from "../preload/api.js";
 import { simpanKad } from "./kad.js";
+import { bacaKomitKit, LogDiagnostik } from "./log.js";
 import { PenulisRakaman, simpanFixtureRakaman } from "./rakaman.js";
 import { PengikatSdk, sediaPersekitaran, wujudFail } from "./sdk.js";
 import { Simpanan, pilihBahasa, tetapanLalai, type Penyulit } from "./simpanan.js";
@@ -77,7 +80,43 @@ function kunciLive(simpanan: Simpanan): string | null {
   return app.isPackaged ? null : (process.env.SMARTSPECTRA_API_KEY?.trim() || null);
 }
 
-function daftarIpc(simpanan: Simpanan, tetingkap: () => BrowserWindow | null): void {
+/** Log diagnostik kit (J6a): kunci tersimpan + env ditapis dari setiap baris. */
+function bukaLog(simpanan: Simpanan): LogDiagnostik {
+  return new LogDiagnostik(
+    () => app.getPath("userData"),
+    konfig.log,
+    () => ({
+      versi: app.getVersion(),
+      komit_kit: bacaKomitKit(join(AKAR, konfig.kit.fail_komit)),
+      os: platform(),
+      os_versi: release(),
+      arch: arch(),
+      electron: process.versions.electron ?? "",
+      sumber: process.env[konfig.sumber_env] ?? "tetapan",
+    }),
+    () => [simpanan.bacaKunci(), process.env.SMARTSPECTRA_API_KEY],
+  );
+}
+
+/** Tetingkap rakaman 16:9 (PH§7.1): saiz kandungan sasaran, dikecilkan jika skrin lebih kecil. */
+function aturTetingkapRakam(win: BrowserWindow, log: LogDiagnostik): void {
+  const t = konfig.tetingkap;
+  if (win.isFullScreen()) win.setFullScreen(false);
+  if (win.isMaximized()) win.unmaximize();
+  const [lw, lt] = win.getSize();
+  const [kw, kt] = win.getContentSize();
+  const kawasan = screen.getDisplayMatching(win.getBounds()).workArea;
+  const saiz = saizRakam(
+    t.rakam,
+    { lebar: kawasan.width - (lw! - kw!), tinggi: kawasan.height - (lt! - kt!) },
+    { lebar: t.min_lebar, tinggi: t.min_tinggi },
+  );
+  win.setContentSize(saiz.lebar, saiz.tinggi);
+  win.center();
+  log.tulis({ jenis: "tetingkap", ...saiz });
+}
+
+function daftarIpc(simpanan: Simpanan, log: LogDiagnostik, tetingkap: () => BrowserWindow | null): void {
   const pengikat = new PengikatSdk<BrowserWindow>(
     // Dimuat malas: pakej SDK memuat pustaka asli semasa require (sim/replay tidak pernah sampai di sini).
     () => require("@smartspectra/node-sdk/main") as { bindSmartSpectraIpc(w: BrowserWindow): void },
@@ -96,12 +135,21 @@ function daftarIpc(simpanan: Simpanan, tetingkap: () => BrowserWindow | null): v
   ipcMain.handle(SALURAN.sediaLive, (e) => {
     const win = tetingkap();
     if (!win || e.sender !== win.webContents) return { ok: false, sebab: "sdk" };
-    return pengikat.sedia(win);
+    const h = pengikat.sedia(win);
+    log.tulis({ jenis: "sdk_sedia", ok: h.ok, sebab: h.ok ? null : h.sebab });
+    return h;
+  });
+  // Log diagnostik: hanya bentuk peristiwa yang dibenarkan (`sahkanDiag`), hanya dari tetingkap Degup.
+  ipcMain.on(SALURAN.diag, (e, p: unknown) => {
+    const win = tetingkap();
+    const sah = win && e.sender === win.webContents ? sahkanDiag(p, konfig.log.teks_maks) : null;
+    if (sah) log.tulis(sah);
   });
   // Sumber tangkapan = ID media tetingkap Degup sendiri (format desktopCapturer); renderer tidak boleh memilih skrin/tetingkap lain.
   ipcMain.handle(SALURAN.rakamMula, (e) => {
     const win = tetingkap();
     if (!win || e.sender !== win.webContents) return { ok: false };
+    aturTetingkapRakam(win, log);
     const h = perakam.mula(new Date());
     return h.ok ? { ok: true, nama: h.nama, sumber: win.getMediaSourceId() } : { ok: false };
   });
@@ -153,9 +201,11 @@ function daftarIpc(simpanan: Simpanan, tetingkap: () => BrowserWindow | null): v
 
 function cipta(): BrowserWindow {
   const t = konfig.tetingkap;
+  const rakam = process.env[t.env] === t.nilai_rakam;
   const win = new BrowserWindow({
-    width: t.lebar,
-    height: t.tinggi,
+    width: rakam ? t.rakam.lebar : t.lebar,
+    height: rakam ? t.rakam.tinggi : t.tinggi,
+    useContentSize: rakam,
     minWidth: t.min_lebar,
     minHeight: t.min_tinggi,
     backgroundColor: "#0f1626",
@@ -191,7 +241,11 @@ void app.whenReady().then(() => {
   const bahasa = pilihBahasa(konfig.bahasa_lalai, app.getLocale(), konfig.bahasa, konfig.bahasa_undur);
   const lalai = tetapanLalai(bahasa, konfig.rasa.bunyi_lalai);
   let win: BrowserWindow | null = null;
-  daftarIpc(new Simpanan(app.getPath("userData"), lalai, konfig.bahasa, penyulit), () => win);
+  const simpanan = new Simpanan(app.getPath("userData"), lalai, konfig.bahasa, penyulit);
+  const log = bukaLog(simpanan);
+  daftarIpc(simpanan, log, () => win);
   win = cipta();
+  const [lebar, tinggi] = win.getContentSize();
+  log.tulis({ jenis: "tetingkap", lebar: lebar!, tinggi: tinggi! });
 });
 app.on("window-all-closed", () => app.quit());

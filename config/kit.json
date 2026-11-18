@@ -1,0 +1,7 @@
+{
+  "_nota": "Tindihan config/app.json untuk kit laptop pemilik SAHAJA (scripts/kit/bina-kit.sh; D22). Lalai repo tidak berubah. PH§5.4 N4: 4 Mbps (4 minit ≈ 120 MB); perakam fixture hidup (angka sesi, tiada imej).",
+  "rakam_fixture": true,
+  "perakam": {
+    "bitrate": 4000000
+  }
+}
