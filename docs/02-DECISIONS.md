@@ -359,3 +359,17 @@ Format D-n: keputusan · sebab · undur. D-K1 hingga D-K15 = salinan PRD §5 (di
   (92 % penuh) dan CPU autopilot dalam mod ketat. Zip + `mula.bat` sudah diuji hujung ke hujung.
 - **Undur:** padam tag (`git push origin :v0.9.0`) dan bina semula kit dari tag baharu; NSIS boleh dibina kemudian dari tag yang sama.
 - **Pemerhatian:** satu larian `vitest` penuh tempatan semasa hos sibuk memberi 5 kegagalan (masa); larian ulang 164/164 lulus tanpa perubahan.
+
+## D24 · J3: teks pos PH§6 verbatim dalam `docs/hantar/HANTAR.md`, blok izin markdown dan `arrhythmia` (19 Nov 2026)
+
+- **Keputusan:** `HANTAR.md` = blok markdown PH§6 verbatim (templat rasmi 7 tajuk, slot TBD kekal) antara `<!-- pos mula -->` dan
+  `<!-- pos akhir -->`; jadual slot, ayat bersyarat, Varian B, GitHub About dalam komen HTML selepas penanda. Tiga ayat pos yang
+  memakai kata larangan dibalut `<!-- izin mula -->` / `<!-- izin akhir -->`: "It is not a health test", perenggan "Breath bends the
+  beat" (nama buku teks *respiratory sinus arrhythmia*, sama dengan kunci lang `lentur.penerangan` yang sudah dalam senarai benar),
+  dan butir "Limits of use" (penafian). `arrhythmia` ditambah ke `markdown_izin` (`tests/kata-larangan.json`), sah HANYA dalam blok
+  izin; di luar blok ujian tetap menolak. `POLISI-AI.md`, `SKRIP-VIDEO.md`, `GALERI.md` diisi dari PH§1, PH§7.2, PH§6.
+  `hantar.json`: `demo.sebab` + `dek_sebab` (komit ikut laluan dalam `~/hackathon`); `HANTAR.md` tidak didaftar dalam `teks` (KP2).
+- **Sebab:** KP6 menuntut teks verbatim; ujian kata larangan menolak tiga ayat itu tanpa blok izin. Komen HTML tidak dipapar DEV
+  dan tidak mengubah teks yang dibaca juri. Memadam ayat RSA melemahkan bahagian "How It Responds" (kriteria Use of Underlying
+  Technology) dan nama itu sudah diluluskan untuk teks app.
+- **Undur:** buang `arrhythmia` dari `markdown_izin` dan tulis semula perenggan Bend tanpa nama buku teks.

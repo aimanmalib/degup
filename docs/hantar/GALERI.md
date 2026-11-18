@@ -1,12 +1,27 @@
-# Galeri — DEV Presage Challenge (SmartSpectra SDK)
+# Galeri: DEV Presage SmartSpectra SDK Challenge (Degup)
 
-> Templat seragam (D36). 5–10 imej berkapsyen, ikut susunan borang. Tangkapan aplikasi SEBENAR (tiada imej AI kecuali
-> `POLISI-AI.md` membenarkan). Saiz ikut halaman acara (lazim 3:2 atau 16:9, ≥ 1280 px lebar). Imej dahulu, kapsyen di bawahnya.
+> Pos DEV menerima SATU gambar kulit (cover image) dan imej dalam teks pos. Tangkapan app SEBENAR sahaja; tiada imej AI.
+> Gambar kulit dan imej pendedahan dalam pos = dari SESI SEBENAR pemilik (P8), bukan mod Simulation: label Simulation
+> TIDAK boleh kelihatan (LARANGAN). Imej repo hanya PNG `docs/media/` tanpa muka; pratonton kamera dipangkas keluar.
 
-| # | Fail | Kapsyen (EN, satu ayat) |
-|---|---|---|
-| 1 | `01-sampul.png` | |
-| 2 | `02-.png` | |
-| 3 | `03-.png` | |
-| 4 | `04-.png` | |
-| 5 | `05-.png` | |
+## Gambar kulit (wajib, P8)
+
+| Perkara | Nilai |
+|---|---|
+| Fail | `docs/media/cover-live.png` (dijana P8) |
+| Saiz | 1000x420 px (nisbah gambar kulit DEV), PNG |
+| Isi | Skrin pendedahan sesi sebenar: ketukan pemilik di bawah degupan yang kamera lihat, skor besar, tanpa label Simulation, tanpa muka |
+| Sumber | Bingkai rakaman sesi pemilik (P6) atau tangkapan replay fixture sesi pemilik (lencana Replay dipangkas keluar dari gambar kulit sahaja) |
+
+## Imej dalam pos
+
+| # | Fail | Slot dalam `HANTAR.md` | Alt (EN, verbatim dalam pos) |
+|---|---|---|---|
+| 1 | `docs/media/reveal-live.png` | `<<TBD url imej pendedahan>>` = `https://raw.githubusercontent.com/aimanmalib/degup/main/docs/media/reveal-live.png` | The reveal screen: my taps drawn under the beats the camera saw |
+
+URL raw GitHub hanya hidup selepas repo awam (P9, pemilik). Sebelum itu imej tidak dipapar; jangan terbit pos sebelum repo awam.
+
+## Imej README sedia ada (mod sim, berlabel)
+
+`docs/media/see.png`, `feel-reveal.png`, `bend.png`, `result.png`, `consent.png`, `flow.gif` = mod Simulation, berlabel. Sesuai
+untuk README sahaja; TIDAK digunakan sebagai gambar kulit atau imej pos.

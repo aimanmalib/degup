@@ -3,7 +3,9 @@
 Keadaan penuh: blok ⭐ dalam PELAN di LUAR repo, `/home/claude/ops/autopilot/projek/presage-degup/PELAN-presage-2026.md` (KP1, D17).
 Jangan salin PELAN ke repo (`/docs/PELAN-*.md` diabaikan git).
 
-- **Seterusnya: J3** (lihat baris PELAN). Tertib pindaan #2842: J3, J4, J7, P8a, lalu pintu pemilik P6.
+- **Seterusnya: J4** (lihat baris PELAN). Tertib pindaan #2842: J4, J7, P8a, lalu pintu pemilik P6.
+- J3 siap (D24): `docs/hantar/HANTAR.md` = pos PH§6 verbatim antara `<!-- pos mula -->`/`<!-- pos akhir -->`, slot TBD kekal
+  (P8 mengisi); kata larangan dalam pos hanya dalam blok `<!-- izin mula -->`. HANTAR.md tidak didaftar dalam hantar.json `teks` sebelum P8.
 - J6b siap (D23): tag `v0.9.0` = `f6f85b7`; FILE DROP `hackathon-degup-kit-v0.9.0.zip` (+ `.sha256`, `hackathon-degup-kit-LANGKAH.md`);
   sha256 dalam `docs/UKUR.md`. NSIS dilangkau. P6b membaca `KIT-COMMIT` dari log pemilik untuk tag `rakaman-akhir`.
 - J6a siap (D22): `bash scripts/kit/bina-kit.sh <tag> [folder]` → `hackathon-degup-kit-<tag>.zip` + `.sha256` (lalai `~/portal/uploads`);
