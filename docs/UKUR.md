@@ -15,6 +15,8 @@ Jumlah sebelum 18 Nov: 0 minit.
 
 | Tarikh (MYT) | Fail (FILE DROP) | sha256 | Nota |
 |---|---|---|---|
+| 19 Nov 2026 | `hackathon-degup-kit-v0.9.0.zip` (1,584,550 bait) | `f2a6ece036680822cd9813480b938357adecb905ff3a8f16b428a1dff175a5e7` | J6b; tag `v0.9.0` = `f6f85b7`; diuji dari zip di hos: `npm ci` rc 0 (72 s), sim + tetingkap muncul, log menulis `komit_kit` |
+| 19 Nov 2026 | `hackathon-degup-kit-LANGKAH.md` | (teks pemilik, tidak ke repo) | J6b; halaman langkah BM PH§7.3 + N4 |
 
 ## Video ujian pemilik (`~/degup-rahsia/`)
 

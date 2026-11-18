@@ -3,7 +3,9 @@
 Keadaan penuh: blok ⭐ dalam PELAN di LUAR repo, `/home/claude/ops/autopilot/projek/presage-degup/PELAN-presage-2026.md` (KP1, D17).
 Jangan salin PELAN ke repo (`/docs/PELAN-*.md` diabaikan git).
 
-- **Seterusnya: J6b** (lihat baris PELAN). Tertib pindaan #2842: J6b, J3, J4, J7, P8a, lalu pintu pemilik P6.
+- **Seterusnya: J3** (lihat baris PELAN). Tertib pindaan #2842: J3, J4, J7, P8a, lalu pintu pemilik P6.
+- J6b siap (D23): tag `v0.9.0` = `f6f85b7`; FILE DROP `hackathon-degup-kit-v0.9.0.zip` (+ `.sha256`, `hackathon-degup-kit-LANGKAH.md`);
+  sha256 dalam `docs/UKUR.md`. NSIS dilangkau. P6b membaca `KIT-COMMIT` dari log pemilik untuk tag `rakaman-akhir`.
 - J6a siap (D22): `bash scripts/kit/bina-kit.sh <tag> [folder]` → `hackathon-degup-kit-<tag>.zip` + `.sha256` (lalai `~/portal/uploads`);
   `config/kit.json` ditindih dalam zip sahaja. Log kit `userData/logs/degup-<tarikh>.log`. Tetingkap rakaman `DEGUP_TETINGKAP=rakam`.
   Xvfb gerbang 1920×1080 (`-s "-screen 0 1920x1080x24"`) untuk ujian 1600×900.
@@ -18,4 +20,4 @@ Jangan salin PELAN ke repo (`/docs/PELAN-*.md` diabaikan git).
 - J0 siap: `hantar.json` entri `video: []` + `teks: []` (KP2; P8 memulihkan senarai sebenar + `"piawai": 2`); gerbang-hantar rc 0.
 - Setiap potongan: semak `~/portal/uploads/` aras atas untuk video telefon pemilik (KP9). Ada = O2 ✅ dan P1 seterusnya.
 - O1 siap: kunci dalam `.env` (diterima SDK, P1a). S1 hingga S8 = lalai PRD §6 (D14).
-- J6b: electron-builder/zip mesti `asarUnpack` pakej `@smartspectra/*` (laluan pustaka asli bila dipakej, `src/main/sdk.ts`).
+- NSIS (jika dibina kemudian): electron-builder mesti `asarUnpack` pakej `@smartspectra/*` (laluan pustaka asli, `src/main/sdk.ts`).

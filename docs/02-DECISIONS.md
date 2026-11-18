@@ -347,3 +347,15 @@ Format D-n: keputusan · sebab · undur. D-K1 hingga D-K15 = salinan PRD §5 (di
   (tiada `.env`, `node_modules`, `dist`, media) → zip `hackathon-degup-kit-<ref>.zip` + `.sha256`. `mula.bat`: Node ≥ 20 (pautan
   nodejs.org), `npm ci` sekali (penanda `node_modules\.degup-ci-ok` selepas berjaya), `npm start`.
 - **Undur:** `git revert` komit J6a; kit lama tiada (J6b belum dibina).
+
+## D23 · J6b: kit v0.9.0 dibina dari zip, NSIS dilangkau (19 Nov 2026)
+
+- **Keputusan:** tag `v0.9.0` = `f6f85b7` (HEAD J6a). Kit = `bina-kit.sh v0.9.0` → FILE DROP zip + `.sha256`, diuji dari zip dalam
+  `mktemp -d` di hos (`npm ci` rc 0; `DEGUP_SUMBER=sim npm start -- --no-sandbox` di Xvfb: tetingkap "Degup" muncul, log diagnostik
+  menulis kepala dengan `komit_kit`; folder dibuang). Halaman langkah BM = `~/portal/uploads/hackathon-degup-kit-LANGKAH.md` (bukan repo).
+  Pemasang NSIS (`electronuserland/builder:wine`) TIDAK dibina.
+- **Sebab:** NSIS pilihan dalam baris J6b. Pemasang membungkus pustaka asli SDK win32 yang tidak boleh diuji pada Windows sebenar dari
+  hos ini; laluan kedua memberi pemilik dua cara memasang dan satu daripadanya tidak diuji. Imej wine beberapa GB pada cakera dikongsi
+  (92 % penuh) dan CPU autopilot dalam mod ketat. Zip + `mula.bat` sudah diuji hujung ke hujung.
+- **Undur:** padam tag (`git push origin :v0.9.0`) dan bina semula kit dari tag baharu; NSIS boleh dibina kemudian dari tag yang sama.
+- **Pemerhatian:** satu larian `vitest` penuh tempatan semasa hos sibuk memberi 5 kegagalan (masa); larian ulang 164/164 lulus tanpa perubahan.
