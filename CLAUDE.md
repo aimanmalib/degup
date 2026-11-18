@@ -1,7 +1,7 @@
 # Degup (`~/degup`): peraturan dan perangkap
 
 Entri DEV Presage SmartSpectra SDK Challenge. Sumber kebenaran: `docs/PRD-presage-2026.md` (BACA SAHAJA, sha256 disemak gerbang)
-dan `docs/PELAN-presage-2026.md` (potongan + blok ⭐). Keputusan: `docs/02-DECISIONS.md` (D-K1 hingga D-K15 = PRD §5, D-n baharu).
+dan PELAN di LUAR repo `/home/claude/ops/autopilot/projek/presage-degup/PELAN-presage-2026.md` (potongan + blok ⭐; KP1, D17). Keputusan: `docs/02-DECISIONS.md` (D-K1 hingga D-K15 = PRD §5, D-n baharu).
 
 ## Peraturan
 

@@ -245,3 +245,19 @@ Format D-n: keputusan · sebab · undur. D-K1 hingga D-K15 = salinan PRD §5 (di
   ditambah ke README.ms.md, disemak 17 Nov). "Respiratory sinus arrhythmia" TIDAK ditulis dalam README (di luar blok); README
   menerangkannya dengan ayat biasa.
 - **Undur:** padam `README.ms.md` + pautan kepala + tiga perkataan BM dari `markdown_izin` + entri `fail_markdown`.
+
+### D17 (J0, 19 Nov 2026) Pindaan pra-hantar #2741/#2842: KP1 hingga KP10 PELAN
+- **KP1:** PELAN keluar dari repo ke `/home/claude/ops/autopilot/projek/presage-degup/PELAN-presage-2026.md`; `docs/PELAN-presage-2026.md`
+  dibuang dari HEAD dan setempat; `.gitignore` `/docs/PELAN-*.md`. Sebab: J7 menjadikan repo awam tanpa nota dalaman BM, dan gerbang
+  membaca PELAN dari folder projek. Semakan "✅ pada BASE" diganti penanda mekanikal (tag `v0.9.0`, tag `rakaman-akhir`, status entri).
+- **KP2:** `~/hackathon/entri/2026-dev-presage-challenge-smartspectra-sdk/hantar.json` `video: []` + `teks: []` (komit hackathon
+  `64adf2d`) sehingga fail wujud; gerbang-hantar rc 0 (GAGAL 0). P8 memulihkan senarai sebenar + `"piawai": 2`.
+- **KP3:** tertib J0, J1, J2, J5, P1a, J6a, J6b, J3, J4, J7, P8a, lalu SATU pintu pemilik P6 (sesi laptop = raptai + rakaman akhir).
+- **KP4:** baris lama diganti, bukan dipadam (P4b → J6b, P5 → J6b, P7 → J3 + J4 + P8, P8a lama → P6, P8b → P8).
+- **KP5:** beku "tiada src/ baharu selepas v0.9.0" diganti: selepas tag `rakaman-akhir`, `src/renderer/`, `lang/`, `config/app.json` tidak berubah.
+- **KP6:** teks pos = PH§6 verbatim (dua kategori + perenggan Agent Session tanpa transkrip), mengatasi lalai PRD S4/S7.
+- **KP7:** selepas entri `dihantar` atau repo awam, hanya `README*.md` dan `docs/` berubah; agen berhenti Isn 23 Nov 09:59 MYT.
+- **KP8:** soalan "teruskan atau tarik diri?" hanya bila video telefon DAN sesi laptop tiada selepas Jum 20 Nov 21:00 MYT; tarik diri = pemilik.
+- **KP9/KP10:** video telefon pemilik disemak setiap potongan (input pilihan, tidak menyekat); J7b lalai tidak ditapis.
+- **Undur:** salin PELAN ke `docs/PELAN-presage-2026.md`, padam baris `.gitignore`, projek.json `pelan` relatif; hantar.json pulihkan dari
+  sejarah `~/hackathon`.

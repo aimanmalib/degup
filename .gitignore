@@ -12,3 +12,4 @@ release
 *.y4m
 test-results
 playwright-report
+/docs/PELAN-*.md
