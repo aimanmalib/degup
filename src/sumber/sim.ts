@@ -138,10 +138,6 @@ export class PenjanaSim {
       (m.breathing ??= {}).rate = [
         { value: k.nafas_per_min, confidence: k.keyakinan, stable: stabil, timestamp: ts },
       ];
-      if (k.nafas_per_min > 0)
-        (m.pulse ??= {}).pulseRespirationQuotient = [
-          { value: this.nadiPurata(s) / k.nafas_per_min, confidence: k.keyakinan, stable: stabil, timestamp: ts },
-        ];
       this.tNadiSeterusnya += k.kadar_nadi_setiap_s * US;
     }
     return m;

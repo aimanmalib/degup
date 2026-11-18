@@ -17,7 +17,6 @@ export interface KonfigBeats {
   keyakinan_stabil: number;
   semak_kendiri_s: number;
   semak_kendiri_toleransi: number;
-  sandaran_pulse_trace_selepas_s: number;
   nadi_lalai_bpm: number;
 }
 
@@ -55,7 +54,6 @@ export class PengesanDegupan {
   private tGridSeterusnya: number | null = null;
   private mentahAkhir: Sampel | null = null;
 
-  private tArteriAkhir: number | null = null;
   private nadiTerkini: { v: number; c: number } | null = null;
   private nadiStabil: number | null = null;
 
@@ -76,24 +74,13 @@ export class PengesanDegupan {
   /** Suap satu payload `metrics`; pulangkan degupan baharu yang dikesan. */
   tambahMetrik(m: MetrikSdk): Degupan[] {
     for (const p of m.cardio?.pulseRate ?? []) this.tambahNadi(p.value, p.confidence);
-    for (const p of m.pulse?.rate ?? []) this.tambahNadi(p.value, p.confidence);
 
     const baharu: Degupan[] = [];
     const arteri = m.cardio?.arterialPressureTrace ?? [];
     for (const s of arteri) {
       const t = keNombor(s.timestamp);
       if (t === null || typeof s.value !== "number") continue;
-      this.tArteriAkhir = Math.max(this.tArteriAkhir ?? t, t);
       baharu.push(...this.tambahSampel({ t, v: s.value, c: s.confidence ?? 0 }));
-    }
-
-    // Sandaran: `pulse.trace` bila jejak arteri kosong > N s; keyakinan = keyakinan nadi terkini.
-    const had = this.kfg.sandaran_pulse_trace_selepas_s * US;
-    for (const s of m.pulse?.trace ?? []) {
-      const t = keNombor(s.timestamp);
-      if (t === null || typeof s.value !== "number") continue;
-      if (this.tArteriAkhir !== null && t - this.tArteriAkhir <= had) continue;
-      baharu.push(...this.tambahSampel({ t, v: s.value, c: this.nadiTerkini?.c ?? 0 }));
     }
     return baharu;
   }

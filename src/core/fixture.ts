@@ -1,7 +1,8 @@
-// Fixture main semula (PRD §4.10): {meta, jejak[{t,v,c}], nadi[{t,v,c}], nafas[{t,v}], prq[], ketukan[t]}.
+// Fixture main semula (PRD §4.10): {meta, jejak[{t,v,c}], nadi[{t,v,c}], nafas[{t,v}], kadar_nafas[{t,v,c}], ketukan[t]}.
+// Skema 2 (J1): siri ikut medan `Metrics` 3.4.0 sebenar (cardio.*, breathing.*); nisbah degupan/nafas dikira, tidak disimpan.
 // ANGKA SAHAJA: pengesah menolak kunci asing dan rentetan dalam data (tiada imej, tiada video, tiada laluan fail).
 // Tulen: tiada DOM, tiada SDK, tiada fs. Masa µs epoch.
-import { keNombor, senarai, type MetrikSdk, type UkuranKeyakinan } from "./metrik.js";
+import { keNombor, type MetrikSdk, type UkuranKeyakinan } from "./metrik.js";
 
 export type JenisFixture = "simulasi" | "pemilik" | "ujian";
 
@@ -36,11 +37,12 @@ export interface Fixture {
   jejak: TitikKeyakinan[];
   nadi: TitikKeyakinan[];
   nafas: TitikNafas[];
-  prq: TitikKeyakinan[];
+  /** `breathing.rate` (nafas/min) dengan keyakinan. */
+  kadar_nafas: TitikKeyakinan[];
   ketukan: number[];
 }
 
-const KUNCI_ATAS = ["meta", "jejak", "nadi", "nafas", "prq", "ketukan"] as const;
+const KUNCI_ATAS = ["meta", "jejak", "nadi", "nafas", "kadar_nafas", "ketukan"] as const;
 const KUNCI_META = ["skema", "jenis", "label", "tarikh", "babak", "jana"];
 const JENIS: readonly JenisFixture[] = ["simulasi", "pemilik", "ujian"];
 const LABEL_MAKS = 60;
@@ -100,7 +102,7 @@ export function sahkanFixture(x: unknown, skema: number): HasilSah {
   semakSiri("jejak", x.jejak, ["t", "v", "c"], [], ralat);
   semakSiri("nadi", x.nadi, ["t", "v", "c"], [], ralat);
   semakSiri("nafas", x.nafas, ["t", "v"], ["s"], ralat);
-  semakSiri("prq", x.prq, ["t", "v", "c"], [], ralat);
+  semakSiri("kadar_nafas", x.kadar_nafas, ["t", "v", "c"], [], ralat);
   if (!Array.isArray(x.ketukan) || !x.ketukan.every(nombor)) ralat.push("ketukan: senarai nombor");
   else if (x.ketukan.some((t, i, a) => i > 0 && t < a[i - 1]!)) ralat.push("ketukan: tidak menaik");
   if (Array.isArray(x.jejak) && x.jejak.length === 0) ralat.push("jejak: kosong");
@@ -158,8 +160,8 @@ export function fixtureKeMetrik(
     (((ambil(p.t).breathing ??= {}).upperTrace ??= []) as unknown[]).push({
       value: p.v, stable: p.s ?? true, timestamp: p.t + anjakUs,
     });
-  for (const p of f.prq)
-    (((ambil(p.t).pulse ??= {}).pulseRespirationQuotient ??= []) as unknown[]).push({
+  for (const p of f.kadar_nafas)
+    (((ambil(p.t).breathing ??= {}).rate ??= []) as unknown[]).push({
       value: p.v, confidence: p.c, stable: p.c >= keyakinanStabil, timestamp: p.t + anjakUs,
     });
   return [...kelompok.entries()]
@@ -171,7 +173,7 @@ const bulat = (x: number, dp: number) => Math.round(x * 10 ** dp) / 10 ** dp;
 
 /** Pengumpul fixture dari aliran payload (penjana sim; perakam fixture sumber live, sesi.ts). Angka sahaja. */
 export class PengumpulFixture {
-  private readonly f: Omit<Fixture, "meta"> = { jejak: [], nadi: [], nafas: [], prq: [], ketukan: [] };
+  private readonly f: Omit<Fixture, "meta"> = { jejak: [], nadi: [], nafas: [], kadar_nafas: [], ketukan: [] };
 
   tambahMetrik(m: MetrikSdk): void {
     const titik = (u: UkuranKeyakinan) => {
@@ -180,7 +182,7 @@ export class PengumpulFixture {
     };
     for (const u of m.cardio?.arterialPressureTrace ?? []) this.tolak(this.f.jejak, titik(u));
     for (const u of m.cardio?.pulseRate ?? []) this.tolak(this.f.nadi, titik(u));
-    for (const u of senarai(m.pulse?.pulseRespirationQuotient)) this.tolak(this.f.prq, titik(u));
+    for (const u of m.breathing?.rate ?? []) this.tolak(this.f.kadar_nafas, titik(u));
     for (const u of m.breathing?.upperTrace ?? []) {
       const t = keNombor(u.timestamp);
       if (t !== null && nombor(u.value)) this.f.nafas.push({ t, v: bulat(u.value, 4), s: u.stable ?? false });
@@ -198,7 +200,7 @@ export class PengumpulFixture {
       jejak: ikutMasa(this.f.jejak),
       nadi: ikutMasa(this.f.nadi),
       nafas: ikutMasa(this.f.nafas),
-      prq: ikutMasa(this.f.prq),
+      kadar_nafas: ikutMasa(this.f.kadar_nafas),
       ketukan: [...this.f.ketukan].sort((a, b) => a - b),
     };
   }

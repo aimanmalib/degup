@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import app from "../config/app.json";
 import { PengesanDegupan, type KonfigBeats } from "../src/core/beats";
 import { fixtureKeMetrik, masaMula, PengumpulFixture, sahkanFixture, type Fixture } from "../src/core/fixture";
+import { PengumpulLentur } from "../src/core/lentur";
 import { kiraLentur, type KonfigLentur } from "../src/core/rsa";
 import { kiraSkor, type KonfigSkor } from "../src/core/score";
 import { SumberReplay } from "../src/sumber/replay";
@@ -22,7 +23,7 @@ describe("fixture contoh (PRD §4.10)", () => {
     expect(contoh.meta.jenis).toBe("simulasi");
     expect(Object.keys(contoh.meta.babak ?? {}).sort()).toEqual(["lentur", "lihat", "rasa"]);
     expect(contoh.ketukan.length).toBeGreaterThanOrEqual(app.rasa.n_min);
-    expect(contoh.prq.length).toBeGreaterThan(0);
+    expect(contoh.kadar_nafas.length).toBeGreaterThan(0);
   });
 
   it("dijana semula sama tepat dari meta.jana (deterministik)", () => {
@@ -34,12 +35,11 @@ describe("fixture contoh (PRD §4.10)", () => {
   it("main semula melalui pengesan → RASA Selaras, LENTUR ada ringkasan", () => {
     const pengesan = new PengesanDegupan(app.beats as KonfigBeats);
     const nafas: { t: number; v: number; stabil: boolean }[] = [];
-    const prq: { v: number; stabil: boolean }[] = [];
+    const kumpul = new PengumpulLentur(STABIL, 1e4);
     for (const { m } of fixtureKeMetrik(contoh, app.replay.kelompok_ms, STABIL)) {
       pengesan.tambahMetrik(m);
+      kumpul.tambahMetrik(m);
       for (const u of m.breathing?.upperTrace ?? []) nafas.push({ t: Number(u.timestamp), v: u.value!, stabil: !!u.stable });
-      const q = m.pulse?.pulseRespirationQuotient;
-      for (const u of Array.isArray(q) ? q : []) prq.push({ v: u.value!, stabil: !!u.stable });
     }
     const t0 = masaMula(contoh);
     const [rm, ra] = contoh.meta.babak!.rasa!;
@@ -55,7 +55,7 @@ describe("fixture contoh (PRD §4.10)", () => {
     const lentur = kiraLentur(
       {
         degupan: pengesan.degupan(), kualitiPada: (t) => pengesan.kualitiPada(t), kualitiSaatMin: app.rasa.kualiti_saat_min,
-        mula: t0 + lm * 1e6, akhir: t0 + la * 1e6, nafas, prq,
+        mula: t0 + lm * 1e6, akhir: t0 + la * 1e6, nafas, prq: kumpul.prq(t0 + lm * 1e6, t0 + la * 1e6),
       },
       app.lentur as KonfigLentur,
     );
@@ -71,7 +71,7 @@ describe("fixture contoh (PRD §4.10)", () => {
     expect(semula.jejak).toEqual(contoh.jejak);
     expect(semula.nadi).toEqual(contoh.nadi);
     expect(semula.nafas).toEqual(contoh.nafas);
-    expect(semula.prq).toEqual(contoh.prq);
+    expect(semula.kadar_nafas).toEqual(contoh.kadar_nafas);
     expect(semula.ketukan).toEqual(contoh.ketukan);
   });
 });

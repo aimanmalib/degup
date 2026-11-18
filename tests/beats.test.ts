@@ -74,19 +74,15 @@ describe("PengesanDegupan atas isyarat sim (PRD §4.3)", () => {
     expect(pengesan.amaranBising()).toEqual([]);
   });
 
-  it("sandaran pulse.trace bila jejak arteri kosong > 5 s", () => {
-    const { benar, dikesan } = larian({ nadi_bpm: 70, benih: 9 }, 40, (m) => {
+  it("hanya cardio.arterialPressureTrace dibaca: tanpanya tiada degupan (tiada sandaran medan lain)", () => {
+    const { dikesan } = larian({ nadi_bpm: 70, benih: 9 }, 40, (m) => {
       const jejak = m.cardio?.arterialPressureTrace ?? [];
       const t = Number(jejak[0]?.timestamp ?? 0);
-      if (t < T0 + 10 * US) return m; // 10 s pertama: jejak arteri biasa
-      return {
-        cardio: { pulseRate: m.cardio?.pulseRate ?? [] },
-        pulse: { trace: jejak.map(({ value, timestamp }) => ({ value, timestamp })) },
-      };
+      if (t < T0 + 10 * US) return m;
+      // Bentuk lama (sebelum J1) yang Metrics 3.4.0 tidak pernah hantar: mesti diabaikan.
+      return { cardio: { pulseRate: m.cardio?.pulseRate ?? [] }, pulse: { trace: jejak } } as MetrikSdk;
     });
-    // Selepas 15 s (5 s tanpa arteri + pemanasan semula), degupan dari pulse.trace.
-    const { kadar } = nilai(benar, dikesan, 20, 39);
-    expect(kadar).toBeGreaterThanOrEqual(0.95);
+    expect(dikesan.filter((d) => d.t > T0 + 11 * US)).toEqual([]);
   });
 
   it("jurang > 2 s ditanda pada degupan pertama selepasnya", () => {

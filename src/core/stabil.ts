@@ -1,6 +1,6 @@
 // Penjejak nadi untuk LIHAT (PRD §4.2): BPM semasa, keyakinan (cincin), dan sejak bila jejak stabil ("Sedia" selepas N s).
 // Tulen: tiada DOM, tiada SDK. Masa µs epoch.
-import { keNombor, type MetrikSdk, type UkuranKeyakinan } from "./metrik.js";
+import { keNombor, type MetrikSdk } from "./metrik.js";
 
 export interface KeadaanNadi {
   bpm: number | null;
@@ -17,8 +17,7 @@ export class PenjejakStabil {
   constructor(private readonly keyakinanMin: number) {}
 
   tambahMetrik(m: MetrikSdk): void {
-    const senarai: UkuranKeyakinan[] = [...(m.cardio?.pulseRate ?? []), ...(m.pulse?.rate ?? [])];
-    for (const p of senarai) {
+    for (const p of m.cardio?.pulseRate ?? []) {
       if (typeof p.value !== "number" || p.value <= 0) continue;
       const c = p.confidence ?? 0;
       const stabil = typeof p.stable === "boolean" ? p.stable && c >= this.keyakinanMin : c >= this.keyakinanMin;

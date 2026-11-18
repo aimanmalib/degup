@@ -93,7 +93,7 @@ Format D-n: keputusan · sebab · undur. D-K1 hingga D-K15 = salinan PRD §5 (di
 - **Skema fixture 1** (`src/core/fixture.ts`): `prq` = [{t, v, c}]; `nafas` boleh ada `s` (stabil, boolean); `meta` = {skema, jenis
   simulasi|pemilik|ujian, label ≤ 60, tarikh YYYY-MM-DD, babak? (saat relatif), jana? (nombor sahaja)}. Pengesah menolak kunci asing dan
   rentetan dalam data (tiada imej/laluan). Main semula menganjak cap masa supaya sampel pertama = jam semasa.
-- **`pulse.pulseRespirationQuotient`** dibaca sebagai satu ukuran ATAU senarai sehingga P1 mengukur bentuk sebenar. Sim kini menghantar
+- **(DIGANTI D18)** **`pulse.pulseRespirationQuotient`** dibaca sebagai satu ukuran ATAU senarai sehingga P1 mengukur bentuk sebenar. Sim kini menghantar
   PRQ = nadi purata / nafas per minit supaya replay dan sim menunjukkan nisbah.
 - **`fixtures/sim-contoh.json`** dijana `node scripts/jana-fixture-sim.mjs`; `meta.jana` menyimpan semua parameter dan ujian menjana
   semula dan membanding tepat (perubahan penjana tanpa jana semula = merah).
@@ -261,3 +261,22 @@ Format D-n: keputusan · sebab · undur. D-K1 hingga D-K15 = salinan PRD §5 (di
 - **KP9/KP10:** video telefon pemilik disemak setiap potongan (input pilihan, tidak menyekat); J7b lalai tidak ditapis.
 - **Undur:** salin PELAN ke `docs/PELAN-presage-2026.md`, padam baris `.gitignore`, projek.json `pelan` relatif; hantar.json pulihkan dari
   sejarah `~/hackathon`.
+
+### D18 (J1, 19 Nov 2026) Buang bacaan `pulse.*`; degupan setiap nafas dikira; fixture skema 2
+
+- **Keputusan:** `Metrics` 3.4.0 (pakej terpasang, `js/messages/generated.d.ts`) hanya ada `breathing, micromotion, eda, face, cardio`.
+  Semua bacaan `pulse.*` dibuang (beats, stabil, lentur, fixture, sim) bersama sandaran `pulse.trace` dan kunci config
+  `beats.sandaran_pulse_trace_selepas_s`. Mengatasi PRD §4.3 (sandaran) dan §4.5 (nisbah SDK) kerana medan itu tidak wujud; D-K3 lajur
+  undur "`pulse.trace`" tiada lagi (undur = mod kira P1b).
+- **Degupan setiap nafas** = nadi stabil terkini (`cardio.pulseRate`) ÷ kadar nafas stabil terkini (`breathing.rate`), dikira dalam
+  `PengumpulLentur`: satu titik setiap kali salah satunya dikemas kini dengan nilai stabil (`stable` SDK jika ada DAN keyakinan ≥
+  `beats.keyakinan_stabil`). Paparan kekal satu perpuluhan (`ringkasPrq`). Label UI menyebut "dikira dari kadar nadi dan kadar nafas SDK".
+  Pengecam dalaman `prq` dan kunci lang `keputusan.prq*` dikekalkan (tiada perubahan kelakuan; mengelak churn `e2e`).
+- **Fixture skema 2:** siri `prq` diganti `kadar_nafas[{t,v,c}]` (= `breathing.rate`); nisbah tidak disimpan, dikira semula semasa main
+  semula. `config.replay.skema` 1 → 2; `fixtures/sim-contoh.json` dijana semula. Fixture skema 1 ditolak pengesah (belum ada fixture
+  pemilik; P6b merakam skema 2).
+- **Ujian bentuk:** `tests/bentuk-metrics.test.ts` memusingkan payload sim dan replay melalui `Metrics.fromObject` → `encode` →
+  `decodeMetrics` pakej terpasang dan menuntut tiada kunci/nilai hilang; aliran dinyahkod mesti menghasilkan degupan, nadi, nisbah dan
+  fixture. Medan rekaan (cth `pulse`) gagal di sini.
+- **CSP renderer** tambah `worker-src 'self' blob:` (README SDK; renderer 3.4.0 tidak mencipta Worker, pagar murah).
+- **Undur:** `git revert` komit J1 (fixture lama skema 1 kembali bersama).

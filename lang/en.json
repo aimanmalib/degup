@@ -95,7 +95,7 @@
     "hembus": "Breathe out",
     "sela": "Beat interval: {dari} → {ke} ms",
     "ringkasan": "Your heart slowed by about {ms} ms on each exhale.",
-    "nisbah": "About {prq} beats per breath.",
+    "nisbah": "About {prq} beats per breath, computed from the SDK pulse and breathing rates.",
     "penerangan": "This is normal. It is called respiratory sinus arrhythmia: the heart follows the breath. We name it, we do not judge it.",
     "arahan": "Follow the lamp. Breathe in as it grows, breathe out slowly as it shrinks.",
     "menunggu": "Waiting for clear beats…",

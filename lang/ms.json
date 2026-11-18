@@ -95,7 +95,7 @@
     "hembus": "Hembus",
     "sela": "Sela degupan: {dari} → {ke} ms",
     "ringkasan": "Jantung kau melambat kira-kira {ms} ms setiap kali hembus.",
-    "nisbah": "Kira-kira {prq} degupan setiap nafas.",
+    "nisbah": "Kira-kira {prq} degupan setiap nafas, dikira dari kadar nadi dan kadar nafas SDK.",
     "penerangan": "Ini normal. Namanya aritmia sinus pernafasan: jantung mengikut nafas. Kami menamakannya, tidak menilainya.",
     "arahan": "Ikut pelita. Tarik nafas bila ia membesar, hembus perlahan bila ia mengecil.",
     "menunggu": "Menunggu degupan yang jelas…",

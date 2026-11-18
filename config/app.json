@@ -40,7 +40,6 @@
     "keyakinan_stabil": 40,
     "semak_kendiri_s": 10,
     "semak_kendiri_toleransi": 0.1,
-    "sandaran_pulse_trace_selepas_s": 5,
     "nadi_lalai_bpm": 70
   },
   "sim": {
@@ -115,7 +114,7 @@
   },
   "replay": {
     "_nota": "PRD §4.10: fixture angka sahaja (tiada imej). Main semula dianjak ke jam semasa.",
-    "skema": 1,
+    "skema": 2,
     "kelompok_ms": 200,
     "contoh": "fixtures/sim-contoh.json"
   },

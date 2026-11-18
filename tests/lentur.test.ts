@@ -21,7 +21,7 @@ function kumpulSim(tempoh_s: number, sim: Partial<KonfigSim> = {}, simpanS = 100
 }
 
 describe("PengumpulLentur", () => {
-  it("mengumpul nafas, PRQ dan nadi dari payload sim; purata nadi dalam julat penjana", () => {
+  it("mengumpul nafas, nisbah dan nadi dari payload sim; purata nadi dalam julat penjana", () => {
     const p = kumpulSim(40);
     expect(p.nafas().length).toBeGreaterThan(40 * app.sim.kadar_hz * 0.9);
     expect(p.prq(T0, T0 + 40 * US).length).toBeGreaterThan(30);
@@ -41,14 +41,22 @@ describe("PengumpulLentur", () => {
     expect(p.nadiPurata(T0, T0 + 30 * US)).toBeNull();
   });
 
-  it("PRQ satu ukuran (bukan senarai) juga diterima; nilai bukan nombor diabaikan", () => {
+  it("degupan setiap nafas = nadi stabil terkini ÷ kadar nafas stabil terkini; nilai tidak stabil/bukan nombor diabaikan", () => {
     const p = new PengumpulLentur(STABIL, 100);
     const m: MetrikSdk = {
-      pulse: { pulseRespirationQuotient: { value: 4.26, confidence: 80, stable: true, timestamp: T0 } },
-      breathing: { upperTrace: [{ value: Number.NaN, timestamp: T0 }, { value: 0.2, timestamp: T0 + 1 }] },
+      cardio: { pulseRate: [{ value: 72, confidence: 80, stable: true, timestamp: T0 }] },
+      breathing: {
+        rate: [
+          { value: 6, confidence: 80, stable: true, timestamp: T0 + 2 },
+          { value: 20, confidence: 10, stable: false, timestamp: T0 + 3 },
+        ],
+        upperTrace: [{ value: Number.NaN, timestamp: T0 }, { value: 0.2, timestamp: T0 + 1 }],
+      },
     };
     p.tambahMetrik(m);
-    expect(p.prq(T0, T0 + 1)).toEqual([{ t: T0, v: 4.26, stabil: true }]);
+    expect(p.prq(T0, T0 + 10)).toEqual([{ t: T0 + 2, v: 12, stabil: true }]);
+    p.tambahMetrik({ cardio: { pulseRate: [{ value: 66, confidence: 80, stable: true, timestamp: T0 + 5 }] } });
+    expect(p.prq(T0 + 4, T0 + 10)).toEqual([{ t: T0 + 5, v: 11, stabil: true }]);
     expect(p.nafas()).toEqual([{ t: T0 + 1, v: 0.2, stabil: true }]);
   });
 });

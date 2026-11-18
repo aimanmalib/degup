@@ -37,7 +37,7 @@ merasa jantung sendiri hari ini, dan kau nampak pernafasan menarik degupan menja
 Permainan ini ada tiga babak, kira-kira tiga minit semuanya. Tempoh datang dari `config/app.json` (`aliran`).
 
 1. **Lihat (30 s).** Pelita berdenyut sekali untuk setiap degupan yang kamera lihat. Degupan datang dari gelombang tekanan
-   arteri SDK (`cardio.arterial_pressure_trace`). Payload SDK tiada penanda degupan, jadi Degup mencarinya sendiri dalam
+   arteri SDK (`cardio.arterialPressureTrace`). Payload SDK tiada penanda degupan, jadi Degup mencarinya sendiri dalam
    [`src/core/beats.ts`](src/core/beats.ts): buang aliran, penapis laluan rendah, ambang menyesuai, dan tetingkap refraktori
    330 ms. Degupan dalam bacaan lemah ditanda dan tidak dikira.
 2. **Rasa (40 s).** Pelita padam. Kau menekan Space setiap kali merasa degupan, tanpa menyentuh nadi. Kemudian pendedahan
@@ -47,15 +47,14 @@ Permainan ini ada tiga babak, kira-kira tiga minit semuanya. Tempoh datang dari 
    selaras.
 3. **Lentur (60 s).** Kau tarik nafas 4 saat dan hembus 6 saat, mengikut pelita. Jarak antara degupan dilukis hidup, berlorek
    ikut nafas. Kebanyakan orang nampak degupan menjadi perlahan pada setiap hembusan. Degup melaporkan saiz ayunan itu dalam
-   milisaat dan angka degupan setiap nafas dari SDK ([`src/core/rsa.ts`](src/core/rsa.ts)).
+   milisaat dan berapa degupan dalam satu nafas, dikira dari kadar nadi dan kadar nafas SDK ([`src/core/rsa.ts`](src/core/rsa.ts)).
 
 | Isyarat SDK (3.4.0) | Apa Degup buat dengannya |
 |---|---|
-| `cardio.arterial_pressure_trace` | Pengesanan degupan untuk pelita, pendedahan dan jarak degupan dalam Lentur |
-| `cardio.pulse_rate` | Semakan kendiri: jika kadar degupan yang dikesan berbeza lebih 10% dari SDK, degupan ditanda bising |
-| `pulse.trace` | Gelombang sandaran bila jejak arteri kosong lebih 5 s |
-| `breathing.upper_trace`, `breathing.rate` | Lorek nafas dalam Lentur, dari nafas sebenar kau bila jejaknya stabil |
-| `pulse.pulse_respiration_quotient` | "Kira-kira N degupan setiap nafas" pada skrin Lentur dan keputusan |
+| `cardio.arterialPressureTrace` | Pengesanan degupan untuk pelita, pendedahan dan jarak degupan dalam Lentur |
+| `cardio.pulseRate` | Semakan kendiri: jika kadar degupan yang dikesan berbeza lebih 10% dari SDK, degupan ditanda bising |
+| `breathing.upperTrace` | Lorek nafas dalam Lentur, dari nafas sebenar kau bila jejaknya stabil |
+| `cardio.pulseRate` ÷ `breathing.rate` | "Kira-kira N degupan setiap nafas" pada skrin Lentur dan keputusan, dikira Degup dari nilai stabil terkini |
 | Keyakinan isyarat | Saat yang lemah dilorek pada garis masa dan tidak diskor |
 
 <p align="center"><img src="docs/media/see.png" width="49%" alt="Babak Lihat dalam mod simulasi: pelita berdenyut dengan setiap degupan simulasi, isyarat simulasi, tiada kamera"> <img src="docs/media/bend.png" width="49%" alt="Babak Lentur dalam mod simulasi: jarak degupan dilukis atas lorek nafas, isyarat simulasi, tiada kamera"></p>
@@ -116,7 +115,7 @@ Status jujur: laluan kod live wujud ([`src/sumber/live.ts`](src/sumber/live.ts),
 
 | Kriteria atau syarat | Di mana melihatnya |
 |---|---|
-| **Use of Underlying Technology** | SDK satu-satunya sumber nadi dan nafas. Degupan dicari dalam `arterial_pressure_trace` mentah ([`src/core/beats.ts`](src/core/beats.ts)), disemak dengan `pulse_rate`, dan diskor ([`src/core/score.ts`](src/core/score.ts)). Pernafasan menggerakkan Lentur ([`src/core/rsa.ts`](src/core/rsa.ts)). Persediaan SDK: [`src/sumber/live.ts`](src/sumber/live.ts) |
+| **Use of Underlying Technology** | SDK satu-satunya sumber nadi dan nafas. Degupan dicari dalam `cardio.arterialPressureTrace` mentah ([`src/core/beats.ts`](src/core/beats.ts)), disemak dengan `cardio.pulseRate`, dan diskor ([`src/core/score.ts`](src/core/score.ts)). Pernafasan menggerakkan Lentur ([`src/core/rsa.ts`](src/core/rsa.ts)). Persediaan SDK: [`src/sumber/live.ts`](src/sumber/live.ts) |
 | **Usability and User Experience** | Tiga babak pendek, satu kekunci untuk bermain. Dwibahasa dari hari pertama: setiap teks UI dalam [`lang/en.json`](lang/en.json) dan [`lang/ms.json`](lang/ms.json). Bacaan lemah ditunjukkan, tidak disorok. Panel Data mengira apa yang benar-benar keluar dari app dalam sesi ini ([`src/renderer/skrin/data.ts`](src/renderer/skrin/data.ts)) |
 | **Originality and Creativity** | Ia menukar tugas interosepsi makmal menjadi permainan kamera web, menskor rasa terhadap degupan dan bukan degupan itu sendiri, dan menjadikan nafas kelihatan ketika ia melentur rentak jantung |
 | SDK di teras, sekurang-kurangnya satu isyarat langsung | Gelombang nadi, kadar nadi dan pernafasan menggerakkan ketiga-tiga babak |
@@ -188,11 +187,14 @@ Apa yang ujian tegaskan, semuanya atas isyarat sintetik dengan jawapan yang dike
 
 - **Pengesan degupan** ([`tests/beats.test.ts`](tests/beats.test.ts)): pada 55 hingga 95 degupan seminit merentas tujuh benih,
   sekurang-kurangnya 95% degupan sebenar dijumpai, ralat masa median bawah 40 ms, tiada dua degupan dalam tetingkap refraktori.
-  Juga semakan kendiri kadar nadi, jejak sandaran, dan jurang.
+  Juga semakan kendiri kadar nadi dan jurang.
 - **Skor selaras** ([`tests/score.test.ts`](tests/score.test.ts)): ketukan sefasa jatuh dalam "Selaras", ketukan rawak dalam
   "Meneka" merentas beberapa benih, separuh-separuh dalam "Ada rasa", ketukan terlalu sedikit tiada skor.
 - **Lentur** ([`tests/rsa.test.ts`](tests/rsa.test.ts)): dengan ayunan nafas diketahui 3 hingga 6 degupan seminit, ayunan yang
   dilaporkan dalam 10% dari rujukan.
+- **Bentuk payload SDK** ([`tests/bentuk-metrics.test.ts`](tests/bentuk-metrics.test.ts)): payload sim dan main semula melalui
+  pengekod `Metrics` dan `decodeMetrics` SDK terpasang tanpa kehilangan apa-apa, dan aliran yang dinyahkod menghasilkan degupan,
+  nadi dan degupan setiap nafas. Medan yang SDK tiada gagal di sini.
 - **Persediaan SDK** ([`tests/live.test.ts`](tests/live.test.ts)): cardio dan breathing sahaja, telemetri mati, tepat satu
   pendengar `metrics`, tiada permintaan Insights di mana-mana dalam `src/`, terhadap SDK tiruan.
 - **Perkataan** ([`tests/kata-larangan.test.ts`](tests/kata-larangan.test.ts)): teks UI dan kedua-dua README disemak untuk

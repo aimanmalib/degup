@@ -35,7 +35,7 @@ heart today, and you see your breathing pull the beat faster and slower in real 
 The game has three scenes, about three minutes in total. Lengths come from `config/app.json` (`aliran`).
 
 1. **See (30 s).** A lamp pulses once for every heartbeat the camera sees. The beats come from the SDK's arterial pressure waveform
-   (`cardio.arterial_pressure_trace`). The SDK payload has no beat markers, so Degup finds them itself in
+   (`cardio.arterialPressureTrace`). The SDK payload has no beat markers, so Degup finds them itself in
    [`src/core/beats.ts`](src/core/beats.ts): detrend, low-pass filter, adaptive threshold, and a 330 ms refractory window. Beats
    in a weak reading are marked and left out.
 2. **Feel (40 s).** The lamp goes dark. You press Space each time you feel a beat, without touching your pulse. Then the reveal
@@ -44,15 +44,14 @@ The game has three scenes, about three minutes in total. Lengths come from `conf
    chance; [`src/core/score.ts`](src/core/score.ts)). A fixed lag of 150 ms every time still counts as in tune.
 3. **Bend (60 s).** You breathe in for 4 seconds and out for 6, following the lamp. The gap between beats is drawn live, shaded
    by the breath. Most people see the beat slow down on each out-breath. Degup reports the size of that swing in milliseconds
-   and the SDK's beats-per-breath figure ([`src/core/rsa.ts`](src/core/rsa.ts)).
+   and how many beats fit in one breath, computed from the SDK pulse and breathing rates ([`src/core/rsa.ts`](src/core/rsa.ts)).
 
 | SDK signal (3.4.0) | What Degup does with it |
 |---|---|
-| `cardio.arterial_pressure_trace` | Beat detection for the lamp, the reveal and the beat gaps in Bend |
-| `cardio.pulse_rate` | Self-check: if the detected beat rate differs from the SDK by more than 10%, the beats are flagged as noisy |
-| `pulse.trace` | Fallback waveform when the arterial trace is empty for more than 5 s |
-| `breathing.upper_trace`, `breathing.rate` | Breath shading in Bend, from your real breath when the trace is steady |
-| `pulse.pulse_respiration_quotient` | "About N beats per breath" on the Bend and result screens |
+| `cardio.arterialPressureTrace` | Beat detection for the lamp, the reveal and the beat gaps in Bend |
+| `cardio.pulseRate` | Self-check: if the detected beat rate differs from the SDK by more than 10%, the beats are flagged as noisy |
+| `breathing.upperTrace` | Breath shading in Bend, from your real breath when the trace is steady |
+| `cardio.pulseRate` ÷ `breathing.rate` | "About N beats per breath" on the Bend and result screens, computed by Degup from the latest steady values |
 | Signal confidence | Weak seconds are shaded on the timeline and not scored |
 
 <p align="center"><img src="docs/media/see.png" width="49%" alt="See scene in simulation mode: the lamp pulses with each simulated beat, simulated signal, no camera"> <img src="docs/media/bend.png" width="49%" alt="Bend scene in simulation mode: beat gaps drawn over breathing shading, simulated signal, no camera"></p>
@@ -113,7 +112,7 @@ real camera or a real video. See [Limits](#limits).
 
 | Criterion or requirement | Where to look |
 |---|---|
-| **Use of Underlying Technology** | The SDK is the only source of the pulse and breath. Beats are found in the raw `arterial_pressure_trace` ([`src/core/beats.ts`](src/core/beats.ts)), checked against `pulse_rate`, and scored ([`src/core/score.ts`](src/core/score.ts)). Breathing drives Bend ([`src/core/rsa.ts`](src/core/rsa.ts)). SDK setup: [`src/sumber/live.ts`](src/sumber/live.ts) |
+| **Use of Underlying Technology** | The SDK is the only source of the pulse and breath. Beats are found in the raw `cardio.arterialPressureTrace` ([`src/core/beats.ts`](src/core/beats.ts)), checked against `cardio.pulseRate`, and scored ([`src/core/score.ts`](src/core/score.ts)). Breathing drives Bend ([`src/core/rsa.ts`](src/core/rsa.ts)). SDK setup: [`src/sumber/live.ts`](src/sumber/live.ts) |
 | **Usability and User Experience** | Three short scenes, one key to play. Bilingual from day one: every UI string lives in [`lang/en.json`](lang/en.json) and [`lang/ms.json`](lang/ms.json). Weak readings are shown, not hidden. A Data panel counts what actually left the app in this session ([`src/renderer/skrin/data.ts`](src/renderer/skrin/data.ts)) |
 | **Originality and Creativity** | It turns a lab interoception task into a webcam game, scores the feeling of a beat rather than the beat, and makes the breath visible as it bends the heart rhythm |
 | SDK at the core, at least one live signal | Pulse waveform, pulse rate and breathing drive all three scenes |
@@ -183,12 +182,15 @@ run `zgmnxvjc31`: 122 unit tests and 12 Electron tests, with 1 skipped (the scre
 What the tests assert, all on synthetic signals with a known answer:
 
 - **Beat detector** ([`tests/beats.test.ts`](tests/beats.test.ts)): at 55 to 95 beats per minute across seven seeds, at least 95% of
-  true beats found, median timing error under 40 ms, no two beats inside the refractory window. Also the pulse rate self-check,
-  the fallback trace, and gaps.
+  true beats found, median timing error under 40 ms, no two beats inside the refractory window. Also the pulse rate self-check
+  and gaps.
 - **Sync score** ([`tests/score.test.ts`](tests/score.test.ts)): taps in phase land in "In tune", random taps land in "Guessing"
   across several seeds, half and half lands in "Some sense", too few taps gives no score.
 - **Bend** ([`tests/rsa.test.ts`](tests/rsa.test.ts)): with a known breathing swing of 3 to 6 beats per minute, the reported swing
   is within 10% of the reference.
+- **SDK payload shape** ([`tests/bentuk-metrics.test.ts`](tests/bentuk-metrics.test.ts)): sim and replay payloads go through
+  the installed SDK's own `Metrics` encoder and `decodeMetrics` with nothing lost, and the decoded stream yields beats, pulse and
+  beats per breath. A field the SDK does not have fails here.
 - **SDK setup** ([`tests/live.test.ts`](tests/live.test.ts)): cardio and breathing only, telemetry off, exactly one `metrics`
   listener, no Insights request anywhere in `src/`, against a fake SDK.
 - **Words** ([`tests/kata-larangan.test.ts`](tests/kata-larangan.test.ts)): UI text and both READMEs are checked for a list of

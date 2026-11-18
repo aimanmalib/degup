@@ -1,6 +1,6 @@
-// LENTUR hidup + keputusan (PRD §4.2, §4.5): pengumpul nafas/PRQ/nadi dari payload, segmen fasa untuk lorek jalur IBI,
+// LENTUR hidup + keputusan (PRD §4.2, §4.5): pengumpul nafas/nisbah/nadi dari payload, segmen fasa untuk lorek jalur IBI,
 // dan baris kad keputusan (kunci lang + nilai) yang dikongsi skrin dan PNG. Tulen: tiada DOM, tiada SDK. Masa µs epoch.
-import { keNombor, senarai, type MetrikSdk, type UkuranKeyakinan } from "./metrik.js";
+import { keNombor, type MetrikSdk, type UkuranKeyakinan } from "./metrik.js";
 import { licinNafas, type HasilLentur, type KonfigLentur, type SampelNafas } from "./rsa.js";
 import type { HasilSkor } from "./score.js";
 
@@ -17,13 +17,17 @@ function stabilPada(u: UkuranKeyakinan, keyakinanMin: number): boolean {
 }
 
 /**
- * Kumpul `breathing.upperTrace`, `pulse.pulseRespirationQuotient` dan nadi (`cardio.pulseRate`/`pulse.rate`) untuk LENTUR dan
- * kad keputusan. Sampel lebih lama daripada `simpanS` sebelum sampel terbaharu dibuang (memori terhad sepanjang sesi).
+ * Kumpul `breathing.upperTrace`, nadi (`cardio.pulseRate`) dan kadar nafas (`breathing.rate`) untuk LENTUR dan kad keputusan.
+ * "Degupan setiap nafas" DIKIRA di sini: nadi stabil terkini ÷ kadar nafas stabil terkini, satu titik setiap kali salah satunya
+ * dikemas kini (SDK 3.4.0 tiada medan nisbah dalam `Metrics`). Sampel lebih lama daripada `simpanS` sebelum sampel terbaharu
+ * dibuang (memori terhad sepanjang sesi).
  */
 export class PengumpulLentur {
   private readonly _nafas: SampelNafas[] = [];
   private readonly _prq: NilaiStabil[] = [];
   private readonly _nadi: NilaiStabil[] = [];
+  private nadiStabil: number | null = null;
+  private kadarNafasStabil: number | null = null;
 
   constructor(
     private readonly keyakinanMin: number,
@@ -36,15 +40,29 @@ export class PengumpulLentur {
       if (t !== null && typeof u.value === "number" && Number.isFinite(u.value))
         this._nafas.push({ t, v: u.value, stabil: u.stable ?? true });
     }
-    const ukuran = (ke: NilaiStabil[], xs: UkuranKeyakinan[]) => {
-      for (const u of xs) {
-        const t = keNombor(u.timestamp);
-        if (t !== null && typeof u.value === "number" && Number.isFinite(u.value) && u.value > 0)
-          ke.push({ t, v: u.value, stabil: stabilPada(u, this.keyakinanMin) });
-      }
+    const sah = (u: UkuranKeyakinan): { t: number; v: number } | null => {
+      const t = keNombor(u.timestamp);
+      return t !== null && typeof u.value === "number" && Number.isFinite(u.value) && u.value > 0 ? { t, v: u.value } : null;
     };
-    ukuran(this._prq, senarai(m.pulse?.pulseRespirationQuotient));
-    ukuran(this._nadi, [...(m.cardio?.pulseRate ?? []), ...(m.pulse?.rate ?? [])]);
+    // Susun ikut masa supaya nisbah memakai nilai stabil terkini pada setiap titik.
+    const kemas: { t: number; v: number; stabil: boolean; jenis: "nadi" | "nafas" }[] = [];
+    for (const u of m.cardio?.pulseRate ?? []) {
+      const x = sah(u);
+      if (x) kemas.push({ ...x, stabil: stabilPada(u, this.keyakinanMin), jenis: "nadi" });
+    }
+    for (const u of m.breathing?.rate ?? []) {
+      const x = sah(u);
+      if (x) kemas.push({ ...x, stabil: stabilPada(u, this.keyakinanMin), jenis: "nafas" });
+    }
+    kemas.sort((a, b) => a.t - b.t);
+    for (const k of kemas) {
+      if (k.jenis === "nadi") {
+        this._nadi.push({ t: k.t, v: k.v, stabil: k.stabil });
+        if (k.stabil) this.nadiStabil = k.v;
+      } else if (k.stabil) this.kadarNafasStabil = k.v;
+      if (k.stabil && this.nadiStabil !== null && this.kadarNafasStabil !== null)
+        this._prq.push({ t: k.t, v: this.nadiStabil / this.kadarNafasStabil, stabil: true });
+    }
     this.pangkas();
   }
 
@@ -63,7 +81,7 @@ export class PengumpulLentur {
     return this._nafas;
   }
 
-  /** PRQ dalam [mula, akhir) (untuk `ringkasPrq`). */
+  /** Nisbah degupan setiap nafas yang dikira, dalam [mula, akhir) (untuk `ringkasPrq`). */
   prq(mula: number, akhir: number): NilaiStabil[] {
     return this._prq.filter((x) => x.t >= mula && x.t < akhir);
   }
