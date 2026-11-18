@@ -1,6 +1,8 @@
 {
   "_nota": "Semua nilai yang munasabah berubah (PRD §4.1 hingga §4.5, §4.7, §4.9, §4.10). Kod membaca; kod tidak menyimpan. Ubah di sini, bukan dalam src/.",
-  "bahasa_lalai": "ms",
+  "_nota_bahasa": "bahasa_lalai: \"auto\" = locale OS (app.getLocale()) yang bermula dengan kod dalam senarai bahasa; tiada padanan = bahasa_undur. Tetapan tersimpan pengguna tetap menang.",
+  "bahasa_lalai": "auto",
+  "bahasa_undur": "en",
   "bahasa": [
     "ms",
     "en"
@@ -65,7 +67,7 @@
     "n_min": 10,
     "kualiti_min": 0.6,
     "kualiti_saat_min": 0.5,
-    "ayat_separuh_kitaran": 0.25,
+    "ayat_separuh_kitaran": 0.125,
     "jalur": [
       {
         "id": "selaras",
@@ -118,7 +120,6 @@
     "kelompok_ms": 200,
     "contoh": "fixtures/sim-contoh.json"
   },
-  "sejarah_lalai": false,
   "rakam_fixture": false,
   "fixture_rakaman": {
     "_nota": "PRD §4.10: bila rakam_fixture hidup dan sumber live, angka sesi (tiada imej) → Dokumen/<folder>/<subfolder>. Jenis 'ujian'; P6b melabel semula.",

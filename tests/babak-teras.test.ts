@@ -4,7 +4,7 @@ import app from "../config/app.json";
 import en from "../lang/en.json";
 import ms from "../lang/ms.json";
 import type { Degupan } from "../src/core/beats";
-import { ayatDedah, garisMasa } from "../src/core/dedah";
+import { ayatDedah, ayatSama, garisMasa } from "../src/core/dedah";
 import { KOD_PETUNJUK, kunciPetunjuk, PenjejakJeda } from "../src/core/petunjuk";
 import { kiraSkor, type KonfigSkor } from "../src/core/score";
 import { PenjejakStabil } from "../src/core/stabil";
@@ -126,13 +126,63 @@ describe("garis masa + ayat pendedahan", () => {
       );
     const sefasa = ayatDedah(skor(benar.filter((t) => t >= mula && t < akhir).map((t) => t + 150_000)));
     expect(sefasa.map((a) => a.kunci)).toEqual(["rasa.kiraan", "dedah.sama", "dedah.bukan_kebetulan", "dedah.sesaran"]);
-    const tersebar = ayatDedah({ ...skor(benar.filter((t) => t >= mula && t < akhir).map((t) => t + 150_000)), jalur: "meneka" });
-    expect(tersebar.map((a) => a.kunci)).toEqual(["rasa.kiraan", "dedah.sama", "dedah.kebetulan"]);
+    // J2.1: ayat "x daripada 10" yang bercanggah dengan jalur tidak dipapar (sefasa x tinggi + jalur meneka = dua ayat bertentangan).
+    const bercanggah = ayatDedah({ ...skor(benar.filter((t) => t >= mula && t < akhir).map((t) => t + 150_000)), jalur: "meneka" });
+    expect(bercanggah.map((a) => a.kunci)).toEqual(["rasa.kiraan", "dedah.kebetulan"]);
     const kosong = ayatDedah(skor([]));
     expect(kosong.map((a) => a.kunci)).toEqual(["rasa.kiraan", "rasa.tak_cukup", "dedah.sebab_ketukan"]);
+    // J2.2: sebab = ketukan → ayat menyebut ketukan, bukan cahaya; nombor minimum dari config.
+    expect(kosong[2]!.nilai).toEqual({ n: 0, min: app.rasa.n_min });
+    for (const b of [ms, en]) {
+      expect(dapat(b, "rasa.tak_cukup")).not.toMatch(/light|cahaya/i);
+      expect(dapat(b, "dedah.sebab_ketukan")).not.toMatch(/light|cahaya/i);
+      expect(dapat(b, "dedah.sebab_kualiti")).toMatch(/light|cahaya/i);
+    }
+    expect(sefasa.find((a) => a.kunci === "dedah.sama")!.nilai).toMatchObject({ a: 2, b: 3 });
     for (const a of [...sefasa, ...kosong]) {
       expect(typeof dapat(ms, a.kunci)).toBe("string");
       expect(typeof dapat(en, a.kunci)).toBe("string");
     }
+  });
+});
+
+describe("ayat kebetulan (PH§5.2 J2.1)", () => {
+  const asas = { samaDaripada10: 0, jalur: "meneka", peluangDaripada10: 10 * 2 * app.rasa.ayat_separuh_kitaran } as never as Parameters<typeof ayatSama>[0];
+  const dengan = (x: number, jalur: string) => ayatSama({ ...asas, samaDaripada10: x, jalur });
+
+  it("tetingkap ±0.125 kitaran: kebetulan semata-mata ≈ 2.5 daripada 10 (dahulu ±0.25 = separuh kitaran, 5 daripada 10)", () => {
+    expect(app.rasa.ayat_separuh_kitaran).toBe(0.125);
+    expect(dengan(8, "selaras")).toEqual({ kunci: "dedah.sama", nilai: { x: 8, a: 2, b: 3 } });
+  });
+
+  it("tidak dipapar bersama jalur yang bercanggah", () => {
+    expect(dengan(8, "meneka")).toBeNull();
+    expect(dengan(3, "meneka")).toEqual({ kunci: "dedah.sama", nilai: { x: 3, a: 2, b: 3 } });
+    expect(dengan(3, "ada_rasa")).toBeNull();
+    expect(dengan(4, "ada_rasa")).not.toBeNull();
+    expect(ayatSama({ ...asas, jalur: null })).toBeNull();
+  });
+
+  it("teks BM + EN menyebut paras kebetulan", () => {
+    expect(en.dedah.sama).toContain("Chance alone gives about {a} or {b}");
+    expect(ms.dedah.sama).toContain("{a} atau {b}");
+  });
+});
+
+describe("lencana Live dan teks LENTUR (PH§5.2 J2.3, J2.4)", () => {
+  it("LENTUR tidak menilai bacaan: tiada 'normal'", () => {
+    expect(en.lentur.penerangan).not.toMatch(/normal/i);
+    expect(ms.lentur.penerangan).not.toMatch(/normal/i);
+    expect(en.lentur.penerangan.startsWith("Most people's hearts do this.")).toBe(true);
+  });
+
+  it("lencana Live membawa versi SDK dari config, dan config = pin package.json = pakej terpasang", async () => {
+    const { readFileSync } = await import("node:fs");
+    const pkg = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8"));
+    const sdk = JSON.parse(readFileSync(new URL("../node_modules/@smartspectra/node-sdk/package.json", import.meta.url), "utf8"));
+    expect(pkg.dependencies[app.sdk.pakej]).toBe(app.sdk.versi);
+    expect(sdk.version).toBe(app.sdk.versi);
+    expect(en.umum.langsung).toBe("Live · SmartSpectra SDK {versi}");
+    expect(ms.umum.langsung).toContain("SmartSpectra SDK {versi}");
   });
 });

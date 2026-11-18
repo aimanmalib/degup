@@ -53,13 +53,27 @@ export function ayatDedah(h: HasilSkor): Ayat[] {
   const ayat: Ayat[] = [{ kunci: "rasa.kiraan", nilai: { N: h.N, n: h.n } }];
   if (!h.cukup) {
     ayat.push({ kunci: "rasa.tak_cukup" });
-    if (h.sebab.includes("ketukan")) ayat.push({ kunci: "dedah.sebab_ketukan", nilai: { n: h.nKetukanSah } });
+    if (h.sebab.includes("ketukan")) ayat.push({ kunci: "dedah.sebab_ketukan", nilai: { n: h.nKetukanSah, min: h.nMin } });
     if (h.sebab.includes("kualiti")) ayat.push({ kunci: "dedah.sebab_kualiti" });
     return ayat;
   }
-  if (h.samaDaripada10 !== null) ayat.push({ kunci: "dedah.sama", nilai: { x: h.samaDaripada10 } });
+  const sama = ayatSama(h);
+  if (sama) ayat.push(sama);
   ayat.push({ kunci: h.jalur === "meneka" ? "dedah.kebetulan" : "dedah.bukan_kebetulan" });
   // Sesaran hanya bermakna bila ketukan berkumpul pada satu fasa; bila meneka, purata fasa ialah hingar.
   if (h.sesaranMs !== null && h.jalur !== "meneka") ayat.push({ kunci: "dedah.sesaran", nilai: { ms: h.sesaranMs } });
   return ayat;
+}
+
+/**
+ * "x kali daripada 10; kebetulan memberi kira-kira a atau b" (PH§5.2 J2.1). Dipapar HANYA bila ia menyokong jalur: jalur meneka
+ * dengan x di atas paras kebetulan, atau jalur lain dengan x pada paras kebetulan, ialah dua ayat yang bercanggah → tiada ayat.
+ */
+export function ayatSama(h: HasilSkor): Ayat | null {
+  if (h.samaDaripada10 === null || h.jalur === null) return null;
+  const a = Math.floor(h.peluangDaripada10);
+  const b = Math.max(Math.ceil(h.peluangDaripada10), a + 1);
+  const atasKebetulan = h.samaDaripada10 > b;
+  if (atasKebetulan !== (h.jalur !== "meneka")) return null;
+  return { kunci: "dedah.sama", nilai: { x: h.samaDaripada10, a, b } };
 }

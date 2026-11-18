@@ -142,9 +142,11 @@ This is the consent text the app shows, copied from [`lang/en.json`](lang/en.jso
 > 3. **What the Presage SDK sends out.** (a) API key validation and model download, to Presage. (b) Derived measurements (pulse,
 >    breathing, HRV) and a session identifier are sent automatically to Presage for its Insights feature, which is generated with
 >    Anthropic. Degup cannot turn this off (SmartSpectra SDK Privacy Policy, 3 Nov 2026, §4.2 and §7.4). Degup sends no prompt
->    text. (c) Aggregate SDK telemetry is turned off.
-> 4. **What Degup keeps.** Nothing, unless you turn on History (scores only, a local file, deleted with one click). Your API key
->    is stored encrypted with Electron safeStorage in your user folder.
+>    text. (c) Aggregate SDK telemetry is turned off. (d) Presage keeps a usage record of each session: session time and counts,
+>    without measurement values (§4.4). Presage keeps this data while the developer account behind the API key is active, and
+>    deletes it within 60 days after that account is closed (§10.1(b)).
+> 4. **What Degup keeps.** A settings file and your API key, stored encrypted with Electron safeStorage in your user folder. No
+>    scores are stored. A PNG card is saved only when you press Save PNG card, and a demo video only when you press Record demo.
 > 5. **Who it is for.** Adults aged 18 and over. One person in the frame.
 > 6. **Not a medical device.** This is a body-awareness game. It does not diagnose, treat or monitor any condition. SDK
 >    measurements are for general wellness and are not FDA cleared for diagnosis.

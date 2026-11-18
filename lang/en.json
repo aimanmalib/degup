@@ -10,7 +10,8 @@
     "teruskan": "Continue",
     "kembali": "Back",
     "tutup": "Close",
-    "pilihan": "Options"
+    "pilihan": "Options",
+    "langsung": "Live · SmartSpectra SDK {versi}"
   },
   "kamera": {
     "hidup": "Camera on",
@@ -33,11 +34,11 @@
       },
       "3": {
         "tajuk": "What the Presage SDK sends out",
-        "teks": "(a) API key validation and model download, to Presage. (b) Derived measurements (pulse, breathing, HRV) and a session identifier are sent automatically to Presage for its Insights feature, which is generated with Anthropic. Degup cannot turn this off (SmartSpectra SDK Privacy Policy, 3 Nov 2026, §4.2 and §7.4). Degup sends no prompt text. (c) Aggregate SDK telemetry is turned off."
+        "teks": "(a) API key validation and model download, to Presage. (b) Derived measurements (pulse, breathing, HRV) and a session identifier are sent automatically to Presage for its Insights feature, which is generated with Anthropic. Degup cannot turn this off (SmartSpectra SDK Privacy Policy, 3 Nov 2026, §4.2 and §7.4). Degup sends no prompt text. (c) Aggregate SDK telemetry is turned off. (d) Presage keeps a usage record of each session: session time and counts, without measurement values (§4.4). Presage keeps this data while the developer account behind the API key is active, and deletes it within 60 days after that account is closed (§10.1(b))."
       },
       "4": {
         "tajuk": "What Degup keeps",
-        "teks": "Nothing, unless you turn on History (scores only, a local file, deleted with one click). Your API key is stored encrypted with Electron safeStorage in your user folder."
+        "teks": "A settings file and your API key, stored encrypted with Electron safeStorage in your user folder. No scores are stored. A PNG card is saved only when you press Save PNG card, and a demo video only when you press Record demo."
       },
       "5": {
         "tajuk": "Who it is for",
@@ -83,7 +84,7 @@
       "ada_rasa": "Some sense",
       "selaras": "In tune"
     },
-    "tak_cukup": "Not enough data: try again with light in front of you.",
+    "tak_cukup": "Not enough data for a score.",
     "kiraan": "The camera saw {N} beats. You tapped {n}.",
     "cuba_lagi": "Try again",
     "diulang": "Paused for more than {s} seconds. The round starts again when the reading resumes.",
@@ -96,7 +97,7 @@
     "sela": "Beat interval: {dari} → {ke} ms",
     "ringkasan": "Your heart slowed by about {ms} ms on each exhale.",
     "nisbah": "About {prq} beats per breath, computed from the SDK pulse and breathing rates.",
-    "penerangan": "This is normal. It is called respiratory sinus arrhythmia: the heart follows the breath. We name it, we do not judge it.",
+    "penerangan": "Most people's hearts do this. It is called respiratory sinus arrhythmia: the heart follows the breath. We name it, we do not judge it.",
     "arahan": "Follow the lamp. Breathe in as it grows, breathe out slowly as it shrinks.",
     "menunggu": "Waiting for clear beats…",
     "jalur_label": "Time between beats over {s} seconds, shaded by breathing in and out.",
@@ -150,12 +151,10 @@
     "fixture": "Session to replay",
     "fixture_tiada": "No saved sessions.",
     "fixture_label": "{label} ({tarikh})",
-    "sejarah": "History",
-    "sejarah_bantuan": "Scores only, in one local file. Off until you turn it on.",
     "bunyi": "Tap sound",
     "bunyi_bantuan": "A soft click each time you tap in FEEL.",
     "padam": "Delete all Degup data",
-    "padam_bantuan": "Settings, key and history on this computer.",
+    "padam_bantuan": "Settings and key on this computer. Saved PNG cards and demo videos stay in your Pictures and Videos folders until you delete them.",
     "padam_sahkan": "Yes, delete everything",
     "padam_siap": "Deleted: {n} files.",
     "tentang": "About",
@@ -188,12 +187,12 @@
     "kunci_ketuk": "Your tap",
     "kunci_lorek": "Weak reading, not counted",
     "saat": "{s} seconds",
-    "sama": "Your taps landed on the same part of the cycle {x} times out of 10.",
+    "sama": "Your taps landed on the same part of the cycle {x} times out of 10. Chance alone gives about {a} or {b}.",
     "kebetulan": "A pattern like that can happen by chance.",
     "bukan_kebetulan": "That is not chance.",
     "sesaran": "You felt the beat about {ms} ms after the camera saw it. That fixed offset does not matter; consistency is what counts.",
-    "sebab_ketukan": "Only {n} taps fell between two clear beats. At least 10 are needed.",
-    "sebab_kualiti": "The camera reading was weak for most of the round."
+    "sebab_ketukan": "Only {n} taps fell between two clear beats. At least {min} are needed. Tap each time you feel a beat.",
+    "sebab_kualiti": "The camera reading was weak for most of the round. Try again with light in front of you."
   },
   "petunjuk": {
     "dijeda": "Paused.",

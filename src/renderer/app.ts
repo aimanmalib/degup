@@ -194,7 +194,7 @@ async function utama(): Promise<void> {
         ? h("span", { class: "lencana", "data-uji": "lencana-sumber" }, t("umum.simulasi"))
         : k.sumber === "replay"
           ? h("span", { class: "lencana", "data-uji": "lencana-sumber" }, t("umum.main_semula", { sesi: labelFixture(k) }))
-          : null;
+          : h("span", { class: "lencana lencana-langsung", "data-uji": "lencana-sumber" }, t("umum.langsung", { versi: k.konfig.sdk.versi }));
     const petunjuk = kamera.hidup
       ? h(
           "div",

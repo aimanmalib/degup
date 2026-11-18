@@ -146,9 +146,12 @@ Ini teks izin yang app paparkan, disalin dari [`lang/ms.json`](lang/ms.json):
 > 3. **Apa yang dihantar keluar oleh SDK Presage.** (a) Pengesahan kunci API dan muat turun model ke Presage. (b) Ukuran
 >    terbitan (nadi, nafas, HRV) dan pengecam sesi dihantar automatik ke Presage untuk ciri Insights, yang dijana dengan
 >    Anthropic. Degup tidak boleh mematikan ini (Dasar Privasi SDK SmartSpectra, 3 Nov 2026, §4.2 dan §7.4). Degup tidak
->    menghantar sebarang teks prompt. (c) Telemetri agregat SDK dimatikan.
-> 4. **Apa yang Degup simpan.** Tiada, melainkan kau hidupkan Sejarah (skor sahaja, fail tempatan, boleh dipadam dengan satu
->    klik). Kunci API disimpan terenkripsi dengan safeStorage Electron dalam folder pengguna.
+>    menghantar sebarang teks prompt. (c) Telemetri agregat SDK dimatikan. (d) Presage menyimpan rekod penggunaan setiap sesi:
+>    masa sesi dan kiraan, tanpa nilai ukuran (§4.4). Presage menyimpan data ini selagi akaun pembangun bagi kunci API itu aktif,
+>    dan memadamnya dalam 60 hari selepas akaun itu ditutup (§10.1(b)).
+> 4. **Apa yang Degup simpan.** Satu fail tetapan dan kunci API kau, disimpan terenkripsi dengan safeStorage Electron dalam
+>    folder pengguna. Tiada skor disimpan. Kad PNG disimpan hanya bila kau tekan Simpan kad PNG, dan video demo hanya bila kau
+>    tekan Rakam demo.
 > 5. **Untuk siapa.** Orang dewasa berumur 18 tahun ke atas. Satu orang sahaja dalam bingkai.
 > 6. **Bukan alat perubatan.** Ini permainan kesedaran tubuh. Ia tidak mendiagnosis, merawat atau memantau apa-apa keadaan.
 >    Ukuran SDK untuk tujuan kesejahteraan am dan tidak diluluskan FDA untuk diagnosis.

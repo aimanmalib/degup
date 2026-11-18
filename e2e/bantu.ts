@@ -23,7 +23,9 @@ export async function lancar(sumber = "sim", envTambahan: Record<string, string>
 
   // --no-sandbox: pelari CI (Ubuntu 24.04 AppArmor) tiada chrome-sandbox SUID. --password-store=basic + DEGUP_UJI_STORAN_ASAS:
   // xvfb tiada keyring, jadi safeStorage Linux menolak (app sebenar memaparkan "tiada storan terenkripsi"; diuji unit tests/simpanan.test.ts).
-  const app = await electron.launch({ args: ["--no-sandbox", "--password-store=basic", ...argTambahan, "."], env });
+  // Bahasa lalai = locale OS (bahasa_lalai "auto"); ujian sedia ada bermula dalam BM, jadi locale ms kecuali ujian memberi --lang sendiri.
+  const lang = argTambahan.some((a) => a.startsWith("--lang=")) ? [] : ["--lang=ms"];
+  const app = await electron.launch({ args: ["--no-sandbox", "--password-store=basic", ...lang, ...argTambahan, "."], env });
   const win = await app.firstWindow();
   // xvfb tanpa pengurus tetingkap boleh memberi saiz minimum; paksa saiz lalai config (1280×800) supaya bukti sama dengan app.
   await app.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows()[0]?.setContentSize(1280, 800));

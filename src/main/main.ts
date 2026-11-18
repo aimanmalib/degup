@@ -9,7 +9,7 @@ import { SALURAN, type FixtureSedia, type Permulaan, type Tetapan } from "../pre
 import { simpanKad } from "./kad.js";
 import { PenulisRakaman, simpanFixtureRakaman } from "./rakaman.js";
 import { PengikatSdk, sediaPersekitaran, wujudFail } from "./sdk.js";
-import { Simpanan, tetapanLalai, type Penyulit } from "./simpanan.js";
+import { Simpanan, pilihBahasa, tetapanLalai, type Penyulit } from "./simpanan.js";
 
 const AKAR = join(__dirname, "..");
 const folderData = process.env.DEGUP_DATA;
@@ -188,7 +188,8 @@ function cipta(): BrowserWindow {
 void app.whenReady().then(() => {
   // Ujian sahaja (xvfb tiada keyring): benarkan backend basic_text Linux. App sebenar tanpa keyring menolak menyimpan kunci.
   if (process.env.DEGUP_UJI_STORAN_ASAS === "1" && process.platform === "linux") safeStorage.setUsePlainTextEncryption(true);
-  const lalai = tetapanLalai(konfig.bahasa_lalai, konfig.sejarah_lalai, konfig.rasa.bunyi_lalai);
+  const bahasa = pilihBahasa(konfig.bahasa_lalai, app.getLocale(), konfig.bahasa, konfig.bahasa_undur);
+  const lalai = tetapanLalai(bahasa, konfig.rasa.bunyi_lalai);
   let win: BrowserWindow | null = null;
   daftarIpc(new Simpanan(app.getPath("userData"), lalai, konfig.bahasa, penyulit), () => win);
   win = cipta();

@@ -280,3 +280,23 @@ Format D-n: keputusan · sebab · undur. D-K1 hingga D-K15 = salinan PRD §5 (di
   fixture. Medan rekaan (cth `pulse`) gagal di sini.
 - **CSP renderer** tambah `worker-src 'self' blob:` (README SDK; renderer 3.4.0 tidak mencipta Worker, pagar murah).
 - **Undur:** `git revert` komit J1 (fixture lama skema 1 kembali bersama).
+
+### D19 (J2, 19 Nov 2026) Tujuh pembetulan UI semakan pra-hantar; suis History dibuang
+- **Ayat kebetulan:** `rasa.ayat_separuh_kitaran` 0.25 → 0.125 (±0.25 kitaran = separuh kitaran, jadi 5/10 ialah nasib). Ayat
+  `dedah.sama` kini menyebut paras kebetulan `{a}`/`{b}` yang DIKIRA dari config (10 × 2 × w = 2.5 → "2 atau 3"). Ayat itu dipapar
+  hanya bila ia menyokong jalur (`ayatSama`): meneka + x > b, atau jalur lain + x ≤ b = bercanggah → tiada ayat.
+- **Tak cukup data:** `rasa.tak_cukup` neutral; nasihat cahaya hanya dalam `dedah.sebab_kualiti`; `dedah.sebab_ketukan` menyebut
+  minimum `{min}` dari `rasa.n_min` (dahulu "10" dalam teks). `lentur.tak_cukup` kekal menyebut cahaya (sebabnya memang degupan kabur).
+- **LENTUR:** "This is normal." → "Most people's hearts do this." (BM setara). Tiada penilaian bacaan.
+- **Lencana Live:** mod `live` memaparkan `umum.langsung` "Live · SmartSpectra SDK {versi}" di tempat lencana Simulation, versi dari
+  `config.sdk.versi`; ujian unit mengunci config = pin `package.json` = pakej terpasang.
+- **Bahasa lalai:** `bahasa_lalai: "auto"` = `app.getLocale()` bermula dengan kod dalam `bahasa` (ms-MY → ms), selainnya
+  `bahasa_undur` ("en", juga sandaran i18n). Tetapan tersimpan menang. E2E lalai melancar dengan `--lang=ms` (ujian sedia ada BM);
+  `e2e/j2.spec.ts` menguji en-US dan ms-MY.
+- **Izin perkara 3:** tambah (d) rekod penggunaan Presage (§4.4: masa sesi dan kiraan, tanpa nilai ukuran) dan tempoh simpan
+  (§10.1(b): selagi akaun pembangun aktif, dipadam ≤ 60 hari selepas ditutup). README EN + BM sama.
+- **Suis History dibuang (menyimpang daripada PRD §4.6 perkara 4):** tiada kod pernah menulis skor; suis itu menjanjikan ciri yang
+  tidak wujud (PH§5.2 J2.7). Medan `sejarah` keluar dari `Tetapan`, `config.sejarah_lalai` dan `sejarah.json` (senarai padam) dibuang.
+  Izin perkara 4 = apa yang benar disimpan: fail tetapan + kunci tersulit, tiada skor; kad PNG hanya bila "Save PNG card", video demo
+  hanya bila "Record demo". `tetapan.padam_bantuan` menyebut kad dan video kekal dalam folder Gambar/Video. PRD "P-lanjut 3" tidak dibina.
+- **Undur:** `git revert` komit J2 (tetapan.json lama dengan `sejarah` diabaikan oleh `gabungTetapan` dalam kedua-dua arah).

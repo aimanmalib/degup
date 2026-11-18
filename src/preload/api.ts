@@ -6,7 +6,6 @@ export interface Tetapan {
   bahasa: string;
   /** deviceId kamera dari enumerateDevices; null = lalai sistem. */
   kamera: string | null;
-  sejarah: boolean;
   bunyi: boolean;
   sumber: SumberTetapan;
   /** Nama fail fixture (tanpa laluan) bila sumber = replay. */

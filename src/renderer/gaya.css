@@ -60,6 +60,7 @@ button, input, select { font: inherit; color: inherit; }
   border: 1px dashed var(--pelita); color: var(--pelita);
   max-width: 22rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
+.lencana-langsung { border-style: solid; }
 .nav { display: flex; align-items: center; gap: var(--j-2); }
 .kamera-hidup, .rakam-hidup { display: flex; align-items: center; gap: var(--j-2); font-weight: 700; color: var(--tulang); }
 .rakam-hidup { padding: 0.1rem 0.2rem 0.1rem 0.6rem; border: 1px solid var(--merah); border-radius: var(--bucu-pil); }

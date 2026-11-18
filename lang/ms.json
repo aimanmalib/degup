@@ -10,7 +10,8 @@
     "teruskan": "Teruskan",
     "kembali": "Kembali",
     "tutup": "Tutup",
-    "pilihan": "Pilihan"
+    "pilihan": "Pilihan",
+    "langsung": "Langsung · SmartSpectra SDK {versi}"
   },
   "kamera": {
     "hidup": "Kamera hidup",
@@ -33,11 +34,11 @@
       },
       "3": {
         "tajuk": "Apa yang dihantar keluar oleh SDK Presage",
-        "teks": "(a) Pengesahan kunci API dan muat turun model ke Presage. (b) Ukuran terbitan (nadi, nafas, HRV) dan pengecam sesi dihantar automatik ke Presage untuk ciri Insights, yang dijana dengan Anthropic. Degup tidak boleh mematikan ini (Dasar Privasi SDK SmartSpectra, 3 Nov 2026, §4.2 dan §7.4). Degup tidak menghantar sebarang teks prompt. (c) Telemetri agregat SDK dimatikan."
+        "teks": "(a) Pengesahan kunci API dan muat turun model ke Presage. (b) Ukuran terbitan (nadi, nafas, HRV) dan pengecam sesi dihantar automatik ke Presage untuk ciri Insights, yang dijana dengan Anthropic. Degup tidak boleh mematikan ini (Dasar Privasi SDK SmartSpectra, 3 Nov 2026, §4.2 dan §7.4). Degup tidak menghantar sebarang teks prompt. (c) Telemetri agregat SDK dimatikan. (d) Presage menyimpan rekod penggunaan setiap sesi: masa sesi dan kiraan, tanpa nilai ukuran (§4.4). Presage menyimpan data ini selagi akaun pembangun bagi kunci API itu aktif, dan memadamnya dalam 60 hari selepas akaun itu ditutup (§10.1(b))."
       },
       "4": {
         "tajuk": "Apa yang Degup simpan",
-        "teks": "Tiada, melainkan kau hidupkan Sejarah (skor sahaja, fail tempatan, boleh dipadam dengan satu klik). Kunci API disimpan terenkripsi dengan safeStorage Electron dalam folder pengguna."
+        "teks": "Satu fail tetapan dan kunci API kau, disimpan terenkripsi dengan safeStorage Electron dalam folder pengguna. Tiada skor disimpan. Kad PNG disimpan hanya bila kau tekan Simpan kad PNG, dan video demo hanya bila kau tekan Rakam demo."
       },
       "5": {
         "tajuk": "Untuk siapa",
@@ -83,7 +84,7 @@
       "ada_rasa": "Ada rasa",
       "selaras": "Selaras"
     },
-    "tak_cukup": "Tak cukup data: cuba lagi dengan cahaya depan.",
+    "tak_cukup": "Tak cukup data untuk skor.",
     "kiraan": "Kamera nampak {N} degupan. Kau ketuk {n}.",
     "cuba_lagi": "Cuba lagi",
     "diulang": "Jeda melebihi {s} saat. Pusingan bermula semula bila bacaan sambung.",
@@ -96,7 +97,7 @@
     "sela": "Sela degupan: {dari} → {ke} ms",
     "ringkasan": "Jantung kau melambat kira-kira {ms} ms setiap kali hembus.",
     "nisbah": "Kira-kira {prq} degupan setiap nafas, dikira dari kadar nadi dan kadar nafas SDK.",
-    "penerangan": "Ini normal. Namanya aritmia sinus pernafasan: jantung mengikut nafas. Kami menamakannya, tidak menilainya.",
+    "penerangan": "Jantung kebanyakan orang berbuat begini. Namanya aritmia sinus pernafasan: jantung mengikut nafas. Kami menamakannya, tidak menilainya.",
     "arahan": "Ikut pelita. Tarik nafas bila ia membesar, hembus perlahan bila ia mengecil.",
     "menunggu": "Menunggu degupan yang jelas…",
     "jalur_label": "Sela antara degupan sepanjang {s} saat, dilorek ikut tarik dan hembus.",
@@ -150,12 +151,10 @@
     "fixture": "Sesi untuk dimain semula",
     "fixture_tiada": "Tiada sesi tersimpan.",
     "fixture_label": "{label} ({tarikh})",
-    "sejarah": "Sejarah",
-    "sejarah_bantuan": "Skor sahaja, dalam satu fail tempatan. Mati sehingga kau hidupkan.",
     "bunyi": "Bunyi ketukan",
     "bunyi_bantuan": "Klik lembut setiap kali kau ketuk dalam RASA.",
     "padam": "Padam semua data Degup",
-    "padam_bantuan": "Tetapan, kunci dan sejarah dalam komputer ini.",
+    "padam_bantuan": "Tetapan dan kunci dalam komputer ini. Kad PNG dan video demo yang disimpan kekal dalam folder Gambar dan Video sehingga kau padam.",
     "padam_sahkan": "Ya, padam semuanya",
     "padam_siap": "Dipadam: {n} fail.",
     "tentang": "Tentang",
@@ -188,12 +187,12 @@
     "kunci_ketuk": "Ketukan kau",
     "kunci_lorek": "Bacaan lemah, tidak dikira",
     "saat": "{s} saat",
-    "sama": "Ketukan kau jatuh pada bahagian kitaran yang sama {x} kali daripada 10.",
+    "sama": "Ketukan kau jatuh pada bahagian kitaran yang sama {x} kali daripada 10. Kebetulan semata-mata memberi kira-kira {a} atau {b}.",
     "kebetulan": "Corak sebegitu boleh berlaku secara kebetulan.",
     "bukan_kebetulan": "Itu bukan kebetulan.",
     "sesaran": "Kau rasa degupan kira-kira {ms} ms selepas kamera melihatnya. Sesaran tetap itu tidak penting; yang dikira ialah ketekalan.",
-    "sebab_ketukan": "Hanya {n} ketukan jatuh antara dua degupan yang jelas. Perlu sekurang-kurangnya 10.",
-    "sebab_kualiti": "Bacaan kamera lemah untuk sebahagian besar pusingan."
+    "sebab_ketukan": "Hanya {n} ketukan jatuh antara dua degupan yang jelas. Perlu sekurang-kurangnya {min}. Ketuk setiap kali kau rasa degupan.",
+    "sebab_kualiti": "Bacaan kamera lemah untuk sebahagian besar pusingan. Cuba lagi dengan cahaya depan."
   },
   "petunjuk": {
     "dijeda": "Dijeda.",

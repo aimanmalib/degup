@@ -27,7 +27,7 @@ export class Keadaan {
   private pendengar: Array<() => void> = [];
 
   constructor(public mula: Permulaan) {
-    this.i18n = new I18n({ ms, en }, mula.tetapan.bahasa, konfig.bahasa_lalai);
+    this.i18n = new I18n({ ms, en }, mula.tetapan.bahasa, konfig.bahasa_undur);
   }
 
   t = (kunci: string, nilai?: Record<string, string | number>) => this.i18n.t(kunci, nilai);

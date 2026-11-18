@@ -1,4 +1,4 @@
-// Panel Tetapan (PRD §4.7): bahasa, kamera, kunci API (safeStorage), sumber isyarat, sejarah, bunyi, padam semua, tentang.
+// Panel Tetapan (PRD §4.7): bahasa, kamera, kunci API (safeStorage), sumber isyarat, bunyi, padam semua, tentang.
 // "Rakam demo" (§4.9) dari ./rakam.ts (P4a, D13).
 import type { Ruang } from "../app.js";
 import { h } from "../dom.js";
@@ -193,7 +193,6 @@ export async function panelTetapan(r: Ruang, tutup: () => void): Promise<HTMLEle
         "section",
         { class: "bahagian" },
         h("h3", {}, t("umum.pilihan")),
-        suis("sejarah", t("tetapan.sejarah"), t("tetapan.sejarah_bantuan"), tg.sejarah, (v) => void r.k.ubah({ sejarah: v })),
         suis("bunyi", t("tetapan.bunyi"), t("tetapan.bunyi_bantuan"), tg.bunyi, (v) => void r.k.ubah({ bunyi: v })),
       ),
       bahagianPadam(r),

@@ -55,6 +55,10 @@ export interface HasilSkor {
   sesaranMs: number | null;
   /** Ketukan dalam ± `ayat_separuh_kitaran` kitaran dari fasa min, daripada 10 (ayat statistik bahasa biasa). */
   samaDaripada10: number | null;
+  /** Jangkaan `samaDaripada10` bila ketukan rawak seragam: 10 × 2 × `ayat_separuh_kitaran` (ayat "kebetulan memberi kira-kira …"). */
+  peluangDaripada10: number;
+  /** Ketukan sah minimum (config `n_min`; ayat sebab ketukan). */
+  nMin: number;
 }
 
 const DUA_PI = 2 * Math.PI;
@@ -172,5 +176,7 @@ export function kiraSkor(input: InputSkor, kfg: KonfigSkor): HasilSkor {
     jalur: cukup ? pilihJalur(kfg.jalur, R, p) : null,
     sesaranMs,
     samaDaripada10,
+    peluangDaripada10: 10 * 2 * kfg.ayat_separuh_kitaran,
+    nMin: kfg.n_min,
   };
 }

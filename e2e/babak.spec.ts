@@ -75,6 +75,11 @@ test("aliran: LIHAT berdenyut + Sedia → RASA sefasa → Selaras; Cuba lagi →
   await win.getByRole("button", { name: en.bahasa.en_penuh }).click();
   await expect(win.locator("[data-uji=jalur]")).toHaveText(en.rasa.jalur.selaras);
   await bukti(win, "dedah-selaras-en", "p3b");
+  // J2.1: ayat "x daripada 10" menyebut paras kebetulan dari config (±ayat_separuh_kitaran).
+  const peluang = 20 * app.rasa.ayat_separuh_kitaran;
+  const [a, b] = [Math.floor(peluang), Math.max(Math.ceil(peluang), Math.floor(peluang) + 1)];
+  await expect(win.locator("[data-uji=dedah]")).toContainText(en.dedah.sama.split("{x}")[1].replace("{a}", String(a)).replace("{b}", String(b)));
+  await bukti(win, "dedah-selaras-en", "j2");
   await win.getByRole("button", { name: ms.bahasa.ms_penuh }).click();
 
   await win.locator("[data-uji=cuba-lagi]").click();
@@ -135,6 +140,16 @@ test("jeda petunjuk: LIHAT dijeda + Sedia ditutup; RASA dijeda > had → pusinga
   await expect(win.locator("[data-uji=dedah]")).toHaveAttribute("data-cukup", "false");
   await expect(win.getByText(ms.rasa.tak_cukup)).toBeVisible();
   await expect(win.locator("[data-uji=kiraan]")).toHaveAttribute("data-n", "0");
+  // J2.2: sebab = ketukan → ayat menyebut ketukan dan minimum dari config, bukan cahaya.
+  const dedahTak = win.locator("[data-uji=dedah]");
+  await expect(dedahTak).toContainText(ms.dedah.sebab_ketukan.replace("{n}", "0").replace("{min}", String(app.rasa.n_min)));
+  await expect(dedahTak).not.toContainText("cahaya");
+  await win.waitForTimeout(app.dedah.kiraan_ms + 500);
+  await bukti(win, "tak-cukup-ketukan-ms", "j2");
+  await win.getByRole("button", { name: en.bahasa.en_penuh }).click();
+  await expect(dedahTak).toContainText(en.dedah.sebab_ketukan.replace("{n}", "0").replace("{min}", String(app.rasa.n_min)));
+  await expect(dedahTak).not.toContainText("light");
+  await bukti(win, "tak-cukup-ketukan-en", "j2");
 
   await win.keyboard.press("Escape");
   await expect(win.locator("[data-uji=senarai-izin]")).toBeVisible();
