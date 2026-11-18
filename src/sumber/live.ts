@@ -59,6 +59,11 @@ export function kategoriRalat(kod: number): RalatLive {
   return "sdk";
 }
 
+/** Kunci lang ayat ralat yang skrin izin paparkan untuk kategori ini (`lang/*.json` `live.ralat_*`). */
+export function kunciRalat(r: RalatLive): string {
+  return `live.ralat_${r}`;
+}
+
 /** Peristiwa sesi yang dikira untuk panel Data (§4.6): diukur, bukan dakwaan. */
 export interface KiraanLive {
   /** Bilangan payload `metrics` diterima. */

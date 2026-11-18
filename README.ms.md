@@ -108,8 +108,9 @@ Mod live ialah yang sebenar: kamera kau, SDK, nadi kau.
 Di Linux tanpa pemacu GPU Vulkan, Degup mengarahkan SDK ke Mesa lavapipe (`sdk.vulkan_icd_linux` dalam `config/app.json`).
 
 Status jujur: laluan kod live wujud ([`src/sumber/live.ts`](src/sumber/live.ts), kamera dimiliki renderer seperti sampel rasmi
-`electron-quickstart`) dan sambungannya diuji unit terhadap SDK tiruan. Ia belum diukur atas kamera atau video sebenar. Lihat
-[Had](#had).
+`electron-quickstart`) dan sambungannya diuji unit terhadap SDK tiruan. Ujian asap dengan kamera palsu tanpa muka mengesahkan kunci,
+jambatan SDK dan petunjuk tiada muka ([`docs/MEASUREMENTS.md`](docs/MEASUREMENTS.md), dalam bahasa Inggeris). Ia belum diukur atas
+muka sebenar. Lihat [Had](#had).
 
 ## Bagaimana ia memenuhi kriteria juri
 

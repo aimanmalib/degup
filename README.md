@@ -105,8 +105,9 @@ Live mode is the real thing: your camera, the SDK, your pulse.
 On Linux without a Vulkan GPU driver, Degup points the SDK at Mesa lavapipe (`sdk.vulkan_icd_linux` in `config/app.json`).
 
 Honest status: the live code path exists ([`src/sumber/live.ts`](src/sumber/live.ts), with the camera owned by the renderer as in
-the official `electron-quickstart` sample) and its wiring is unit tested against a fake SDK. It has not yet been measured on a
-real camera or a real video. See [Limits](#limits).
+the official `electron-quickstart` sample) and its wiring is unit tested against a fake SDK. A smoke test with a fake camera and no
+face confirmed the key, the SDK bridge and the no-face hint ([`docs/MEASUREMENTS.md`](docs/MEASUREMENTS.md)). It has not yet been
+measured on a real face. See [Limits](#limits).
 
 ## How it meets the judging criteria
 

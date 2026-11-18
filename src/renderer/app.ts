@@ -17,7 +17,7 @@ import { panelTetapan } from "./skrin/tetapan.js";
 import { pasangCangkukUji } from "./uji.js";
 import type { Keputusan } from "../core/lentur.js";
 import type { HasilSkor } from "../core/score.js";
-import type { RalatLive } from "../sumber/live.js";
+import { kunciRalat, type RalatLive } from "../sumber/live.js";
 
 export type NamaSkrin = "izin" | "rehat" | "lihat" | "rasa" | "dedah" | "lentur" | "keputusan";
 type NamaBabak = Extract<NamaSkrin, "lihat" | "rasa" | "dedah" | "lentur">;
@@ -113,7 +113,7 @@ async function utama(): Promise<void> {
         ruang.sesi = await SesiUkur.cipta(k, kamera.media, ralatLive);
       } catch (e) {
         kamera.tutup();
-        ralatMula = `live.ralat_${e instanceof RalatMulaLive ? e.sebab : "sdk"}`;
+        ralatMula = kunciRalat(e instanceof RalatMulaLive ? e.sebab : "sdk");
         lukis();
         return;
       }
@@ -149,7 +149,7 @@ async function utama(): Promise<void> {
   function ralatLive(r: RalatLive): void {
     if (!ruang.sesi) return;
     ruang.berhenti();
-    ralatMula = `live.ralat_${r}`;
+    ralatMula = kunciRalat(r);
     lukis();
   }
 

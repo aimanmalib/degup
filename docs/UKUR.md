@@ -7,6 +7,7 @@ Nama fail video pemilik sahaja, tiada laluan penuh, tiada imej.
 
 | Tarikh (MYT) | Potongan | Tempoh (min) | Tujuan | Sumber (nama fail / kamera) | Keputusan |
 |---|---|---|---|---|---|
+| 19 Nov 2026 03:25 hingga 03:31 | P1a | ≈ 1.0 (12 + 12 s fail, 18.8 + 18.9 s app) | Asap laluan langsung tanpa muka: `headless-smoke.mjs` × 2 atas video corak `testsrc` 20 s (mktemp, dibuang) + `asap-live.mjs` × 2 (Electron, kamera palsu Chromium) | corak ujian, tiada orang | kunci diterima (kRunning, Data "Yes"); kNoFaceFound 118×; 0 payload metrics; 0 ralat; tiada CSP/konsol; Esc mematikan kamera |
 
 Jumlah sebelum 18 Nov: 0 minit.
 

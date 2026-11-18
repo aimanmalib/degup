@@ -198,6 +198,18 @@
       "max_duration_ms": 0,
       "had_dinding_s": 300,
       "label_fixture": "host test video"
+    },
+    "asap_live": {
+      "_nota": "scripts/asap-live.mjs (P1a): Electron sumber live + kamera palsu Chromium (corak bergerak, tiada orang). Had masa dalam saat; jumlah masa SDK <= had_sdk_s (kredit).",
+      "had_sdk_s": 120,
+      "tunggu_berjalan_s": 45,
+      "tunggu_petunjuk_s": 45,
+      "kod_tiada_muka": 1,
+      "bahasa": "en",
+      "suis_chromium": [
+        "--use-fake-device-for-media-stream",
+        "--use-fake-ui-for-media-stream"
+      ]
     }
   }
 }

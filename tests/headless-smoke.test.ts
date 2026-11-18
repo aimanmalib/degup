@@ -103,6 +103,7 @@ describe("jalankanAsap (SDK tiruan)", () => {
 
     const r = h.ringkasan;
     expect(r.status_akhir).toBe(1);
+    expect(r.status_dilihat).toEqual([2, 3, 4, 1]);
     expect(r.insight).toBe(1);
     expect(r.pengesahan.peralihan.map((x) => x.kod)).toEqual([1, 0]);
     expect(r.pengesahan.kiraan).toEqual({ 0: 1, 1: 1 });
@@ -140,6 +141,7 @@ describe("jalankanAsap (SDK tiruan)", () => {
     expect(h.tamatMasa).toBe(false);
     expect(h.ringkasan.ralat).toEqual([{ kod: 2, boleh_ulang: false }]);
     expect(h.ringkasan.status_akhir).toBe(5);
+    expect(h.ringkasan.status_dilihat).not.toContain(3);
     expect(rekod.sdk!.berhenti).toBe(1);
     expect(nilaiP1(h.ringkasan, P1).sebab).toContain("h1_ralat_sdk");
   });
@@ -181,7 +183,7 @@ describe("scripts/gerbang-p1.mjs", () => {
   afterAll(() => rmSync(dir, { recursive: true, force: true }));
   const lari = (fail: string) => spawnSync(process.execPath, ["scripts/gerbang-p1.mjs", fail], { encoding: "utf8" });
   const contoh = (lebih: Partial<RingkasanP1["degupan"]> = {}, stabil = 85): RingkasanP1 => ({
-    skema: 1, sdk_versi: "3.4.0", status_akhir: 1, ralat: [], masa_ke_metrik_pertama_ms: 4000, payload_metrik: 600, insight: 0,
+    skema: 1, sdk_versi: "3.4.0", status_akhir: 1, status_dilihat: [2, 3, 4, 1], ralat: [], masa_ke_metrik_pertama_ms: 4000, payload_metrik: 600, insight: 0,
     pengesahan: { peralihan: [{ kod: 0, t: T0 }], kiraan: { 0: 1 } },
     nadi: { sampel: 300, sampel_dinilai: 250, stabil: Math.round(2.5 * stabil), peratus_stabil: stabil, purata_bpm: 70 },
     nafas: { sampel: 100, purata_per_min: 12 },

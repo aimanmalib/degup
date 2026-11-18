@@ -2,8 +2,10 @@
 // SATU pendengar `metrics`, tiada `requestInsight`, ralat SDK dikategori, kiraan panel Data diukur.
 import { describe, expect, it } from "vitest";
 import app from "../config/app.json";
+import en from "../lang/en.json";
+import ms from "../lang/ms.json";
 import type { MetrikSdk } from "../src/core/metrik";
-import { kategoriRalat, opsyenSdk, SumberLive, type KilangSdk, type OpsyenSdk, type SdkRenderer } from "../src/sumber/live";
+import { kategoriRalat, kunciRalat, opsyenSdk, SumberLive, type KilangSdk, type OpsyenSdk, type SdkRenderer } from "../src/sumber/live";
 
 // Kod rasmi SDK 3.4.0 (`constants.js`): bentuk sahaja, ujian tidak memuat pakej asli.
 const KUMPULAN = { cardio: [15, 16, 17], breathing: [0, 1, 2, 3, 4, 5, 6, 7], face: [11, 12, 13, 14] };
@@ -152,6 +154,28 @@ describe("kategoriRalat (SmartSpectraErrorCode)", () => {
     [8, "sdk"],
     [1, "sdk"],
   ])("kod %i → %s", (kod, jangka) => expect(kategoriRalat(kod)).toBe(jangka));
+});
+
+describe("ralat SDK semasa sesi → ayat skrin izin (P1a, SDK tiruan)", () => {
+  const bacaKunci = (b: Record<string, unknown>, kunci: string) => kunci.split(".").reduce<unknown>((o, k) => (o as Record<string, unknown>)?.[k], b);
+  it.each([
+    [2, "live.ralat_kunci"],
+    [4, "live.ralat_kredit"],
+    [5, "live.ralat_rangkaian"],
+    [6, "live.ralat_rangkaian"],
+  ])("kod %i → %s, wujud dalam BM dan EN", async (kod, jangka) => {
+    const { sumber, dicipta } = bina();
+    const kunci: string[] = [];
+    sumber.onRalat((r) => kunci.push(kunciRalat(r)));
+    await sumber.mula();
+    dicipta[0]!.pancar("error", kod, "mesej SDK", false);
+    expect(kunci).toEqual([jangka]);
+    for (const b of [en, ms]) expect(String(bacaKunci(b, jangka) ?? "").length).toBeGreaterThan(10);
+  });
+  it("kunci, kredit dan rangkaian ialah tiga ayat berbeza", () => {
+    const t = (["kunci", "kredit", "rangkaian"] as const).map((r) => bacaKunci(en, kunciRalat(r)));
+    expect(new Set(t).size).toBe(3);
+  });
 });
 
 describe("larangan SDK dalam kod sumber (K6, K7)", () => {

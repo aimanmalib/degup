@@ -26,6 +26,8 @@ export interface RingkasanP1 {
   skema: 1;
   sdk_versi: string;
   status_akhir: number | null;
+  /** Setiap `processingStatus` yang pernah tiba, ikut tertib pertama (3 = kRunning: kunci diterima pelayan). */
+  status_dilihat: number[];
   ralat: { kod: number; boleh_ulang: boolean }[];
   masa_ke_metrik_pertama_ms: number | null;
   payload_metrik: number;
@@ -60,6 +62,7 @@ export class PengumpulP1 {
   private payload = 0;
   private insight = 0;
   private status: number | null = null;
+  private statusDilihat: number[] = [];
   private tMulaMs: number | null = null;
   private tMetrikPertamaMs: number | null = null;
 
@@ -98,6 +101,7 @@ export class PengumpulP1 {
 
   statusPemprosesan(s: number): void {
     this.status = s;
+    if (!this.statusDilihat.includes(s)) this.statusDilihat.push(s);
   }
 
   ralatSdk(kod: number, bolehUlang: boolean): void {
@@ -131,6 +135,7 @@ export class PengumpulP1 {
       skema: 1,
       sdk_versi: this.sdkVersi,
       status_akhir: this.status,
+      status_dilihat: [...this.statusDilihat],
       ralat: this.ralat,
       masa_ke_metrik_pertama_ms:
         this.tMulaMs !== null && this.tMetrikPertamaMs !== null ? Math.round(this.tMetrikPertamaMs - this.tMulaMs) : null,

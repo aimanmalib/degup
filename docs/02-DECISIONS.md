@@ -316,3 +316,16 @@ Format D-n: keputusan · sebab · undur. D-K1 hingga D-K15 = salinan PRD §5 (di
 - **Keluaran:** JSON angka sahaja (tiada kunci, laluan atau mesej ralat SDK); kod keluar 3 = kunci ditolak, 4 = kredit habis (P1a
   TERSEKAT), 5 = ralat lain / tamat masa. `--fixture` menulis fixture skema 2 jenis "ujian".
 - **Undur:** `git revert` komit J5; `SumberLive` kembali mendaftar pendengar sendiri.
+
+### D21 (P1a, 19 Nov 2026) Asap laluan langsung tanpa muka di hos
+
+- **Keputusan:** `scripts/asap-live.mjs` melancar Electron sebenar (Playwright `_electron`, sumber `live`, kamera palsu Chromium
+  `--use-fake-device-for-media-stream --use-fake-ui-for-media-stream`) dengan kunci dari `.env` melalui env (tidak dicetak; teks konsol
+  dibersihkan daripada kunci). Semakan: jambatan preload, saluran IPC baharu selepas Start (= `bindSmartSpectraIpc` terikat), petunjuk
+  kod 1, Data "Yes", Esc, tiada CSP/ralat konsol, masa SDK ≤ `config.p1.asap_live.had_sdk_s`. Bukan sebahagian gerbang (memakai kredit).
+- **`status_dilihat`** ditambah pada ringkasan `headless-smoke` supaya kRunning direkod, bukan disimpulkan dari `status_akhir`.
+- **`kunciRalat(r)`** (`src/sumber/live.ts`) = satu sumber kunci lang ayat ralat; `app.ts` memakainya; ujian kod 2/4/5/6 → ayat BM + EN.
+- **Kod keluar:** `xvfb-run -a` di hos dikongsi keluar 1 walaupun arahan lulus (`xvfb-run -a true` → 1; punca dalam `gerbang-ujian.sh`),
+  jadi JSON membawa medan `rc` sendiri; guna `-n <paparan bebas>`.
+- **Hasil:** semua lulus; kunci diterima; tiada pepijat integrasi ditemui. Angka awam: `docs/MEASUREMENTS.md`.
+- **Undur:** `git revert` komit P1a; tiada kod app berubah selain `kunciRalat`.
