@@ -373,3 +373,15 @@ Format D-n: keputusan · sebab · undur. D-K1 hingga D-K15 = salinan PRD §5 (di
   dan tidak mengubah teks yang dibaca juri. Memadam ayat RSA melemahkan bahagian "How It Responds" (kriteria Use of Underlying
   Technology) dan nama itu sudah diluluskan untuk teks app.
 - **Undur:** buang `arrhythmia` dari `markdown_izin` dan tulis semula perenggan Bend tanpa nama buku teks.
+
+## D25 · J4: README juri: peta kod, glosari, komen kepala EN, pengisytiharan AI (19 Nov 2026)
+
+- **Keputusan:** README.md + README.ms.md dapat "Code map for reviewers" / "Peta kod untuk penilai" (10 baris: 8 fail yang pos dan
+  PH§5.2 namakan + `src/sumber/sim.ts` + fail lang) dan "Glossary (Malay to English)" (34 istilah dalam jadual dua lajur pasang,
+  semuanya pengecam yang wujud dalam `src/`). Lapan fail dapat 2 hingga 3 baris komen kepala EN di atas komen BM sedia ada; tiada
+  kod berubah. Tarikh komit pertama = "8 Nov 2026 UTC" (`git log` 2026-11-08T16:00:38Z). "PAT 2.0 (2026)" dibuang (tiada sumber
+  disahkan); Plans et al. 2021 kekal dengan DOI. Pengisytiharan AI = perenggan Agent Session PH§6 TANPA klausa yang belum berlaku
+  (laptop + muka pemilik, rakaman demo, semak setiap angka): klausa itu ditunda ke P8 selepas P6. Tajuk "AI disclosure" kekal.
+- **Sebab:** juri membaca nama Melayu; PH§5.2 J4. Klausa bersyarat ditulis dalam kala kini ("reviews ... before I submit") supaya
+  benar hari ini.
+- **Undur:** buang dua bahagian dan baris komen EN pertama setiap fail (`git revert` komit J4).

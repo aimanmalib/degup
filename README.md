@@ -5,7 +5,7 @@
 <p align="center"><img src="https://img.shields.io/badge/SmartSpectra%20SDK-3.4.0-f5b85c" alt="SmartSpectra SDK 3.4.0"> <img src="https://img.shields.io/badge/Electron-45-47848f" alt="Electron 45"> <img src="https://img.shields.io/badge/licence-MIT-blue" alt="Licence: MIT"> <img src="https://img.shields.io/badge/DEV%20challenge-Nov%202026-0a0a0a" alt="DEV challenge, November 2026"></p>
 
 <p align="center"><b>Can you feel your own heartbeat? A three-minute webcam game that checks.</b> · <i>Boleh kau rasa degupan jantung sendiri? Permainan kamera web tiga minit yang menyemaknya.</i><br>
-<a href="#run-it-in-one-command">Run it</a> · <a href="#how-it-meets-the-judging-criteria">How it meets the judging criteria</a> · <a href="#tests-and-what-was-measured">Tests</a> · <a href="#limits">Limits</a> · <a href="#consent-and-data">Consent and data</a> · <a href="README.ms.md">Bahasa Melayu</a><br>
+<a href="#run-it-in-one-command">Run it</a> · <a href="#how-it-meets-the-judging-criteria">How it meets the judging criteria</a> · <a href="#code-map-for-reviewers">Code map</a> · <a href="#tests-and-what-was-measured">Tests</a> · <a href="#limits">Limits</a> · <a href="#consent-and-data">Consent and data</a> · <a href="README.ms.md">Bahasa Melayu</a><br>
 Built in Malaysia by <a href="https://aimanmalib.com">Aiman Malib</a> · <a href="https://sasateguh.com">Sasa Teguh</a></p>
 
 Degup is a desktop game for adults. A normal webcam and the Presage SmartSpectra SDK see your pulse, and then the game asks
@@ -64,7 +64,7 @@ The game has three scenes, about three minutes in total. Lengths come from `conf
 simulated beats on purpose. A person tapping by feel scores lower.*
 
 Built for the Presage SmartSpectra SDK Challenge on DEV (November 2026). First commit:
-`50def1be6dd669eac62371ec66c7c7c72d9648e3` (9 Nov 2026).
+`50def1be6dd669eac62371ec66c7c7c72d9648e3` (8 Nov 2026 UTC).
 
 ## Run it in one command
 
@@ -176,6 +176,45 @@ The game logic never knows where the numbers come from. `sim` and `replay` emit 
 tests and the screenshots run the same code path as a live session, minus the camera. Timestamps stay in the SDK's
 microseconds since epoch, and taps are stamped on the same clock, so pipeline latency does not shift the score.
 
+## Code map for reviewers
+
+| File | What it does |
+|---|---|
+| [`src/sumber/live.ts`](src/sumber/live.ts) | SDK setup: cardio and breathing only, telemetry off, one `metrics` listener, error codes to messages |
+| [`src/renderer/sdk-live.ts`](src/renderer/sdk-live.ts) | The real SDK factory: `SmartSpectraSDK` from the renderer entry plus `decodeMetrics` |
+| [`src/main/sdk.ts`](src/main/sdk.ts) | Main process: `bindSmartSpectraIpc` loaded only for live mode, native library path, Vulkan on Linux |
+| [`src/core/beats.ts`](src/core/beats.ts) | Beat detection on `cardio.arterialPressureTrace`, the SDK's raw pulse waveform |
+| [`src/core/stabil.ts`](src/core/stabil.ts) | Pulse rate, confidence and stable time for the See screen |
+| [`src/core/score.ts`](src/core/score.ts) | Sync score: tap phase, mean resultant length and the chance test |
+| [`src/core/rsa.ts`](src/core/rsa.ts) | Bend maths: beat gaps grouped by breathing cycle |
+| [`src/core/lentur.ts`](src/core/lentur.ts) | Bend collector and result rows, including beats per breath |
+| [`src/sumber/sim.ts`](src/sumber/sim.ts) | The simulated source: a synthetic payload in the SDK's shape with known beat times |
+| [`lang/en.json`](lang/en.json) | Every English string, including the consent text word for word |
+
+## Glossary (Malay to English)
+
+File and identifier names are in Malay. These are the ones you will meet most.
+
+| Malay | English | Malay | English |
+|---|---|---|---|
+| `sumber` | signal source | `teras` | core |
+| `degupan` | beats | `ketukan` | taps |
+| `nadi` | pulse | `nafas` | breathing |
+| `lihat` | See (scene 1) | `rasa` | Feel (scene 2) |
+| `lentur` | Bend (scene 3) | `dedah` | reveal |
+| `keputusan` | result | `izin` | consent |
+| `tetapan` | settings | `babak` | scene |
+| `skor` | score | `jalur` | band |
+| `ambang` | threshold | `keyakinan` | confidence |
+| `stabil` | stable | `sela` | interval |
+| `petunjuk` | hint | `pelita` | the light circle |
+| `rakaman`, `perakam` | recording, recorder | `kad` | result card |
+| `pemancar` | emitter | `pendengar` | listener |
+| `kilang` | factory | `nyahkod` | decode |
+| `simpanan` | local storage | `ralat` | error |
+| `gerbang` | gate (checks before commit) | `ujian` | test |
+| `kata larangan` | banned words | `ukur` | measure |
+
 ## Tests and what was measured
 
 The gate is [`scripts/gerbang-ujian.sh`](scripts/gerbang-ujian.sh): file size limits, `tsc` for main and renderer, vitest,
@@ -221,13 +260,16 @@ What the tests assert, all on synthetic signals with a known answer:
 
 - The renderer owns the camera and hands the stream to the SDK, following the official `electron-quickstart` sample in
   [Presage-Security/SmartSpectra](https://github.com/Presage-Security/SmartSpectra) (`nodejs/samples/electron-quickstart`).
-- The tapping idea is inspired by the Phase Adjustment Task (Plans et al., 2021) and PAT 2.0 (2026). Inspiration only; Degup is
-  not a validated version of either.
+- The tapping idea is inspired by the Phase Adjustment Task ([Plans et al., 2021](https://doi.org/10.1016/j.biopsycho.2021.108171)).
+  Inspiration only; Degup is not a validated version of it.
 - Fonts: Bricolage Grotesque and Atkinson Hyperlegible Next (SIL Open Font License), bundled from `@fontsource`.
 
 ## AI disclosure
 
-I built Degup with Claude Code, an AI coding tool. I test it and make the calls. The app itself does not call an AI model.
+Degup was built with Claude Code. Claude agents, working under my standing project rules, wrote the spec, the code, the tests
+and the first draft of the DEV post. A separate Claude session reviews the work before I submit. I approved the look of the app.
+The build ran as many Claude Code sessions on my own server; the transcripts carry that server's private setup, so they are not
+published. The app itself does not call an AI model.
 In live mode the Presage SDK sends derived measurements to Presage for its Insights feature, which Presage generates with
 Anthropic; Degup cannot turn that off and says so on the consent screen.
 

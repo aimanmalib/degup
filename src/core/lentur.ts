@@ -1,3 +1,5 @@
+// Bend collector and result rows: reads `breathing.upperTrace`, `breathing.rate` and `cardio.pulseRate` from each payload.
+// Beats per breath = latest stable pulse rate divided by latest stable breathing rate. Shared by the result screen and PNG card.
 // LENTUR hidup + keputusan (PRD §4.2, §4.5): pengumpul nafas/nisbah/nadi dari payload, segmen fasa untuk lorek jalur IBI,
 // dan baris kad keputusan (kunci lang + nilai) yang dikongsi skrin dan PNG. Tulen: tiada DOM, tiada SDK. Masa µs epoch.
 import { keNombor, type MetrikSdk, type UkuranKeyakinan } from "./metrik.js";

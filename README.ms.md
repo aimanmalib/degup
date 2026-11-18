@@ -5,7 +5,7 @@
 <p align="center"><img src="https://img.shields.io/badge/SmartSpectra%20SDK-3.4.0-f5b85c" alt="SmartSpectra SDK 3.4.0"> <img src="https://img.shields.io/badge/Electron-45-47848f" alt="Electron 45"> <img src="https://img.shields.io/badge/lesen-MIT-blue" alt="Lesen: MIT"> <img src="https://img.shields.io/badge/cabaran%20DEV-Nov%202026-0a0a0a" alt="Cabaran DEV, November 2026"></p>
 
 <p align="center"><b>Boleh kau rasa degupan jantung sendiri? Permainan kamera web tiga minit yang menyemaknya.</b> · <i>Can you feel your own heartbeat? A three-minute webcam game that checks.</i><br>
-<a href="#jalankan-dengan-satu-arahan">Jalankan</a> · <a href="#bagaimana-ia-memenuhi-kriteria-juri">Kriteria juri</a> · <a href="#ujian-dan-apa-yang-diukur">Ujian</a> · <a href="#had">Had</a> · <a href="#izin-dan-data">Izin dan data</a> · <a href="README.md">English</a><br>
+<a href="#jalankan-dengan-satu-arahan">Jalankan</a> · <a href="#bagaimana-ia-memenuhi-kriteria-juri">Kriteria juri</a> · <a href="#peta-kod-untuk-penilai">Peta kod</a> · <a href="#ujian-dan-apa-yang-diukur">Ujian</a> · <a href="#had">Had</a> · <a href="#izin-dan-data">Izin dan data</a> · <a href="README.md">English</a><br>
 Dibina di Malaysia oleh <a href="https://aimanmalib.com">Aiman Malib</a> · <a href="https://sasateguh.com">Sasa Teguh</a></p>
 
 Ini terjemahan Bahasa Melayu. [README.md](README.md) dalam bahasa Inggeris ialah versi rujukan; Bahasa Melayu untuk pautan ini.
@@ -67,7 +67,7 @@ Permainan ini ada tiga babak, kira-kira tiga minit semuanya. Tempoh datang dari 
 degupan simulasi dengan sengaja. Orang yang mengetuk ikut rasa mendapat skor lebih rendah.*
 
 Dibina untuk Presage SmartSpectra SDK Challenge di DEV (November 2026). Komit pertama:
-`50def1be6dd669eac62371ec66c7c7c72d9648e3` (9 Nov 2026).
+`50def1be6dd669eac62371ec66c7c7c72d9648e3` (8 Nov 2026 UTC).
 
 ## Jalankan dengan satu arahan
 
@@ -181,6 +181,45 @@ Logik permainan tidak tahu dari mana angka datang. `sim` dan `replay` memancarka
 dan tangkapan skrin menjalankan laluan kod yang sama dengan sesi live, tolak kamera. Cap masa kekal dalam mikrosaat sejak epoch
 seperti SDK, dan ketukan dicap pada jam yang sama, jadi kependaman paip tidak menganjak skor.
 
+## Peta kod untuk penilai
+
+| Fail | Apa yang ia buat |
+|---|---|
+| [`src/sumber/live.ts`](src/sumber/live.ts) | Penyediaan SDK: cardio dan breathing sahaja, telemetri mati, satu pendengar `metrics`, kod ralat ke mesej |
+| [`src/renderer/sdk-live.ts`](src/renderer/sdk-live.ts) | Kilang SDK sebenar: `SmartSpectraSDK` dari pintu masuk renderer dan `decodeMetrics` |
+| [`src/main/sdk.ts`](src/main/sdk.ts) | Proses main: `bindSmartSpectraIpc` dimuat hanya untuk mod live, laluan pustaka asli, Vulkan di Linux |
+| [`src/core/beats.ts`](src/core/beats.ts) | Pengesan degupan atas `cardio.arterialPressureTrace`, gelombang nadi mentah SDK |
+| [`src/core/stabil.ts`](src/core/stabil.ts) | Kadar nadi, keyakinan dan masa stabil untuk skrin Lihat |
+| [`src/core/score.ts`](src/core/score.ts) | Skor selaras: fasa ketukan, panjang resultan min dan ujian kebetulan |
+| [`src/core/rsa.ts`](src/core/rsa.ts) | Matematik Lentur: sela degupan dikumpul ikut kitaran nafas |
+| [`src/core/lentur.ts`](src/core/lentur.ts) | Pengumpul Lentur dan baris keputusan, termasuk degupan setiap nafas |
+| [`src/sumber/sim.ts`](src/sumber/sim.ts) | Sumber simulasi: payload sintetik berbentuk SDK dengan masa degupan yang diketahui |
+| [`lang/ms.json`](lang/ms.json) | Setiap teks Bahasa Melayu, termasuk teks izin kata demi kata |
+
+## Glosari (Melayu ke Inggeris)
+
+Nama fail dan pengecam dalam Bahasa Melayu. Penilai yang membaca Inggeris boleh guna jadual ini.
+
+| Melayu | Inggeris | Melayu | Inggeris |
+|---|---|---|---|
+| `sumber` | signal source | `teras` | core |
+| `degupan` | beats | `ketukan` | taps |
+| `nadi` | pulse | `nafas` | breathing |
+| `lihat` | See (babak 1) | `rasa` | Feel (babak 2) |
+| `lentur` | Bend (babak 3) | `dedah` | reveal |
+| `keputusan` | result | `izin` | consent |
+| `tetapan` | settings | `babak` | scene |
+| `skor` | score | `jalur` | band |
+| `ambang` | threshold | `keyakinan` | confidence |
+| `stabil` | stable | `sela` | interval |
+| `petunjuk` | hint | `pelita` | the light circle |
+| `rakaman`, `perakam` | recording, recorder | `kad` | result card |
+| `pemancar` | emitter | `pendengar` | listener |
+| `kilang` | factory | `nyahkod` | decode |
+| `simpanan` | local storage | `ralat` | error |
+| `gerbang` | gate (semakan sebelum komit) | `ujian` | test |
+| `kata larangan` | banned words | `ukur` | measure |
+
 ## Ujian dan apa yang diukur
 
 Gerbangnya [`scripts/gerbang-ujian.sh`](scripts/gerbang-ujian.sh): had saiz fail, `tsc` untuk main dan renderer, vitest, binaan
@@ -227,14 +266,16 @@ Apa yang ujian tegaskan, semuanya atas isyarat sintetik dengan jawapan yang dike
 
 - Renderer memiliki kamera dan menyerahkan strim kepada SDK, mengikut sampel rasmi `electron-quickstart` dalam
   [Presage-Security/SmartSpectra](https://github.com/Presage-Security/SmartSpectra) (`nodejs/samples/electron-quickstart`).
-- Idea mengetuk diilhamkan oleh Phase Adjustment Task (Plans et al., 2021) dan PAT 2.0 (2026). Ilham sahaja; Degup bukan versi
-  yang disahkan bagi mana-mana satu.
+- Idea mengetuk diilhamkan oleh Phase Adjustment Task ([Plans et al., 2021](https://doi.org/10.1016/j.biopsycho.2021.108171)).
+  Ilham sahaja; Degup bukan versi yang disahkan baginya.
 - Fon: Bricolage Grotesque dan Atkinson Hyperlegible Next (SIL Open Font License), dibundel dari `@fontsource`.
 
 ## AI disclosure
 
-Aku membina Degup dengan Claude Code, alat pengekodan AI. Aku mengujinya dan membuat keputusan. App sendiri tidak memanggil
-model AI. Dalam mod live, SDK Presage menghantar ukuran terbitan kepada Presage untuk ciri Insights, yang Presage jana dengan
+Degup dibina dengan Claude Code. Ejen Claude, bekerja di bawah peraturan projek tetap aku, menulis spesifikasi, kod, ujian dan
+draf pertama pos DEV. Sesi Claude yang berasingan menyemak kerja itu sebelum aku menghantar. Aku meluluskan rupa app.
+Binaan berjalan sebagai banyak sesi Claude Code di pelayan aku sendiri; transkripnya membawa tetapan peribadi pelayan itu, jadi ia
+tidak diterbitkan. App sendiri tidak memanggil model AI. Dalam mod live, SDK Presage menghantar ukuran terbitan kepada Presage untuk ciri Insights, yang Presage jana dengan
 Anthropic; Degup tidak dapat mematikannya dan menyatakannya pada skrin izin.
 
 ## Lesen

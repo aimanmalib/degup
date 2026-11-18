@@ -1,3 +1,5 @@
+// Bend maths: beat-to-beat gaps (IBI) grouped by breathing cycle, then the median swing per cycle (peak to trough of a fitted sine by default).
+// Uses beats from beats.ts and the SDK breathing waveform. It reports numbers only, no good or bad label.
 // LENTUR (PRD §4.5): sela degupan (IBI) mengikut kitaran nafas; ringkasan = median (IBI maks − IBI min) setiap kitaran.
 // Tulen: tiada DOM, tiada SDK. Masa µs epoch. Tiada pentafsiran baik/buruk di sini atau di UI.
 import type { Degupan } from "./beats.js";

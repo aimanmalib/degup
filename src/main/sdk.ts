@@ -1,3 +1,5 @@
+// Main-process SDK setup: loads `bindSmartSpectraIpc(win)` lazily, only when the renderer starts the live source.
+// Sets the native library path and, on Linux without a GPU driver, the Vulkan lavapipe ICD before the SDK is required.
 // Penyediaan SDK di proses main (PRD §4.11, corak `electron-quickstart`): `bindSmartSpectraIpc(win)` dimuat MALAS, hanya bila
 // renderer memulakan sumber `live`. Pakej SDK memuat pustaka asli semasa `require`; mod sim/replay (ujian, juri tanpa kunci)
 // tidak pernah menyentuhnya. Persekitaran (laluan pustaka bila dipakej, Vulkan lavapipe Linux) ditetapkan SEBELUM `require`.

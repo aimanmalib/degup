@@ -1,3 +1,5 @@
+// Pulse tracker for See: current `cardio.pulseRate`, the SDK confidence for the ring, and how long the reading has been stable.
+// See shows Ready once the reading stays stable for the time set in config.
 // Penjejak nadi untuk LIHAT (PRD §4.2): BPM semasa, keyakinan (cincin), dan sejak bila jejak stabil ("Sedia" selepas N s).
 // Tulen: tiada DOM, tiada SDK. Masa µs epoch.
 import { keNombor, type MetrikSdk } from "./metrik.js";

@@ -1,3 +1,5 @@
+// Beat detection on the SDK's raw pulse waveform (`cardio.arterialPressureTrace`): filter, adaptive threshold, refractory window.
+// The SDK payload has no beat markers, so beat times are computed here, in microseconds since epoch like the SDK timestamps.
 // Pengesan degupan dari jejak tekanan arteri SDK (PRD §4.3). Tulen: tiada DOM, tiada SDK.
 // Semua parameter dari `config.beats`. Masa dalam µs sejak epoch (sama seperti SDK).
 import { Biquad, Detrend, kelewatanFasa, lowpassButterworth, type PekaliBiquad } from "./isyarat.js";

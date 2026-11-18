@@ -1,3 +1,5 @@
+// Sync score for Feel: the phase of each tap inside its beat cycle, mean resultant length R, and a Rayleigh test for chance.
+// Input is the beats from beats.ts and tap times on the same microsecond clock. Score bands come from config.
 // Skor RASA (PRD §4.4): fasa ketukan dalam kitaran degupan, panjang resultan min R, ujian Rayleigh, jalur dari config.
 // Tulen: tiada DOM, tiada SDK. Masa dalam µs epoch (asas sama untuk degupan SDK dan ketukan).
 import type { Degupan } from "./beats.js";
