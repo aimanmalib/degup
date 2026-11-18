@@ -3,7 +3,10 @@
 Keadaan penuh: blok ⭐ dalam PELAN di LUAR repo, `/home/claude/ops/autopilot/projek/presage-degup/PELAN-presage-2026.md` (KP1, D17).
 Jangan salin PELAN ke repo (`/docs/PELAN-*.md` diabaikan git).
 
-- **Seterusnya: J6a** (lihat baris PELAN). Tertib pindaan #2842: J6a, J6b, J3, J4, J7, P8a, lalu pintu pemilik P6.
+- **Seterusnya: J6b** (lihat baris PELAN). Tertib pindaan #2842: J6b, J3, J4, J7, P8a, lalu pintu pemilik P6.
+- J6a siap (D22): `bash scripts/kit/bina-kit.sh <tag> [folder]` → `hackathon-degup-kit-<tag>.zip` + `.sha256` (lalai `~/portal/uploads`);
+  `config/kit.json` ditindih dalam zip sahaja. Log kit `userData/logs/degup-<tarikh>.log`. Tetingkap rakaman `DEGUP_TETINGKAP=rakam`.
+  Xvfb gerbang 1920×1080 (`-s "-screen 0 1920x1080x24"`) untuk ujian 1600×900.
 - P1a siap (D21): kunci diterima SDK. `scripts/asap-live.mjs --out f.json` melalui `ujian-pelayar.sh xvfb-run -a -n <paparan bebas>`
   (Electron live + kamera palsu; keputusan = medan `rc` JSON). Angka awam `docs/MEASUREMENTS.md`; `docs/UKUR.md` ≈ 1 min.
 - J5 siap (D20): `node scripts/headless-smoke.mjs <video> --out r.json [--fixture f.json]` lalu `node scripts/gerbang-p1.mjs r.json`
