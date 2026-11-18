@@ -13,3 +13,10 @@ release
 test-results
 playwright-report
 /docs/PELAN-*.md
+# Nota dalaman BM (J7, D26): kekal setempat, tidak dalam repo awam.
+/CLAUDE.md
+/NEXT.md
+/docs/PRD-*.md
+/docs/hantar/
+/docs/02-DECISIONS.md
+/docs/UKUR*.md

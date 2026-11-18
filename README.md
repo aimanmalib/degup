@@ -243,7 +243,7 @@ What the tests assert, all on synthetic signals with a known answer:
 
 ## Limits
 
-- **Live mode is not measured yet.** No run on a real camera or real video is recorded in [`docs/UKUR.md`](docs/UKUR.md). The
+- **Live mode is not measured yet.** No run on a real face is recorded in [`docs/MEASUREMENTS.md`](docs/MEASUREMENTS.md). The
   detector numbers above are on synthetic signals only, which are not physiology. How many beats the detector misses in dim
   light, and on which webcams, is unknown.
 - **No installer.** There is no Windows or macOS build to download. Run from source.

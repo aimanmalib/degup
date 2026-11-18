@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Asap laluan LANGSUNG tanpa muka (P1a): Electron sebenar, sumber `live`, kamera palsu Chromium (corak bergerak, tiada orang),
-// kunci dari env SMARTSPECTRA_API_KEY atau `.env` repo (tidak pernah dicetak). Memakai kredit Presage: rekod dalam docs/UKUR.md.
+// kunci dari env SMARTSPECTRA_API_KEY atau `.env` repo (tidak pernah dicetak). Memakai kredit Presage: rekod dalam docs/MEASUREMENTS.md.
 // Bukan bukti isyarat manusia: hanya laluan kod (jambatan, pengesahan kunci, petunjuk tiada muka, Esc).
 //
 // Guna (hos, selepas `node esbuild.config.mjs`), paparan bebas dipilih seperti scripts/gerbang-ujian.sh (xvfb-run -a di hos dikongsi

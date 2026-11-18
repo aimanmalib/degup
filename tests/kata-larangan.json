@@ -1,5 +1,5 @@
 {
-  "_nota": "PRD §4.8 + padanan BM. Perkataan dipadan tanpa kira huruf besar, pada sempadan perkataan. senarai_benar = HANYA kunci teks izin/penafian wajib (PRD §4.6, §4.2) dan kunci RSA LENTUR yang dinamakan; setiap kunci hanya membenarkan perkataan yang disenaraikan untuknya. Rekod D-n dalam docs/02-DECISIONS.md sebelum menambah.",
+  "_nota": "PRD §4.8 + padanan BM. Perkataan dipadan tanpa kira huruf besar, pada sempadan perkataan. senarai_benar = HANYA kunci teks izin/penafian wajib (PRD §4.6, §4.2) dan kunci RSA LENTUR yang dinamakan; setiap kunci hanya membenarkan perkataan yang disenaraikan untuknya. Rekod D-n dalam rekod keputusan (setempat) sebelum menambah.",
   "kata": [
     "anxiety",
     "stress",
@@ -53,9 +53,13 @@
   },
   "fail_markdown": [
     "README.md",
-    "docs/hantar/HANTAR.md",
-    "README.ms.md"
+    "README.ms.md",
+    "docs/MEASUREMENTS.md"
   ],
+  "fail_markdown_setempat": [
+    "docs/hantar/HANTAR.md"
+  ],
+  "_nota_setempat": "fail_markdown_setempat = nota dalaman yang diabaikan git selepas J7 (D26): disemak bila fail wujud di hos, dilangkau di klon bersih/Depot.",
   "_nota_markdown": "Dalam fail_markdown, hanya blok antara <!-- izin mula --> dan <!-- izin akhir --> (salinan teks izin PRD §4.6) boleh memakai perkataan dalam markdown_izin.",
   "markdown_izin": [
     "HRV",

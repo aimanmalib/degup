@@ -1,7 +1,7 @@
 # Measurements
 
-Every number here comes from a run on this repo's own scripts or tests. Runs that use Presage credit are also listed in
-[`docs/UKUR.md`](UKUR.md). Nothing here is a measurement of a person.
+Every number here comes from a run on this repo's own scripts or tests. Each run that uses Presage credit has its own
+section below. Nothing here is a measurement of a person.
 
 ## Live path smoke test, no face
 

@@ -45,9 +45,15 @@ describe("kata larangan (PRD §4.8)", () => {
     }
   });
 
+  // Fail awam yang dijejak git: mesti wujud (klon bersih juga). Nota setempat (D26): disemak bila ada di hos sahaja.
   for (const fail of dasar.fail_markdown) {
     it(`${fail} bersih`, () => {
-      if (!existsSync(fail)) return;
+      expect(existsSync(fail), `${fail} tiada`).toBe(true);
+      expect(semakMarkdown(readFileSync(fail, "utf8"), kata, dasar.markdown_izin)).toEqual([]);
+    });
+  }
+  for (const fail of dasar.fail_markdown_setempat) {
+    it.skipIf(!existsSync(fail))(`${fail} bersih (setempat)`, () => {
       expect(semakMarkdown(readFileSync(fail, "utf8"), kata, dasar.markdown_izin)).toEqual([]);
     });
   }

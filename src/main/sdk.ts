@@ -39,7 +39,7 @@ export function sediaPersekitaran(env: Record<string, string | undefined>, k: Ko
       ditetap.push("SMARTSPECTRA_CAPI_PATH");
     }
   }
-  // Linux tanpa pemacu Vulkan GPU: Mesa lavapipe (PRD §4.11; UKUR-P1 merekod yang berjaya).
+  // Linux tanpa pemacu Vulkan GPU: Mesa lavapipe (PRD §4.11; docs/MEASUREMENTS.md merekod yang berjaya).
   if (k.platform === "linux" && !env.VK_ICD_FILENAMES && k.wujud(k.vulkanIcdLinux)) {
     env.VK_ICD_FILENAMES = k.vulkanIcdLinux;
     ditetap.push("VK_ICD_FILENAMES");

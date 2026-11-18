@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Asap headless P1 (PRD §2 H1, H2): SDK SmartSpectra membaca video melalui `useFile()`; keluaran JSON angka sahaja
-// (tiada kunci, tiada laluan, tiada imej) untuk `scripts/gerbang-p1.mjs`. Larian SEBENAR memakai kredit: rekod dalam docs/UKUR.md.
+// (tiada kunci, tiada laluan, tiada imej) untuk `scripts/gerbang-p1.mjs`. Larian SEBENAR memakai kredit: rekod dalam docs/MEASUREMENTS.md.
 //
 // Tukar video telefon (HEVC / kadar bingkai berubah) ke H.264 30 fps tetap DAHULU, dalam ~/degup-rahsia/:
 //   ffmpeg -i in -vf fps=30 -c:v libx264 -pix_fmt yuv420p -an out.mp4

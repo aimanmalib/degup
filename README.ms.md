@@ -249,7 +249,7 @@ Apa yang ujian tegaskan, semuanya atas isyarat sintetik dengan jawapan yang dike
 
 ## Had
 
-- **Mod live belum diukur.** Tiada larian atas kamera sebenar atau video sebenar direkod dalam [`docs/UKUR.md`](docs/UKUR.md).
+- **Mod live belum diukur.** Tiada larian atas muka sebenar direkod dalam [`docs/MEASUREMENTS.md`](docs/MEASUREMENTS.md).
   Angka pengesan di atas atas isyarat sintetik sahaja, yang bukan fisiologi. Berapa degupan yang pengesan terlepas dalam cahaya
   malap, dan pada kamera web mana, belum diketahui.
 - **Tiada pemasang.** Tiada binaan Windows atau macOS untuk dimuat turun. Jalankan dari sumber.

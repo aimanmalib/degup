@@ -1,7 +1,7 @@
 // Live source. The renderer owns the webcam and hands the stream to the Presage SmartSpectra SDK (useMediaStream).
 // Requests the cardio and breathing metric groups only, telemetry off, accumulated output off, one `metrics` listener.
 // Maps SDK status and error codes to plain messages. Never requests an Insight; automatic `insight` events are only counted.
-// Sumber `live` (PRD §4.10, §4.11; corak sampel rasmi `electron-quickstart`, dikreditkan dalam README dan 02-DECISIONS):
+// Sumber `live` (PRD §4.10, §4.11; corak sampel rasmi `electron-quickstart`, dikreditkan dalam README):
 // renderer memiliki kamera (`getUserMedia`) dan menyerahkannya kepada SDK renderer melalui `useMediaStream`.
 // SDK disuntik melalui `KilangSdk` supaya modul ini boleh diuji tanpa pakej asli (ujian memakai SDK tiruan).
 // Konfigurasi dikunci: cardio + breathing sahaja, telemetri MATI, output terkumpul MATI, SATU pendengar `metrics`
