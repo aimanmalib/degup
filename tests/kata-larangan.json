@@ -54,7 +54,8 @@
   "fail_markdown": [
     "README.md",
     "README.ms.md",
-    "docs/MEASUREMENTS.md"
+    "docs/MEASUREMENTS.md",
+    "docs/DECISIONS.md"
   ],
   "fail_markdown_setempat": [
     "docs/hantar/HANTAR.md"
