@@ -38,7 +38,11 @@ if [ -d e2e ] && [ -f playwright.config.ts ]; then
       echo "xvfb-run tiada dan tidak boleh dipasang"; exit 1
     fi
   fi
-  DEGUP_SUMBER="${DEGUP_SUMBER:-sim}" xvfb-run -a npx --no-install playwright test --reporter=line
+  # `xvfb-run -a` hanya menyemak /tmp/.X<n>-lock; hos dikongsi menyimpan soket /tmp/.X11-unix/X<n> tanpa kunci (sesi lain,
+  # /tmp peribadi), jadi Xvfb gagal 10 kali dan xvfb-run keluar 1 walaupun ujian lulus. Pilih paparan yang tiada kunci DAN soket.
+  paparan=99
+  while [ -e "/tmp/.X${paparan}-lock" ] || [ -e "/tmp/.X11-unix/X${paparan}" ]; do paparan=$((paparan + 1)); done
+  DEGUP_SUMBER="${DEGUP_SUMBER:-sim}" xvfb-run -a -n "$paparan" npx --no-install playwright test --reporter=line
 else
   langkah "Playwright: dilangkau (e2e/ belum wujud; P3a)"
 fi
