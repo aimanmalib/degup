@@ -5,6 +5,7 @@
 // (Exhale: pendengar kedua menggantikan yang pertama), TIADA permintaan Insight atas arahan (K6/K7).
 import type { MetrikSdk } from "../core/metrik.js";
 import type { Sumber } from "./jenis.js";
+import { pasangPendengar } from "./pendengar.js";
 import { Pemancar } from "./pemancar.js";
 
 /** Opsyen yang Degup hantar kepada pembina SDK. Tiada medan lain dibenarkan. */
@@ -96,36 +97,38 @@ export class SumberLive implements Sumber {
     const sdk = this.kilang.cipta(this.opsyen);
     this.sdk = sdk;
     sdk.useMediaStream(this.strim);
-    // SATU pendengar `metrics`; sebaran ke sesi melalui Pemancar sendiri.
-    sdk.on("metrics", ((buf: Uint8Array) => {
-      let m: MetrikSdk;
-      try {
-        m = this.kilang.nyahkod(buf);
-      } catch {
-        return; // payload rosak dilangkau; pengesan menganggapnya jurang
-      }
-      this.kiraan.metrik++;
-      this.metrik.pancar(m);
-    }) as (...a: never[]) => void);
-    sdk.on("validationStatus", ((kod: number, tUs: number) => this.petunjuk.pancar(kod, tUs)) as (...a: never[]) => void);
-    sdk.on("processingStatus", ((s: number) => {
-      if (s === STATUS_BERJALAN && this.kiraan.pengesahan !== true) {
-        this.kiraan.pengesahan = true;
+    // SATU pendengar setiap peristiwa (`pasangPendengar`); sebaran ke sesi melalui Pemancar sendiri.
+    pasangPendengar(sdk, {
+      metrik: (buf) => {
+        let m: MetrikSdk;
+        try {
+          m = this.kilang.nyahkod(buf);
+        } catch {
+          return; // payload rosak dilangkau; pengesan menganggapnya jurang
+        }
+        this.kiraan.metrik++;
+        this.metrik.pancar(m);
+      },
+      pengesahan: (kod, tUs) => this.petunjuk.pancar(kod, tUs),
+      status: (s) => {
+        if (s === STATUS_BERJALAN && this.kiraan.pengesahan !== true) {
+          this.kiraan.pengesahan = true;
+          this.kira.pancar(this.kiraan);
+        }
+      },
+      insight: () => {
+        this.kiraan.insight++;
         this.kira.pancar(this.kiraan);
-      }
-    }) as (...a: never[]) => void);
-    sdk.on("insight", (() => {
-      this.kiraan.insight++;
-      this.kira.pancar(this.kiraan);
-    }) as (...a: never[]) => void);
-    sdk.on("error", ((kod: number) => {
-      const k = kategoriRalat(kod);
-      if (k === "kunci") {
-        this.kiraan.pengesahan = false;
-        this.kira.pancar(this.kiraan);
-      }
-      this.ralat.pancar(k);
-    }) as (...a: never[]) => void);
+      },
+      ralat: (kod) => {
+        const k = kategoriRalat(kod);
+        if (k === "kunci") {
+          this.kiraan.pengesahan = false;
+          this.kira.pancar(this.kiraan);
+        }
+        this.ralat.pancar(k);
+      },
+    });
     await sdk.start();
   }
 

@@ -22,6 +22,7 @@
     "src/core/**/*.ts",
     "src/sumber/**/*.ts",
     "src/main/**/*.ts",
+    "src/alat/**/*.ts",
     "src/preload/**/*.ts",
     "tests/**/*.ts",
     "e2e/**/*.ts",

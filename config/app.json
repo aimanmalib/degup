@@ -183,5 +183,21 @@
   "uji": {
     "_nota": "Ujian Playwright sahaja: skala masa babak (0 < x ≤ 1) dipakai HANYA bila DEGUP_SUMBER=sim. Live/replay sentiasa 1.",
     "skala_masa_env": "DEGUP_SKALA_MASA"
+  },
+  "p1": {
+    "_nota": "Gerbang P1 (PRD §2 H1, H2): scripts/headless-smoke.mjs mengukur, scripts/gerbang-p1.mjs menilai. Gagal H1 atau H2 = mod kira R2 (PRD §7).",
+    "abai_awal_s": 15,
+    "stabil_min": 0.7,
+    "toleransi_degupan": 0.1,
+    "cv_maks": 0.25,
+    "jurang_maks_s": 2,
+    "asap": {
+      "_nota": "useFile(): 0 = selaju mungkin (lalai SDK). had_dinding_s = had masa dinding larian (kredit).",
+      "interframe_delay_ms": 0,
+      "start_offset_ms": 0,
+      "max_duration_ms": 0,
+      "had_dinding_s": 300,
+      "label_fixture": "host test video"
+    }
   }
 }

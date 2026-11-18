@@ -300,3 +300,19 @@ Format D-n: keputusan · sebab · undur. D-K1 hingga D-K15 = salinan PRD §5 (di
   Izin perkara 4 = apa yang benar disimpan: fail tetapan + kunci tersulit, tiada skor; kad PNG hanya bila "Save PNG card", video demo
   hanya bila "Record demo". `tetapan.padam_bantuan` menyebut kad dan video kekal dalam folder Gambar/Video. PRD "P-lanjut 3" tidak dibina.
 - **Undur:** `git revert` komit J2 (tetapan.json lama dengan `sejarah` diabaikan oleh `gabungTetapan` dalam kedua-dua arah).
+
+### D20 (J5, 19 Nov 2026) Abah-abah P1: asap headless + gerbang H1/H2
+- **Struktur:** analisis tulen `src/core/ukur-p1.ts` (`PengumpulP1` → `RingkasanP1`; `nilaiP1` → "penuh" / "R2"); pelari node
+  `src/alat/asap-p1.ts` (SDK binding utama disuntik, `useFile()` + `start()`, tamat bila `processingStatus` kIdle selepas
+  kStarting/kRunning, kError, ralat tidak boleh-ulang, atau had dinding); CLI `scripts/headless-smoke.mjs` + `scripts/gerbang-p1.mjs`
+  memuat TS melalui `scripts/muat-ts.mjs` (esbuild dalam memori, corak `jana-fixture-sim.mjs`). `src/alat/` ditambah ke `tsconfig.json`.
+- **Tidak memakai `waitUntilComplete()`:** ia menyekat gelung peristiwa, jadi panggilan balik `metrics` hanya tiba selepasnya; status
+  pemprosesan memberi akhir fail yang sama tanpa menyekat.
+- **Satu pendengar:** pendaftaran peristiwa SDK dipindah ke `src/sumber/pendengar.ts` (`pasangPendengar`), dipakai `SumberLive` dan
+  pelari asap; ujian larangan "satu `.on("metrics")` dalam src/" kekal ketat (merah bila pelari mendaftar sendiri).
+- **Ambang:** `config.p1` (abai 15 s pertama, stable ≥ 0.7, ±0.1, CV < 0.25, jurang ≤ 2 s) + `p1.asap` (opsyen `useFile`, had dinding
+  300 s, label fixture "host test video"). H2 dikira atas degupan dan jejak SELEPAS tempoh abai; jangkaan = purata `pulseRate` dalam
+  tetingkap sama × tempoh jejak.
+- **Keluaran:** JSON angka sahaja (tiada kunci, laluan atau mesej ralat SDK); kod keluar 3 = kunci ditolak, 4 = kredit habis (P1a
+  TERSEKAT), 5 = ralat lain / tamat masa. `--fixture` menulis fixture skema 2 jenis "ujian".
+- **Undur:** `git revert` komit J5; `SumberLive` kembali mendaftar pendengar sendiri.
