@@ -176,8 +176,8 @@ microseconds since epoch, and taps are stamped on the same clock, so pipeline la
 ## Tests and what was measured
 
 The gate is [`scripts/gerbang-ujian.sh`](scripts/gerbang-ujian.sh): file size limits, `tsc` for main and renderer, vitest,
-an esbuild build, then Playwright driving the built Electron app under xvfb in `sim` mode. On 17 November 2026 it passed on Depot CI,
-run `zgmnxvjc31`: 122 unit tests and 12 Electron tests, with 1 skipped (the screenshot script for this README, which runs only on request).
+an esbuild build, then Playwright driving the built Electron app under xvfb in `sim` mode. On 19 November 2026 it passed on Depot CI,
+run `7m3kh0vmj7`: 126 unit tests and 12 Electron tests, with 1 skipped (the screenshot script for this README, which runs only on request).
 
 What the tests assert, all on synthetic signals with a known answer:
 

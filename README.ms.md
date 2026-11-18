@@ -180,8 +180,8 @@ seperti SDK, dan ketukan dicap pada jam yang sama, jadi kependaman paip tidak me
 ## Ujian dan apa yang diukur
 
 Gerbangnya [`scripts/gerbang-ujian.sh`](scripts/gerbang-ujian.sh): had saiz fail, `tsc` untuk main dan renderer, vitest, binaan
-esbuild, kemudian Playwright memandu app Electron yang dibina di bawah xvfb dalam mod `sim`. Pada 17 November 2026 ia lulus di Depot CI,
-larian `zgmnxvjc31`: 122 ujian unit dan 12 ujian Electron, dengan 1 dilangkau (skrip tangkapan skrin README ini).
+esbuild, kemudian Playwright memandu app Electron yang dibina di bawah xvfb dalam mod `sim`. Pada 19 November 2026 ia lulus di Depot CI,
+larian `7m3kh0vmj7`: 126 ujian unit dan 12 ujian Electron, dengan 1 dilangkau (skrip tangkapan skrin README ini).
 
 Apa yang ujian tegaskan, semuanya atas isyarat sintetik dengan jawapan yang diketahui:
 
