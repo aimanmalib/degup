@@ -18,14 +18,11 @@ const saizKandungan = (x: Lancar) => x.app.evaluate(({ BrowserWindow }) => Brows
 
 /** Tiada limpahan mendatar/menegak pada halaman dan setiap panel/dialog yang terbuka. */
 async function tiadaLimpah(x: Lancar): Promise<void> {
-  const limpah = await x.win.evaluate(() =>
-    [document.documentElement, ...document.querySelectorAll<HTMLElement>("[role=dialog], dialog[open], aside, #pentas")]
-      .filter((e) => e.scrollWidth > e.clientWidth + 1)
-      .map((e) => `${e.tagName}#${e.id} ${e.scrollWidth}>${e.clientWidth}`),
-  );
+  const limpah = await x.win
+    .locator("html, [role=dialog], dialog[open], aside, #pentas")
+    .evaluateAll((els) => els.filter((e) => e.scrollWidth > e.clientWidth + 1).map((e) => `${e.tagName}#${e.id} ${e.scrollWidth}>${e.clientWidth}`));
   expect(limpah).toEqual([]);
-  const tinggi = await x.win.evaluate(() => document.documentElement.scrollHeight <= document.documentElement.clientHeight + 1);
-  expect(tinggi).toBe(true);
+  expect(await x.win.locator("html").evaluate((el) => el.scrollHeight - el.clientHeight)).toBeLessThanOrEqual(1);
 }
 
 const barisLog = (data: string) => {
@@ -40,7 +37,7 @@ test("DEGUP_TETINGKAP=rakam: kandungan 1600×900 dari awal, tiada limpah (izin, 
   l = await lancar("sim", { DEGUP_TETINGKAP: konfig.tetingkap.nilai_rakam, DEGUP_SKALA_MASA: "0.2" });
   const { win } = l;
   expect(await saizKandungan(l)).toEqual(SASARAN);
-  expect(await win.evaluate(() => [innerWidth, innerHeight])).toEqual(SASARAN);
+  expect(await win.locator("html").evaluate((el) => [el.clientWidth, el.clientHeight])).toEqual(SASARAN);
   await tiadaLimpah(l);
   await bukti(win, "rakam-izin-1600", "j6a");
   await win.locator("[data-uji=buka-tetapan]").click();
