@@ -225,8 +225,10 @@ Nama fail dan pengecam dalam Bahasa Melayu. Penilai yang membaca Inggeris boleh 
 ## Ujian dan apa yang diukur
 
 Gerbangnya [`scripts/gerbang-ujian.sh`](scripts/gerbang-ujian.sh): had saiz fail, `tsc` untuk main dan renderer, vitest, binaan
-esbuild, kemudian Playwright memandu app Electron yang dibina di bawah xvfb dalam mod `sim`. Pada 19 November 2026 ia lulus di Depot CI,
-larian `7m3kh0vmj7`: 126 ujian unit dan 12 ujian Electron, dengan 1 dilangkau (skrip tangkapan skrin README ini).
+esbuild, kemudian Playwright memandu app Electron yang dibina di bawah xvfb dalam mod `sim`. Pada 19 November 2026 (UTC) ia lulus di
+Depot CI, larian `xv8s2plgvx`: 212 ujian unit dan 19 ujian Electron lulus. Dilangkau di sana: 2 ujian unit yang membaca nota setempat di
+luar git, skrip tangkapan skrin README ini (hanya bila diminta), dan ujian telefon halaman Simulation pelayar (perlu WebKit, yang tiada
+pada pelari itu; ia lulus di hos binaan).
 
 Apa yang ujian tegaskan, semuanya atas isyarat sintetik dengan jawapan yang diketahui:
 

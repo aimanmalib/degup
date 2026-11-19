@@ -220,8 +220,10 @@ File and identifier names are in Malay. These are the ones you will meet most.
 ## Tests and what was measured
 
 The gate is [`scripts/gerbang-ujian.sh`](scripts/gerbang-ujian.sh): file size limits, `tsc` for main and renderer, vitest,
-an esbuild build, then Playwright driving the built Electron app under xvfb in `sim` mode. On 19 November 2026 it passed on Depot CI,
-run `7m3kh0vmj7`: 126 unit tests and 12 Electron tests, with 1 skipped (the screenshot script for this README, which runs only on request).
+an esbuild build, then Playwright driving the built Electron app under xvfb in `sim` mode. On 19 November 2026 (UTC) it passed on Depot CI,
+run `xv8s2plgvx`: 212 unit tests and 19 Electron tests passed. Skipped there: 2 unit tests that read local notes kept out of git, the
+screenshot script for this README (runs only on request), and the phone test of the browser Simulation page (needs WebKit, which
+that runner does not have; it passes on the build host).
 
 What the tests assert, all on synthetic signals with a known answer:
 
