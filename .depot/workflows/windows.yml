@@ -1,0 +1,30 @@
+# K6 (PH§5.5): satu larian Windows sebelum pemilik duduk dengan kit. workflow_dispatch sahaja, dipanggil
+# `~/bin/gerbang-depot.sh .depot/workflows/windows.yml -- <undur>` atau `depot ci run --workflow .depot/workflows/windows.yml`.
+# Tiada rahsia, tiada kunci Presage. Langkah = laluan kit (npm ci, bina) + tsc + ujian unit + app sim 20 s (e2e/asap-windows.spec.ts).
+# Jangan pindah ke .github/workflows: Actions private dimatikan rumah (bajet USD 0).
+# 20 Nov 2026 (larian n57cvxdx17): Depot CI MENOLAK sebelum mula, "Dispatch failed: Non-linux runs-on label".
+# Fail ini disimpan supaya larian boleh diulang bila Depot CI menerima pelari Windows; sehingga itu Windows belum diuji.
+name: windows
+on: workflow_dispatch
+jobs:
+  windows:
+    runs-on: depot-windows-2022
+    timeout-minutes: 40
+    env:
+      NO_COLOR: "1"
+      CI: "1"
+      DEGUP_ASAP_S: "20"
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: node -p "process.platform + ' ' + process.arch + ' node ' + process.version"
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npx --no-install vitest run --reporter=dot
+      - run: npm run build
+      - run: npx --no-install playwright test e2e/asap-windows.spec.ts e2e/cangkerang.spec.ts --reporter=line
