@@ -59,7 +59,7 @@ async function buatSumber(k: Keadaan, strim: MediaStream | null): Promise<Sumber
 export class SesiUkur {
   readonly pengesan: PengesanDegupan;
   readonly nadi: PenjejakStabil;
-  readonly jeda = new PenjejakJeda();
+  readonly jeda: PenjejakJeda;
   /** Nafas, PRQ dan nadi untuk LENTUR + kad keputusan. */
   readonly lentur: PengumpulLentur;
   /** Masa sesi dicipta (µs epoch): nadi purata keputusan dikira dari sini. */
@@ -73,6 +73,8 @@ export class SesiUkur {
   private readonly dengarDegupan = new Set<(d: Degupan) => void>();
   private readonly dengarJeda = new Set<() => void>();
   private lepas: Array<() => void> = [];
+  /** Cap SDK petunjuk terakhir + jam renderer ketika itu: `detik` mengunjur masa SDK bila tiada kod baharu. */
+  private petunjukAkhir: { t: number; dinding: number } | null = null;
 
   private constructor(
     private readonly k: Keadaan,
@@ -81,6 +83,13 @@ export class SesiUkur {
     this.pengesan = new PengesanDegupan(k.konfig.beats);
     this.nadi = new PenjejakStabil(k.konfig.beats.keyakinan_stabil);
     this.lentur = new PengumpulLentur(k.konfig.beats.keyakinan_stabil, k.konfig.lentur.simpan_s);
+    const { aliran, petunjuk } = k.konfig;
+    this.jeda = new PenjejakJeda({
+      ...petunjuk,
+      jeda_selepas_bukan_ok_s: k.masaS(aliran.jeda_selepas_bukan_ok_s),
+      sambung_selepas_ok_s: k.masaS(aliran.sambung_selepas_ok_s),
+      tukar_teks_min_s: k.masaS(petunjuk.tukar_teks_min_s),
+    });
     this.rakaman = k.konfig.rakam_fixture && sumber?.jenis === "live" ? new PengumpulFixture() : null;
   }
 
@@ -94,6 +103,8 @@ export class SesiUkur {
     if (s.sumber) {
       s.lepas.push(s.sumber.onMetrik((m) => s.terimaMetrik(m)));
       s.lepas.push(s.sumber.onPetunjuk((kod, t) => s.terimaPetunjuk(kod, t)));
+      const detik = setInterval(() => s.detikPetunjuk(), k.konfig.lihat.kemas_ms);
+      s.lepas.push(() => clearInterval(detik));
       if (s.sumber instanceof SumberLive) {
         const live = s.sumber;
         s.lepas.push(live.onRalat(ralat));
@@ -138,15 +149,28 @@ export class SesiUkur {
 
   private terimaMetrik(m: MetrikSdk): void {
     this.rakaman?.tambahMetrik(m);
-    this.nadi.tambahMetrik(m);
+    // Dalam jeda nadi tidak disuap: kiraan "Sedia" bermula semula selepas sambung (putus dipanggil sekali, bila jeda bermula).
+    if (!this.jeda.dijeda) this.nadi.tambahMetrik(m);
     this.lentur.tambahMetrik(m);
-    if (this.jeda.dijeda) this.nadi.putus();
     for (const d of this.pengesan.tambahMetrik(m)) for (const f of this.dengarDegupan) f(d);
   }
 
   terimaPetunjuk(kod: number, t: number): void {
-    if (!this.jeda.kemas(kod, t)) return;
-    if (this.jeda.dijeda) this.nadi.putus();
+    this.petunjukAkhir = { t, dinding: kiniUs() };
+    this.selepasJeda(this.jeda.dijeda, this.jeda.kemas(kod, t));
+  }
+
+  /** Histeresis jeda bergantung masa: majukan dengan masa SDK yang diunjur dari kod terakhir (tiada kod = tiada apa). */
+  private detikPetunjuk(): void {
+    const a = this.petunjukAkhir;
+    if (!a) return;
+    const dijeda = this.jeda.dijeda;
+    this.selepasJeda(dijeda, this.jeda.detik(a.t + (kiniUs() - a.dinding)));
+  }
+
+  private selepasJeda(dahulu: boolean, berubah: boolean): void {
+    if (!berubah) return;
+    if (!dahulu && this.jeda.dijeda) this.nadi.putus();
     for (const f of this.dengarJeda) f();
   }
 

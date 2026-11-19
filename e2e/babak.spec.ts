@@ -48,15 +48,18 @@ test("aliran: LIHAT berdenyut + Sedia → RASA sefasa → Selaras; Cuba lagi →
   await sedia.click();
 
   // RASA: arahan, tiada BPM / pelita hidup; Space dikira sebagai ketukan.
+  const rasaMs = app.aliran.rasa_s * skala * 1000;
   const rasa = win.locator("[data-uji=rasa]");
   await expect(rasa).toBeVisible();
+  let mulaRasa = Date.now();
+  // Ketukan bertulis 2.5 s sebelum pusingan tamat, diukur dari skrin RASA muncul (bukan selepas semakan + bukti di bawah).
+  const tungguHujungRasa = () => win.waitForTimeout(Math.max(0, rasaMs - 2500 - (Date.now() - mulaRasa)));
   await expect(win.getByText(ms.rasa.arahan)).toBeVisible();
   await expect(win.locator("[data-uji=bpm]")).toHaveCount(0);
   await expect(win.locator("[data-uji=nota-sim]")).toHaveText(ms.rasa.nota_sim);
   await bukti(win, "rasa-ms", "p3b");
   await win.keyboard.press("Space");
-  const rasaMs = app.aliran.rasa_s * skala * 1000;
-  await win.waitForTimeout(rasaMs - 2500);
+  await tungguHujungRasa();
   const nSefasa = await c.sefasa(150);
   expect(nSefasa).toBeGreaterThanOrEqual(app.rasa.n_min);
 
@@ -88,7 +91,8 @@ test("aliran: LIHAT berdenyut + Sedia → RASA sefasa → Selaras; Cuba lagi →
 
   await win.locator("[data-uji=cuba-lagi]").click();
   await expect(rasa).toBeVisible();
-  await win.waitForTimeout(rasaMs - 2500);
+  mulaRasa = Date.now();
+  await tungguHujungRasa();
   expect(await c.tersebar()).toBeGreaterThanOrEqual(app.rasa.n_min);
   await expect(dedah).toBeVisible({ timeout: 10_000 });
   await expect(win.locator("[data-uji=jalur]")).toHaveAttribute("data-jalur", "meneka");
@@ -132,9 +136,11 @@ test("jeda petunjuk: LIHAT dijeda + Sedia ditutup; RASA dijeda > had → pusinga
   await win.locator("[data-uji=sedia]").click();
 
   await expect(win.locator("[data-uji=rasa]")).toBeVisible();
-  await c.petunjuk(12);
-  await expect(petunjuk).toContainText(ms.petunjuk.gerak);
+  // K2: kod kritikal (tiada muka) menjeda selepas ambang histeresis; kod nasihat tidak menjeda (e2e/kelip.spec.ts).
+  await c.petunjuk(1);
+  await expect(petunjuk).toContainText(ms.petunjuk.tiada_muka);
   await expect(win.locator("[data-uji=rasa]")).toHaveAttribute("data-keadaan", "dijeda");
+  await expect(petunjuk).toContainText(ms.petunjuk.dijeda);
   // Ketukan semasa jeda tidak dikira.
   await win.keyboard.press("Space");
   await expect(win.locator("[data-uji=rasa-ulang]")).toBeVisible({ timeout: (app.aliran.jeda_ulang_pusingan_s * skala + 3) * 1000 });

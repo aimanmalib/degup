@@ -75,7 +75,8 @@
     "stabil": "Pulse found. Every pulse of the lamp is one heartbeat.",
     "unit": "beats per minute",
     "sedia_dalam": "Ready in {s} seconds.",
-    "belum_stabil": "The camera reading is not steady yet. You can go on, but there may not be enough data for a score."
+    "belum_stabil": "The camera reading is not steady yet. You can go on, but there may not be enough data for a score.",
+    "masih_mencari": "Still looking. Sit still and face the light."
   },
   "rasa": {
     "arahan": "Press Space (or click) every time you FEEL your heart beat. Do not touch your pulse, do not hold your breath.",

@@ -43,6 +43,7 @@ export function babakLihat(r: Ruang): Babak {
   const sediaSelepas = k.masaS(kfg.aliran.lihat_sedia_selepas_stabil_s);
   const panggilSelepas = k.masaS(kfg.aliran.lihat_s);
   const maks = k.masaS(kfg.aliran.lihat_maks_s);
+  const mencariSelepas = k.masaS(kfg.lihat.masih_mencari_s);
   const kurangGerak = matchMedia("(prefers-reduced-motion: reduce)").matches;
   let dom: {
     akar: HTMLElement;
@@ -52,6 +53,7 @@ export function babakLihat(r: Ruang): Babak {
     status: HTMLElement;
     sedia: HTMLButtonElement;
     nota: HTMLElement;
+    mencari: HTMLElement;
     petunjuk: HTMLElement;
   } | null = null;
 
@@ -77,6 +79,10 @@ export function babakLihat(r: Ruang): Babak {
     dom.bpm.textContent = hidup && nadi.bpm !== null ? String(Math.round(nadi.bpm)) : "—";
     dom.isi.style.strokeDashoffset = String(100 - (hidup ? Math.min(100, Math.max(0, nadi.keyakinan)) : 0));
     dom.status.textContent = hidup ? t("lihat.stabil") : t("lihat.membaca");
+    // Baris kedua selepas N s tanpa bacaan (PH§5.5 K2): bacaan pertama boleh lambat pada kamera sebenar.
+    const mencari = !hidup && !dijeda && berlalu >= mencariSelepas ? t("lihat.masih_mencari") : "";
+    if (dom.mencari.textContent !== mencari) dom.mencari.textContent = mencari;
+    dom.mencari.hidden = !mencari;
     const sedia = stabilS >= sediaSelepas && !dijeda;
     const tamat = berlalu >= maks;
     dom.sedia.disabled = !(sedia || tamat);
@@ -105,6 +111,7 @@ export function babakLihat(r: Ruang): Babak {
       const sedia = h("button", { class: "butang utama", type: "button", "data-uji": "sedia", disabled: true, onclick: () => r.pergi("rasa") }, t("lihat.sedia"));
       const bpm = h("span", { class: "bpm-angka", "data-uji": "bpm" }, "—");
       const status = h("p", { class: "status-baca", role: "status" });
+      const mencari = h("p", { class: "status-baca status-kedua", "aria-live": "polite", "data-uji": "masih-mencari", hidden: true });
       const nota = h("p", { class: "nota", "aria-live": "polite", "data-uji": "nota-sedia" });
       const petunjuk = kotakPetunjuk();
       const akar = h(
@@ -114,11 +121,12 @@ export function babakLihat(r: Ruang): Babak {
         h("div", { class: "lihat-pusat" }, p, h("div", { class: "bpm" }, bpm, h("span", { class: "bpm-unit" }, t("lihat.unit")))),
         petunjuk,
         status,
+        mencari,
         h("p", { class: "arahan" }, t("lihat.arahan")),
         h("div", { class: "lihat-tindakan" }, sedia, nota),
         h("p", { class: "nota" }, t("lihat.esc")),
       );
-      dom = { akar, teras: p.querySelector(".pelita-teras")!, bpm, isi, status, sedia, nota, petunjuk };
+      dom = { akar, teras: p.querySelector(".pelita-teras")!, bpm, isi, status, sedia, nota, mencari, petunjuk };
       kemas();
       return akar;
     },

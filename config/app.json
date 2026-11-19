@@ -28,12 +28,20 @@
     "lihat_sedia_selepas_stabil_s": 15,
     "rasa_s": 40,
     "lentur_s": 60,
-    "jeda_ulang_pusingan_s": 20
+    "jeda_ulang_pusingan_s": 20,
+    "jeda_selepas_bukan_ok_s": 1.5,
+    "sambung_selepas_ok_s": 1.0
+  },
+  "petunjuk": {
+    "tukar_teks_min_s": 1,
+    "kritikal": ["kNoFaceFound", "kMultipleFacesFound"],
+    "nasihat": ["kFrameRateTooLow", "kExcessiveMotion", "kChestNotVisible", "kTooDark", "kTooBright", "kCameraTuning"]
   },
   "lihat": {
     "denyut_ms": 120,
     "denyut_skala": 1.09,
-    "kemas_ms": 250
+    "kemas_ms": 250,
+    "masih_mencari_s": 15
   },
   "beats": {
     "buffer_s": 12,

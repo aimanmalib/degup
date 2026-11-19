@@ -75,7 +75,8 @@
     "stabil": "Nadi dikesan. Setiap denyut pelita = satu degupan.",
     "unit": "degupan seminit",
     "sedia_dalam": "Sedia dalam {s} saat.",
-    "belum_stabil": "Bacaan kamera belum stabil. Kau boleh teruskan, tetapi skor mungkin tak cukup data."
+    "belum_stabil": "Bacaan kamera belum stabil. Kau boleh teruskan, tetapi skor mungkin tak cukup data.",
+    "masih_mencari": "Masih mencari. Duduk diam dan hadap cahaya."
   },
   "rasa": {
     "arahan": "Tekan Space (atau klik) setiap kali kau RASA jantung berdegup. Jangan sentuh nadi, jangan tahan nafas.",

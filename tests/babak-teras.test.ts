@@ -5,7 +5,7 @@ import en from "../lang/en.json";
 import ms from "../lang/ms.json";
 import type { Degupan } from "../src/core/beats";
 import { ayatDedah, ayatSama, garisMasa } from "../src/core/dedah";
-import { KOD_PETUNJUK, kunciPetunjuk, PenjejakJeda } from "../src/core/petunjuk";
+import { KOD_PETUNJUK, kunciPetunjuk } from "../src/core/petunjuk";
 import { kiraSkor, type KonfigSkor } from "../src/core/score";
 import { PenjejakStabil } from "../src/core/stabil";
 import { larianSim, T0, US } from "./bantu-sim";
@@ -21,21 +21,6 @@ describe("petunjuk SDK (validationStatus)", () => {
       expect(typeof dapat(en, kunciPetunjuk(k))).toBe("string");
     }
     expect(kunciPetunjuk(99)).toBe("petunjuk.lain");
-  });
-
-  it("jeda bermula pada kod bukan OK, tamat pada OK; ulang hanya selepas had", () => {
-    const j = new PenjejakJeda();
-    expect(j.kemas(0, T0)).toBe(false);
-    expect(j.kemas(12, T0 + US)).toBe(true);
-    expect(j.dijeda).toBe(true);
-    // Kod berubah dalam jeda: jeda yang sama, masa mula tidak dianjak.
-    expect(j.kemas(1, T0 + 5 * US)).toBe(false);
-    expect(j.kodSemasa).toBe(1);
-    expect(j.perluUlang(T0 + 20 * US, 20)).toBe(false);
-    expect(j.perluUlang(T0 + 21.5 * US, 20)).toBe(true);
-    expect(j.kemas(0, T0 + 22 * US)).toBe(true);
-    expect(j.dijeda).toBe(false);
-    expect(j.tempohUs(T0 + 30 * US)).toBe(0);
   });
 });
 
