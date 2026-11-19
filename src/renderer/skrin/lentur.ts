@@ -9,6 +9,7 @@ import { kiniUs } from "../sesi.js";
 import { pratonton } from "./lihat.js";
 import { pelita } from "./pelita.js";
 import { kotakPetunjuk, kemasPetunjuk } from "./petunjuk.js";
+import { notaHenti } from "./sentuh.js";
 
 const SVG = "http://www.w3.org/2000/svg";
 
@@ -230,7 +231,7 @@ export function babakLentur(r: Ruang): Babak {
         selesai
           ? null
           : h("div", { class: "pembilang", role: "timer", "aria-label": t("lentur.pembilang", { s: kfg.aliran.lentur_s }) }, jarum),
-        h("p", { class: "nota" }, t("lihat.esc")),
+        notaHenti(r),
       );
       dom = { akar, jalur, sela, sumber, fasa, jarum, petunjuk };
       if (!selesai) {

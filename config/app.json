@@ -252,5 +252,9 @@
         "--use-fake-ui-for-media-stream"
       ]
     }
+  },
+  "sentuh": {
+    "_nota": "K5: skrin tanpa papan kekunci (telefon, tablet) memaparkan ayat ketuk dan butang Henti menggantikan Space dan Esc.",
+    "media": "(pointer: coarse)"
   }
 }

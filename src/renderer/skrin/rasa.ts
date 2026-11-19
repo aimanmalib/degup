@@ -6,6 +6,7 @@ import { h } from "../dom.js";
 import { kiniUs, masaPeristiwaUs } from "../sesi.js";
 import { pelita } from "./pelita.js";
 import { kotakPetunjuk, kemasPetunjuk } from "./petunjuk.js";
+import { notaHenti, skrinSentuh } from "./sentuh.js";
 
 /** Klik lembut: satu nada pendek dengan sampul eksponen (nilai dari config.rasa.bunyi). */
 function pembunyi(kfg: { hz: number; ms: number; gain: number }): () => void {
@@ -130,7 +131,7 @@ export function babakRasa(r: Ruang): Babak {
         h("h1", { class: "sr" }, t("babak.rasa")),
         p,
         petunjuk,
-        h("p", { class: "arahan rasa-arahan" }, t("rasa.arahan")),
+        h("p", { class: "arahan rasa-arahan" }, t(skrinSentuh(r) ? "rasa.arahan_sentuh" : "rasa.arahan")),
         k.sumber === "sim" ? h("p", { class: "nota rasa-nota-sim", "data-uji": "nota-sim" }, t("rasa.nota_sim")) : null,
         ulang,
         h("p", { class: "nota rasa-mengira" }, t("rasa.mengira")),
@@ -139,7 +140,7 @@ export function babakRasa(r: Ruang): Babak {
           { class: "pembilang", role: "timer", "aria-label": t("rasa.pembilang", { s: kfg.aliran.rasa_s }) },
           jarum,
         ),
-        h("p", { class: "nota" }, t("lihat.esc")),
+        notaHenti(r),
       );
       dom = { akar, jarum, petunjuk, ulang, riak };
       kemas();

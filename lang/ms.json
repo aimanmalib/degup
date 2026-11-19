@@ -76,7 +76,9 @@
     "unit": "degupan seminit",
     "sedia_dalam": "Sedia dalam {s} saat.",
     "belum_stabil": "Bacaan kamera belum stabil. Kau boleh teruskan, tetapi skor mungkin tak cukup data.",
-    "masih_mencari": "Masih mencari. Duduk diam dan hadap cahaya."
+    "masih_mencari": "Masih mencari. Duduk diam dan hadap cahaya.",
+    "henti_sentuh": "Ketik Henti untuk berhenti. Kamera mati serta-merta.",
+    "henti": "Henti"
   },
   "rasa": {
     "arahan": "Tekan Space (atau klik) setiap kali kau RASA jantung berdegup. Jangan sentuh nadi, jangan tahan nafas.",
@@ -92,7 +94,8 @@
     "cuba_lagi": "Cuba lagi",
     "diulang": "Jeda melebihi {s} saat. Pusingan bermula semula bila bacaan sambung.",
     "mengira": "Mengira…",
-    "pembilang": "Masa pusingan, {s} saat"
+    "pembilang": "Masa pusingan, {s} saat",
+    "arahan_sentuh": "Ketik pelita setiap kali kau RASA degupan. Jangan sentuh nadi, jangan tahan nafas."
   },
   "lentur": {
     "tarik": "Tarik",

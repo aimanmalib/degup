@@ -76,7 +76,9 @@
     "unit": "beats per minute",
     "sedia_dalam": "Ready in {s} seconds.",
     "belum_stabil": "The camera reading is not steady yet. You can go on, but there may not be enough data for a score.",
-    "masih_mencari": "Still looking. Sit still and face the light."
+    "masih_mencari": "Still looking. Sit still and face the light.",
+    "henti_sentuh": "Tap Stop to end the round. The camera turns off at once.",
+    "henti": "Stop"
   },
   "rasa": {
     "arahan": "Press Space (or click) every time you FEEL your heart beat. Do not touch your pulse, do not hold your breath.",
@@ -92,7 +94,8 @@
     "cuba_lagi": "Try again",
     "diulang": "Paused for more than {s} seconds. The round starts again when the reading resumes.",
     "mengira": "Counting…",
-    "pembilang": "Round time, {s} seconds"
+    "pembilang": "Round time, {s} seconds",
+    "arahan_sentuh": "Tap the lamp each time you FEEL a beat. Do not touch your pulse, do not hold your breath."
   },
   "lentur": {
     "tarik": "Breathe in",

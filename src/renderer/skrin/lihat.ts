@@ -5,6 +5,7 @@ import { h } from "../dom.js";
 import { kiniUs } from "../sesi.js";
 import { pelita } from "./pelita.js";
 import { kotakPetunjuk, kemasPetunjuk } from "./petunjuk.js";
+import { notaHenti } from "./sentuh.js";
 
 const SVG = "http://www.w3.org/2000/svg";
 
@@ -124,7 +125,7 @@ export function babakLihat(r: Ruang): Babak {
         mencari,
         h("p", { class: "arahan" }, t("lihat.arahan")),
         h("div", { class: "lihat-tindakan" }, sedia, nota),
-        h("p", { class: "nota" }, t("lihat.esc")),
+        notaHenti(r),
       );
       dom = { akar, teras: p.querySelector(".pelita-teras")!, bpm, isi, status, sedia, nota, mencari, petunjuk };
       kemas();

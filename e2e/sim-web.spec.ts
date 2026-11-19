@@ -58,12 +58,16 @@ test("sim web: izin → LIHAT → RASA → pendedahan → LENTUR → keputusan, 
   await expect(win.locator("[data-uji=lihat]")).toHaveAttribute("data-keadaan", "hidup", { timeout: 15_000 });
   await expect(win.locator("[data-uji=pratonton-sim]")).toHaveText(en.kamera.simulasi);
   await expect(win.locator("[data-uji=bpm]")).toHaveText(/^\d{2,3}$/);
+  // K5: penunjuk tetikus (bukan sentuh) = nota Esc kekal, tiada butang Henti sentuh.
+  await expect(win.getByText(en.lihat.esc)).toBeVisible();
+  await expect(win.locator("[data-uji=henti-sentuh]")).toHaveCount(0);
   await lencana(win);
   await bukti(win, "lihat-en", "j8");
   await win.locator("[data-uji=sedia]").click({ timeout: (app.aliran.lihat_sedia_selepas_stabil_s * SKALA + 10) * 1000 });
 
   // RASA (babak 2): ketukan sefasa melalui cangkuk ujian sim → pendedahan Selaras.
   await expect(win.locator("[data-uji=rasa]")).toBeVisible();
+  await expect(win.locator(".rasa-arahan")).toHaveText(en.rasa.arahan);
   await lencana(win);
   await bukti(win, "rasa-en", "j8");
   await win.waitForTimeout(app.aliran.rasa_s * SKALA * 1000 - 1500);
