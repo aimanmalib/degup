@@ -1,0 +1,66 @@
+{
+  "_nota": "K3 / PH§5.5, PH§5.4 N6, PH§7.3A: jentera jalan B (video telefon pemilik sebagai kamera). scripts/jalanb/*.mjs + src/alat/jalanb.ts membaca nilai di sini; kod tidak menyimpannya.",
+  "folder_rahsia": "~/degup-rahsia",
+  "kamera": {
+    "_nota": "Fail kamera palsu Chromium (--use-file-for-fake-video-capture): MJPEG kecil, bukan y4m (3 min y4m 640×360 ≈ 1.9 GB).",
+    "lebar": 640,
+    "tinggi": 360,
+    "fps": 30,
+    "kualiti_mjpeg": 4,
+    "cakera_min_gb": 20
+  },
+  "babak": {
+    "_nota": "Saat VIDEO diukur dari bingkai pertama kamera (PH§7.3A: diam 0:00–1:00, ketuk 1:00–1:45, nafas 4/6 1:45–3:00). Sumber sim tiada kamera: sauh = skrin LIHAT muncul.",
+    "lihat_tamat_s": 60,
+    "lentur_mula_min_s": 105,
+    "tamat_video_s": 180,
+    "tunggu_sedia_maks_s": 30,
+    "tunggu_skrin_s": 20,
+    "tunggu_keputusan_s": 90,
+    "tunggu_rakaman_tamat_s": 30,
+    "tunggu_bingkai_pertama_s": 20,
+    "had_larian_s": 420
+  },
+  "ketukan": {
+    "_nota": "Pengesan permulaan bunyi (ketukan jari di meja). Tenaga RMS setiap langkah; lantai hingar = persentil RMS bergolek; ketukan = naik melepasi lantai × nisbah DAN pecahan puncak klip DAN melonjak naik_db dalam naik_ms (hingar bilik/nafas naik perlahan); tempoh refraktori antara ketukan.",
+    "kadar_sampel": 16000,
+    "penapis_ffmpeg": "highpass=f=150",
+    "tetingkap_ms": 10,
+    "langkah_ms": 2,
+    "lantai_s": 2,
+    "lantai_persentil": 0.5,
+    "nisbah_lantai_db": 10,
+    "pecahan_puncak": 0.15,
+    "naik_ms": 20,
+    "naik_db": 6,
+    "refraktori_ms": 250,
+    "julat_s": [
+      55,
+      110
+    ],
+    "ralat_maks_ms": 30
+  },
+  "pemegang_tempat": {
+    "_nota": "Raptai (PH§5.5 K3 c): corak ujian ffmpeg + trek audio ketukan sintetik + hingar latar. Tiada muka. Kekal dalam folder rahsia, tidak didaftar, tidak diterbit.",
+    "awalan": "PEMEGANG-TEMPAT-JALANB-",
+    "tempoh_s": 180,
+    "ketukan_mula_s": 61.2,
+    "ketukan_akhir_s": 104,
+    "selang_asas_s": 0.86,
+    "selang_goyang_s": 0.18,
+    "ketukan_hz": 1400,
+    "ketukan_amp": 0.6,
+    "ketukan_reput": 70,
+    "ketukan_tempoh_s": 0.06,
+    "hingar_amp": 0.02,
+    "letus_amp": 0.05,
+    "letus_mula_s": [
+      20,
+      80,
+      95,
+      140
+    ],
+    "letus_tempoh_s": 0.8,
+    "_nota_letus": "Letusan hingar (bunyi bilik/nafas) DI DALAM dan di luar tetingkap ketukan: mesti tiada ketukan palsu."
+  }
+}
