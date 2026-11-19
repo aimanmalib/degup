@@ -61,6 +61,15 @@ describe("kiraSkor atas sim (PRD §4.4)", () => {
     expect(h.jalur).toBe("ada_rasa");
   });
 
+  it("ketukan sefasa hanya 12 s pertama → cukup data tetapi liputan gagal: jalur terlalu_sedikit, bukan Selaras (K1)", () => {
+    const h = skorDengan((b, r) => sefasa(b, r).filter((t) => t < MULA + 12 * US));
+    expect(h.cukup).toBe(true);
+    expect(h.R).toBeGreaterThan(0.8);
+    expect(h.liputanCukup).toBe(false);
+    expect(h.rentangS).toBeLessThan(KFG.liputan.rentang_min_s);
+    expect(h.jalur).toBe(KFG.liputan.jalur);
+  });
+
   it("terlalu sedikit ketukan → tak cukup data, tiada jalur", () => {
     const h = skorDengan((b, r) => sefasa(b, r).slice(0, KFG.n_min - 1));
     expect(h.cukup).toBe(false);
@@ -127,7 +136,9 @@ describe("blok asas skor", () => {
   it("jalur ikut config, padanan pertama (D4)", () => {
     expect(pilihJalur(KFG.jalur, 0.7, 0.001)).toBe("selaras");
     expect(pilihJalur(KFG.jalur, 0.7, 0.02)).toBe("ada_rasa");
-    expect(pilihJalur(KFG.jalur, 0.4, 0.04)).toBe("ada_rasa");
+    // K1/D29: p < 0.05 sahaja tidak cukup lagi; R mesti ≥ r_min ada_rasa (0.45).
+    expect(pilihJalur(KFG.jalur, 0.5, 0.04)).toBe("ada_rasa");
+    expect(pilihJalur(KFG.jalur, 0.4, 0.04)).toBe("meneka");
     expect(pilihJalur(KFG.jalur, 0.9, 0.05)).toBe("meneka");
     expect(() => pilihJalur([{ id: "x", p_bawah: 0.5 }], 0, 1)).toThrow();
   });

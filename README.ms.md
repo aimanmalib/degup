@@ -42,9 +42,11 @@ Permainan ini ada tiga babak, kira-kira tiga minit semuanya. Tempoh datang dari 
    330 ms. Degupan dalam bacaan lemah ditanda dan tidak dikira.
 2. **Rasa (40 s).** Pelita padam. Kau menekan Space setiap kali merasa degupan, tanpa menyentuh nadi. Kemudian pendedahan
    melukis ketukan kau di bawah degupan yang kamera lihat. Skor selaras ialah tentang ketekalan, bukan kelewatan: setiap ketukan
-   diberi kedudukan dalam kitaran degupannya, dan skor ialah betapa rapat kedudukan itu berkumpul (panjang resultan min, dengan
-   ujian Rayleigh untuk kebetulan; [`src/core/score.ts`](src/core/score.ts)). Kelewatan tetap 150 ms setiap kali tetap dikira
-   selaras.
+   diberi kedudukan dalam kitaran degupannya, dan skor ialah betapa rapat kedudukan itu berkumpul (panjang resultan min R dan
+   ujian Rayleigh; [`src/core/score.ts`](src/core/score.ts)). Kelewatan tetap 150 ms setiap kali tetap dikira selaras. Rentak
+   tetap juga boleh berkumpul, jadi jalur ditetapkan daripada pengetuk yang tidak merasa apa-apa
+   ([`docs/MEASUREMENTS.md`](docs/MEASUREMENTS.md)), dan pusingan dikira hanya bila ketukan meliputi sebahagian besarnya: kurang
+   daripada 20 ketukan atau kurang daripada 30 saat memberi "Terlalu sedikit untuk dinilai".
 3. **Lentur (60 s).** Kau tarik nafas 4 saat dan hembus 6 saat, mengikut pelita. Jarak antara degupan dilukis hidup, berlorek
    ikut nafas. Kebanyakan orang nampak degupan menjadi perlahan pada setiap hembusan. Degup melaporkan saiz ayunan itu dalam
    milisaat dan berapa degupan dalam satu nafas, dikira dari kadar nadi dan kadar nafas SDK ([`src/core/rsa.ts`](src/core/rsa.ts)).
@@ -190,7 +192,7 @@ seperti SDK, dan ketukan dicap pada jam yang sama, jadi kependaman paip tidak me
 | [`src/main/sdk.ts`](src/main/sdk.ts) | Proses main: `bindSmartSpectraIpc` dimuat hanya untuk mod live, laluan pustaka asli, Vulkan di Linux |
 | [`src/core/beats.ts`](src/core/beats.ts) | Pengesan degupan atas `cardio.arterialPressureTrace`, gelombang nadi mentah SDK |
 | [`src/core/stabil.ts`](src/core/stabil.ts) | Kadar nadi, keyakinan dan masa stabil untuk skrin Lihat |
-| [`src/core/score.ts`](src/core/score.ts) | Skor selaras: fasa ketukan, panjang resultan min dan ujian kebetulan |
+| [`src/core/score.ts`](src/core/score.ts) | Skor selaras: fasa ketukan, panjang resultan min, ujian Rayleigh, jalur dan syarat liputan |
 | [`src/core/rsa.ts`](src/core/rsa.ts) | Matematik Lentur: sela degupan dikumpul ikut kitaran nafas |
 | [`src/core/lentur.ts`](src/core/lentur.ts) | Pengumpul Lentur dan baris keputusan, termasuk degupan setiap nafas |
 | [`src/sumber/sim.ts`](src/sumber/sim.ts) | Sumber simulasi: payload sintetik berbentuk SDK dengan masa degupan yang diketahui |
@@ -232,7 +234,12 @@ Apa yang ujian tegaskan, semuanya atas isyarat sintetik dengan jawapan yang dike
   sekurang-kurangnya 95% degupan sebenar dijumpai, ralat masa median bawah 40 ms, tiada dua degupan dalam tetingkap refraktori.
   Juga semakan kendiri kadar nadi dan jurang.
 - **Skor selaras** ([`tests/score.test.ts`](tests/score.test.ts)): ketukan sefasa jatuh dalam "Selaras", ketukan rawak dalam
-  "Meneka" merentas beberapa benih, separuh-separuh dalam "Ada rasa", ketukan terlalu sedikit tiada skor.
+  "Meneka" merentas beberapa benih, separuh-separuh dalam "Ada rasa", bawah 10 ketukan tiada skor, ketukan hanya dalam 12 saat
+  pertama memberi "Terlalu sedikit untuk dinilai".
+- **Pengetuk yang tidak merasa** ([`tests/pengetuk-tidak-merasa.test.ts`](tests/pengetuk-tidak-merasa.test.ts)): enam model
+  pengetuk berbenih, 2,000 pusingan setiap satu, melalui skor sebenar. Pengetuk rawak sampai "Ada rasa" ke atas dalam paling
+  banyak 10% pusingan, rentak tetap pada kadar nadi paling banyak 20%, "Selaras" paling banyak 5%; pengetuk yang merasa sampai ke
+  situ dalam sekurang-kurangnya 80% (lemah) dan 99% (jelas).
 - **Lentur** ([`tests/rsa.test.ts`](tests/rsa.test.ts)): dengan ayunan nafas diketahui 3 hingga 6 degupan seminit, ayunan yang
   dilaporkan dalam 10% dari rujukan.
 - **Bentuk payload SDK** ([`tests/bentuk-metrics.test.ts`](tests/bentuk-metrics.test.ts)): payload sim dan main semula melalui

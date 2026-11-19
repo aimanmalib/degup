@@ -1,5 +1,6 @@
 // Sync score for Feel: the phase of each tap inside its beat cycle, mean resultant length R, and a Rayleigh test for chance.
-// Input is the beats from beats.ts and tap times on the same microsecond clock. Score bands come from config.
+// Input is the beats from beats.ts and tap times on the same microsecond clock. Score bands come from config; a round whose
+// taps are too few or cover too little of the round gets the coverage band instead of an R/p band (rhythm alone can fake R).
 // Skor RASA (PRD §4.4): fasa ketukan dalam kitaran degupan, panjang resultan min R, ujian Rayleigh, jalur dari config.
 // Tulen: tiada DOM, tiada SDK. Masa dalam µs epoch (asas sama untuk degupan SDK dan ketukan).
 import type { Degupan } from "./beats.js";
@@ -10,8 +11,16 @@ export interface JalurKonfig {
   p_bawah?: number;
 }
 
+/** Syarat liputan (K1, D29): skor yang cukup data tetapi ketukannya sedikit atau sempit = jalur `jalur`, bukan jalur R/p. */
+export interface KonfigLiputan {
+  ketukan_min: number;
+  rentang_min_s: number;
+  jalur: string;
+}
+
 export interface KonfigSkor {
   n_min: number;
+  liputan: KonfigLiputan;
   kualiti_min: number;
   kualiti_saat_min: number;
   ayat_separuh_kitaran: number;
@@ -61,6 +70,10 @@ export interface HasilSkor {
   peluangDaripada10: number;
   /** Ketukan sah minimum (config `n_min`; ayat sebab ketukan). */
   nMin: number;
+  /** Saat antara ketukan sah pertama dan terakhir (syarat liputan). */
+  rentangS: number;
+  /** Ketukan sah ≥ `liputan.ketukan_min` DAN rentang ≥ `liputan.rentang_min_s`. */
+  liputanCukup: boolean;
 }
 
 const DUA_PI = 2 * Math.PI;
@@ -77,9 +90,10 @@ export function fasaKetukan(
   sah: readonly boolean[],
   degupan: readonly Degupan[],
   ketukan: readonly number[],
-): { fasa: number[]; ibiUs: number[] } {
+): { fasa: number[]; ibiUs: number[]; masa: number[] } {
   const fasa: number[] = [];
   const ibiUs: number[] = [];
+  const masa: number[] = [];
   const tersusun = [...ketukan].sort((a, b) => a - b);
   let j = 0;
   for (let i = 0; i + 1 < degupan.length; i++) {
@@ -92,10 +106,11 @@ export function fasaKetukan(
     let k = j;
     while (k < tersusun.length && tersusun[k]! < b.t) {
       fasa.push((DUA_PI * (tersusun[k]! - a.t)) / sela);
+      masa.push(tersusun[k]!);
       k++;
     }
   }
-  return { fasa, ibiUs };
+  return { fasa, ibiUs, masa };
 }
 
 /** Statistik bulat: R (panjang resultan min), sudut min dalam [0, 2π). */
@@ -147,7 +162,7 @@ export function kiraSkor(input: InputSkor, kfg: KonfigSkor): HasilSkor {
   const degupan = input.degupan.filter((d) => dalam(d.t));
   const ketukan = input.ketukan.filter(dalam);
   const sah = degupan.map((d) => degupanSah(d, input.kualitiPada, kfg.kualiti_saat_min));
-  const { fasa, ibiUs } = fasaKetukan(sah, degupan, ketukan);
+  const { fasa, ibiUs, masa } = fasaKetukan(sah, degupan, ketukan);
   const { R, sudut } = resultan(fasa);
   const { z, p } = rayleigh(fasa.length, R);
 
@@ -155,6 +170,9 @@ export function kiraSkor(input: InputSkor, kfg: KonfigSkor): HasilSkor {
   if (fasa.length < kfg.n_min) sebab.push("ketukan");
   if (input.kualitiTetingkap === null || input.kualitiTetingkap < kfg.kualiti_min) sebab.push("kualiti");
   const cukup = sebab.length === 0;
+  // `masa` tersusun menaik (fasaKetukan berjalan atas ketukan tersusun).
+  const rentangS = masa.length > 1 ? (masa[masa.length - 1]! - masa[0]!) / 1e6 : 0;
+  const liputanCukup = fasa.length >= kfg.liputan.ketukan_min && rentangS >= kfg.liputan.rentang_min_s;
 
   const ibiMed = median(ibiUs);
   const sesaranMs = fasa.length > 0 && ibiMed !== null ? Math.round(((sudut / DUA_PI) * ibiMed) / 1000) : null;
@@ -175,10 +193,12 @@ export function kiraSkor(input: InputSkor, kfg: KonfigSkor): HasilSkor {
     z,
     p,
     skor: Math.round(R * 100),
-    jalur: cukup ? pilihJalur(kfg.jalur, R, p) : null,
+    jalur: !cukup ? null : liputanCukup ? pilihJalur(kfg.jalur, R, p) : kfg.liputan.jalur,
     sesaranMs,
     samaDaripada10,
     peluangDaripada10: 10 * 2 * kfg.ayat_separuh_kitaran,
     nMin: kfg.n_min,
+    rentangS,
+    liputanCukup,
   };
 }

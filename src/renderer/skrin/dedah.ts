@@ -95,6 +95,13 @@ export function babakDedah(r: Ruang): Babak {
   const kfg = k.konfig;
   const rasa = r.hasilRasa ?? { mula: 0, akhir: 0, ketukan: [] };
   const p = sesi.pengesan;
+  // Syarat liputan ikut skala masa ujian yang sama dengan pusingan (1 dalam app sebenar): pusingan dipendekkan → degupan dan
+  // rentang yang boleh dicapai juga berkurang dengan nisbah yang sama.
+  const liputan = {
+    ...kfg.rasa.liputan,
+    ketukan_min: Math.ceil(k.masaS(kfg.rasa.liputan.ketukan_min)),
+    rentang_min_s: k.masaS(kfg.rasa.liputan.rentang_min_s),
+  };
   const hasil: HasilSkor = kiraSkor(
     {
       degupan: p.degupan(),
@@ -104,7 +111,7 @@ export function babakDedah(r: Ruang): Babak {
       kualitiTetingkap: p.kualitiAntara(rasa.mula, rasa.akhir),
       kualitiPada: (t) => p.kualitiPada(t),
     },
-    kfg.rasa,
+    { ...kfg.rasa, liputan },
   );
   r.hasilSkor = hasil;
   const garis = garisMasa({
@@ -170,7 +177,7 @@ export function babakDedah(r: Ruang): Babak {
               t("dedah.tiada_skor"),
             ),
           );
-      const ayat = ayatDedah(hasil);
+      const ayat = ayatDedah(hasil, liputan);
       const akar = h(
         "div",
         {
@@ -194,6 +201,8 @@ export function babakDedah(r: Ruang): Babak {
               t(a.kunci, a.nilai),
             ),
           ),
+          // K1: dalam Simulation tiada degupan sebenar untuk dirasa; skor hanya menunjukkan cara permainan berjalan.
+          k.sumber === "sim" ? h("p", { class: "lencana-panel", "data-uji": "nota-sim" }, t("dedah.nota_sim")) : null,
         ),
         h(
           "figure",

@@ -218,6 +218,7 @@ button, input, select { font: inherit; color: inherit; }
 .jalur-selaras { background: var(--pelita); color: var(--malam); border-color: var(--pelita); }
 .jalur-ada_rasa { border-color: var(--pelita); color: var(--pelita); }
 .jalur-meneka { color: var(--kabus); }
+.jalur-terlalu_sedikit { color: var(--kabus); border-style: dashed; }
 .garis-bingkai { margin: 0; width: 100%; display: grid; gap: var(--j-2); }
 .garis { width: 100%; height: clamp(5.5rem, 15vh, 8rem); display: block; }
 .garis-paksi { stroke: var(--garis); stroke-width: 1; vector-effect: non-scaling-stroke; }

@@ -79,10 +79,12 @@
   },
   "rasa": {
     "arahan": "Tekan Space (atau klik) setiap kali kau RASA jantung berdegup. Jangan sentuh nadi, jangan tahan nafas.",
+    "nota_sim": "Simulasi: tiada degupan sebenar untuk dirasa di sini, jadi skor Simulasi hanya menunjukkan cara permainan berjalan.",
     "jalur": {
       "meneka": "Meneka",
       "ada_rasa": "Ada rasa",
-      "selaras": "Selaras"
+      "selaras": "Selaras",
+      "terlalu_sedikit": "Terlalu sedikit untuk dinilai"
     },
     "tak_cukup": "Tak cukup data untuk skor.",
     "kiraan": "Kamera nampak {N} degupan. Kau ketuk {n}.",
@@ -188,8 +190,13 @@
     "kunci_lorek": "Bacaan lemah, tidak dikira",
     "saat": "{s} saat",
     "sama": "Ketukan kau jatuh pada bahagian kitaran yang sama {x} kali daripada 10. Kebetulan semata-mata memberi kira-kira {a} atau {b}.",
-    "kebetulan": "Corak sebegitu boleh berlaku secara kebetulan.",
-    "bukan_kebetulan": "Itu bukan kebetulan.",
+    "makna": {
+      "selaras": "Ketukan setekal ini jarang berlaku hanya kerana rentak.",
+      "ada_rasa": "Lebih tekal daripada ketukan rawak biasanya. Rentak tetap yang hampir dengan nadi kau juga boleh sampai ke sini, jadi main satu pusingan lagi.",
+      "meneka": "Tiada kaitan jelas antara ketukan kau dan degupan kau pusingan ini. Kebanyakan orang bermula di sini.",
+      "terlalu_sedikit": "{n} ketukan dalam {s} saat terlalu sedikit untuk membezakan rasa daripada rentak. Skor memerlukan sekurang-kurangnya {min} ketukan merentasi {smin} saat, jadi ketuk sepanjang pusingan."
+    },
+    "nota_sim": "Pusingan ini Simulasi. Tiada degupan sebenar untuk dirasa, jadi skor hanya menunjukkan cara permainan berjalan.",
     "sesaran": "Kau rasa degupan kira-kira {ms} ms selepas kamera melihatnya. Sesaran tetap itu tidak penting; yang dikira ialah ketekalan.",
     "sebab_ketukan": "Hanya {n} ketukan jatuh antara dua degupan yang jelas. Perlu sekurang-kurangnya {min}. Ketuk setiap kali kau rasa degupan.",
     "sebab_kualiti": "Bacaan kamera lemah untuk sebahagian besar pusingan. Cuba lagi dengan cahaya depan."

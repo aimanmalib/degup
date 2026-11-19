@@ -72,6 +72,12 @@
   "rasa": {
     "bunyi_lalai": true,
     "n_min": 10,
+    "liputan": {
+      "_nota": "K1/D29: skor cukup data tetapi < ketukan_min ketukan sah atau rentang < rentang_min_s saat = jalur ini, bukan jalur R/p.",
+      "ketukan_min": 20,
+      "rentang_min_s": 30,
+      "jalur": "terlalu_sedikit"
+    },
     "kualiti_min": 0.6,
     "kualiti_saat_min": 0.5,
     "ayat_separuh_kitaran": 0.125,
@@ -83,6 +89,7 @@
       },
       {
         "id": "ada_rasa",
+        "r_min": 0.45,
         "p_bawah": 0.05
       },
       {

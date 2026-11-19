@@ -1,7 +1,7 @@
 // Pendedahan RASA (PRD §4.2, §4.4): garis masa (degupan, ketukan, jalur kualiti) sebagai kedudukan relatif 0..1, dan
 // ayat bahasa biasa sebagai kunci i18n + nilai. Tulen: tiada DOM, tiada SDK. Masa µs epoch.
 import type { Degupan } from "./beats.js";
-import { degupanSah, type HasilSkor } from "./score.js";
+import { degupanSah, type HasilSkor, type KonfigLiputan } from "./score.js";
 
 const US = 1e6;
 
@@ -49,7 +49,7 @@ export interface Ayat {
 }
 
 /** Ayat pendedahan mengikut hasil: kiraan N/n, ayat statistik, sesaran (prinsip PAT), atau "tak cukup data". */
-export function ayatDedah(h: HasilSkor): Ayat[] {
+export function ayatDedah(h: HasilSkor, kfg: Pick<KonfigLiputan, "ketukan_min" | "rentang_min_s">): Ayat[] {
   const ayat: Ayat[] = [{ kunci: "rasa.kiraan", nilai: { N: h.N, n: h.n } }];
   if (!h.cukup) {
     ayat.push({ kunci: "rasa.tak_cukup" });
@@ -57,9 +57,16 @@ export function ayatDedah(h: HasilSkor): Ayat[] {
     if (h.sebab.includes("kualiti")) ayat.push({ kunci: "dedah.sebab_kualiti" });
     return ayat;
   }
+  if (!h.liputanCukup) {
+    // K1/D29: terlalu sedikit atau terlalu sempit untuk menilai; nombor ayat dari hasil dan config, bukan R.
+    const nilai = { n: h.nKetukanSah, s: Math.round(h.rentangS), min: kfg.ketukan_min, smin: kfg.rentang_min_s };
+    ayat.push({ kunci: `dedah.makna.${h.jalur}`, nilai });
+    return ayat;
+  }
   const sama = ayatSama(h);
   if (sama) ayat.push(sama);
-  ayat.push({ kunci: h.jalur === "meneka" ? "dedah.kebetulan" : "dedah.bukan_kebetulan" });
+  // K1: satu ayat makna setiap jalur (ayat tetap lama tidak dapat dipertahankan untuk ketukan berentak; D29).
+  ayat.push({ kunci: `dedah.makna.${h.jalur}` });
   // Sesaran hanya bermakna bila ketukan berkumpul pada satu fasa; bila meneka, purata fasa ialah hingar.
   if (h.sesaranMs !== null && h.jalur !== "meneka") ayat.push({ kunci: "dedah.sesaran", nilai: { ms: h.sesaranMs } });
   return ayat;
@@ -70,7 +77,7 @@ export function ayatDedah(h: HasilSkor): Ayat[] {
  * dengan x di atas paras kebetulan, atau jalur lain dengan x pada paras kebetulan, ialah dua ayat yang bercanggah → tiada ayat.
  */
 export function ayatSama(h: HasilSkor): Ayat | null {
-  if (h.samaDaripada10 === null || h.jalur === null) return null;
+  if (h.samaDaripada10 === null || h.jalur === null || h.liputanCukup === false) return null;
   const a = Math.floor(h.peluangDaripada10);
   const b = Math.max(Math.ceil(h.peluangDaripada10), a + 1);
   const atasKebetulan = h.samaDaripada10 > b;

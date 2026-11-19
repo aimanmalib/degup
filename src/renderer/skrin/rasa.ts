@@ -131,6 +131,7 @@ export function babakRasa(r: Ruang): Babak {
         p,
         petunjuk,
         h("p", { class: "arahan rasa-arahan" }, t("rasa.arahan")),
+        k.sumber === "sim" ? h("p", { class: "nota rasa-nota-sim", "data-uji": "nota-sim" }, t("rasa.nota_sim")) : null,
         ulang,
         h("p", { class: "nota rasa-mengira" }, t("rasa.mengira")),
         h(

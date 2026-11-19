@@ -40,8 +40,10 @@ The game has three scenes, about three minutes in total. Lengths come from `conf
    in a weak reading are marked and left out.
 2. **Feel (40 s).** The lamp goes dark. You press Space each time you feel a beat, without touching your pulse. Then the reveal
    draws your taps under the beats the camera saw. The sync score is about consistency, not delay: each tap gets a position in
-   its beat cycle, and the score is how tightly those positions cluster (mean resultant length, with a Rayleigh test for
-   chance; [`src/core/score.ts`](src/core/score.ts)). A fixed lag of 150 ms every time still counts as in tune.
+   its beat cycle, and the score is how tightly those positions cluster (mean resultant length R plus a Rayleigh test;
+   [`src/core/score.ts`](src/core/score.ts)). A fixed lag of 150 ms every time still counts as in tune. A steady rhythm can also
+   cluster, so the bands are set from tappers who feel nothing ([`docs/MEASUREMENTS.md`](docs/MEASUREMENTS.md)), and a round counts
+   only when the taps cover most of it: fewer than 20 taps or less than 30 seconds gives "Too few taps to tell".
 3. **Bend (60 s).** You breathe in for 4 seconds and out for 6, following the lamp. The gap between beats is drawn live, shaded
    by the breath. Most people see the beat slow down on each out-breath. Degup reports the size of that swing in milliseconds
    and how many beats fit in one breath, computed from the SDK pulse and breathing rates ([`src/core/rsa.ts`](src/core/rsa.ts)).
@@ -185,7 +187,7 @@ microseconds since epoch, and taps are stamped on the same clock, so pipeline la
 | [`src/main/sdk.ts`](src/main/sdk.ts) | Main process: `bindSmartSpectraIpc` loaded only for live mode, native library path, Vulkan on Linux |
 | [`src/core/beats.ts`](src/core/beats.ts) | Beat detection on `cardio.arterialPressureTrace`, the SDK's raw pulse waveform |
 | [`src/core/stabil.ts`](src/core/stabil.ts) | Pulse rate, confidence and stable time for the See screen |
-| [`src/core/score.ts`](src/core/score.ts) | Sync score: tap phase, mean resultant length and the chance test |
+| [`src/core/score.ts`](src/core/score.ts) | Sync score: tap phase, mean resultant length, Rayleigh test, bands and the coverage rule |
 | [`src/core/rsa.ts`](src/core/rsa.ts) | Bend maths: beat gaps grouped by breathing cycle |
 | [`src/core/lentur.ts`](src/core/lentur.ts) | Bend collector and result rows, including beats per breath |
 | [`src/sumber/sim.ts`](src/sumber/sim.ts) | The simulated source: a synthetic payload in the SDK's shape with known beat times |
@@ -227,7 +229,11 @@ What the tests assert, all on synthetic signals with a known answer:
   true beats found, median timing error under 40 ms, no two beats inside the refractory window. Also the pulse rate self-check
   and gaps.
 - **Sync score** ([`tests/score.test.ts`](tests/score.test.ts)): taps in phase land in "In tune", random taps land in "Guessing"
-  across several seeds, half and half lands in "Some sense", too few taps gives no score.
+  across several seeds, half and half lands in "Some sense", under 10 taps gives no score, taps in only the first 12 seconds give
+  "Too few taps to tell".
+- **A tapper who feels nothing** ([`tests/pengetuk-tidak-merasa.test.ts`](tests/pengetuk-tidak-merasa.test.ts)): six seeded tapper
+  models, 2,000 rounds each, through the real score. Random tappers reach "Some sense" or above in at most 10% of rounds, a steady
+  rhythm at the pulse rate in at most 20%, "In tune" at most 5%; tappers who feel reach it in at least 80% (weak) and 99% (clear).
 - **Bend** ([`tests/rsa.test.ts`](tests/rsa.test.ts)): with a known breathing swing of 3 to 6 beats per minute, the reported swing
   is within 10% of the reference.
 - **SDK payload shape** ([`tests/bentuk-metrics.test.ts`](tests/bentuk-metrics.test.ts)): sim and replay payloads go through

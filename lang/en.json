@@ -79,10 +79,12 @@
   },
   "rasa": {
     "arahan": "Press Space (or click) every time you FEEL your heart beat. Do not touch your pulse, do not hold your breath.",
+    "nota_sim": "Simulation: there is no real heartbeat to feel here, so a Simulation score only shows how the game works.",
     "jalur": {
       "meneka": "Guessing",
       "ada_rasa": "Some sense",
-      "selaras": "In tune"
+      "selaras": "In tune",
+      "terlalu_sedikit": "Too few taps to tell"
     },
     "tak_cukup": "Not enough data for a score.",
     "kiraan": "The camera saw {N} beats. You tapped {n}.",
@@ -188,8 +190,13 @@
     "kunci_lorek": "Weak reading, not counted",
     "saat": "{s} seconds",
     "sama": "Your taps landed on the same part of the cycle {x} times out of 10. Chance alone gives about {a} or {b}.",
-    "kebetulan": "A pattern like that can happen by chance.",
-    "bukan_kebetulan": "That is not chance.",
+    "makna": {
+      "selaras": "Taps this consistent rarely happen by rhythm alone.",
+      "ada_rasa": "More consistent than random tapping usually gets. A steady rhythm close to your pulse can also land here, so play another round.",
+      "meneka": "No clear link between your taps and your beats this round. Most people start here.",
+      "terlalu_sedikit": "{n} taps across {s} seconds is too little to tell feeling from rhythm. A score needs at least {min} taps across {smin} seconds, so tap through the whole round."
+    },
+    "nota_sim": "This round was Simulation. There was no real heartbeat to feel, so the score only shows how the game works.",
     "sesaran": "You felt the beat about {ms} ms after the camera saw it. That fixed offset does not matter; consistency is what counts.",
     "sebab_ketukan": "Only {n} taps fell between two clear beats. At least {min} are needed. Tap each time you feel a beat.",
     "sebab_kualiti": "The camera reading was weak for most of the round. Try again with light in front of you."

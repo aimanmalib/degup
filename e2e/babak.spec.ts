@@ -52,6 +52,7 @@ test("aliran: LIHAT berdenyut + Sedia → RASA sefasa → Selaras; Cuba lagi →
   await expect(rasa).toBeVisible();
   await expect(win.getByText(ms.rasa.arahan)).toBeVisible();
   await expect(win.locator("[data-uji=bpm]")).toHaveCount(0);
+  await expect(win.locator("[data-uji=nota-sim]")).toHaveText(ms.rasa.nota_sim);
   await bukti(win, "rasa-ms", "p3b");
   await win.keyboard.press("Space");
   const rasaMs = app.aliran.rasa_s * skala * 1000;
@@ -65,7 +66,10 @@ test("aliran: LIHAT berdenyut + Sedia → RASA sefasa → Selaras; Cuba lagi →
   await expect(win.locator("[data-uji=jalur]")).toHaveText(ms.rasa.jalur.selaras);
   await expect(win.locator("[data-uji=kiraan]")).toHaveAttribute("data-n", String(nSefasa + 1));
   await expect(win.getByText(ms.umum.penafian)).toBeVisible();
-  await expect(win.getByText(ms.dedah.bukan_kebetulan)).toBeVisible();
+  await expect(win.getByText(ms.dedah.makna.selaras)).toBeVisible();
+  // K1: mod Simulation berkata terus terang tiada degupan sebenar untuk dirasa (skrin Feel diuji di atas; pendedahan di sini).
+  await expect(win.locator("[data-uji=nota-sim]")).toHaveText(ms.dedah.nota_sim);
+  await expect(win.getByText(/bukan kebetulan|not chance/i)).toHaveCount(0);
   expect(await win.locator(".tanda-degup").count()).toBeGreaterThanOrEqual(nSefasa);
   await expect(win.locator(".titik-ketuk")).toHaveCount(nSefasa + 1);
   expect(await win.locator("html").evaluate((el) => el.scrollWidth - el.clientWidth)).toBeLessThanOrEqual(0);
@@ -88,7 +92,7 @@ test("aliran: LIHAT berdenyut + Sedia → RASA sefasa → Selaras; Cuba lagi →
   expect(await c.tersebar()).toBeGreaterThanOrEqual(app.rasa.n_min);
   await expect(dedah).toBeVisible({ timeout: 10_000 });
   await expect(win.locator("[data-uji=jalur]")).toHaveAttribute("data-jalur", "meneka");
-  await expect(win.getByText(ms.dedah.kebetulan)).toBeVisible();
+  await expect(win.getByText(ms.dedah.makna.meneka)).toBeVisible();
   await win.waitForTimeout(app.dedah.kiraan_ms + 1500);
   await bukti(win, "dedah-meneka-ms", "p3b");
   // Saiz minimum tetingkap: tiada limpahan mendatar; butang masih boleh dicapai.

@@ -108,7 +108,7 @@ describe("garis masa + ayat pendedahan", () => {
     expect(garisMasa({ mula: T0, akhir: T0, degupan: [], ketukan: [], kualitiSaat: new Map(), kualitiSaatMin: 0.5 }).kualiti).toEqual([]);
   });
 
-  it("ayat: sefasa → bukan kebetulan + sesaran; tiada ketukan → tak cukup dengan sebab; semua kunci wujud BM + EN", () => {
+  it("ayat: sefasa → makna selaras + sesaran; tiada ketukan → tak cukup dengan sebab; semua kunci wujud BM + EN", () => {
     const { pengesan, benar } = larianSim({}, 62);
     const mula = T0 + 20 * US;
     const akhir = mula + 40 * US;
@@ -124,12 +124,17 @@ describe("garis masa + ayat pendedahan", () => {
         },
         app.rasa as KonfigSkor,
       );
-    const sefasa = ayatDedah(skor(benar.filter((t) => t >= mula && t < akhir).map((t) => t + 150_000)));
-    expect(sefasa.map((a) => a.kunci)).toEqual(["rasa.kiraan", "dedah.sama", "dedah.bukan_kebetulan", "dedah.sesaran"]);
+    const sefasa = ayatDedah(skor(benar.filter((t) => t >= mula && t < akhir).map((t) => t + 150_000)), app.rasa.liputan);
+    expect(sefasa.map((a) => a.kunci)).toEqual(["rasa.kiraan", "dedah.sama", "dedah.makna.selaras", "dedah.sesaran"]);
     // J2.1: ayat "x daripada 10" yang bercanggah dengan jalur tidak dipapar (sefasa x tinggi + jalur meneka = dua ayat bertentangan).
-    const bercanggah = ayatDedah({ ...skor(benar.filter((t) => t >= mula && t < akhir).map((t) => t + 150_000)), jalur: "meneka" });
-    expect(bercanggah.map((a) => a.kunci)).toEqual(["rasa.kiraan", "dedah.kebetulan"]);
-    const kosong = ayatDedah(skor([]));
+    const bercanggah = ayatDedah({ ...skor(benar.filter((t) => t >= mula && t < akhir).map((t) => t + 150_000)), jalur: "meneka" }, app.rasa.liputan);
+    expect(bercanggah.map((a) => a.kunci)).toEqual(["rasa.kiraan", "dedah.makna.meneka"]);
+    // K1: 12 ketukan sefasa dalam ±10 s = cukup untuk skor tetapi liputan gagal → ayat terlalu sedikit dengan nombor, tiada "x daripada 10".
+    const sedikit = ayatDedah(skor(benar.filter((t) => t >= mula && t < akhir).slice(0, 12).map((t) => t + 150_000)), app.rasa.liputan);
+    expect(sedikit.map((a) => a.kunci)).toEqual(["rasa.kiraan", "dedah.makna.terlalu_sedikit"]);
+    expect(sedikit[1]!.nilai).toMatchObject({ n: 12, min: app.rasa.liputan.ketukan_min, smin: app.rasa.liputan.rentang_min_s });
+    expect(sedikit[1]!.nilai!.s).toBeLessThan(app.rasa.liputan.rentang_min_s);
+    const kosong = ayatDedah(skor([]), app.rasa.liputan);
     expect(kosong.map((a) => a.kunci)).toEqual(["rasa.kiraan", "rasa.tak_cukup", "dedah.sebab_ketukan"]);
     // J2.2: sebab = ketukan → ayat menyebut ketukan, bukan cahaya; nombor minimum dari config.
     expect(kosong[2]!.nilai).toEqual({ n: 0, min: app.rasa.n_min });
@@ -139,7 +144,7 @@ describe("garis masa + ayat pendedahan", () => {
       expect(dapat(b, "dedah.sebab_kualiti")).toMatch(/light|cahaya/i);
     }
     expect(sefasa.find((a) => a.kunci === "dedah.sama")!.nilai).toMatchObject({ a: 2, b: 3 });
-    for (const a of [...sefasa, ...kosong]) {
+    for (const a of [...sefasa, ...kosong, ...sedikit, ...bercanggah]) {
       expect(typeof dapat(ms, a.kunci)).toBe("string");
       expect(typeof dapat(en, a.kunci)).toBe("string");
     }
