@@ -203,6 +203,13 @@
     "_nota": "Ujian Playwright sahaja: skala masa babak (0 < x ≤ 1) dipakai HANYA bila DEGUP_SUMBER=sim. Live/replay sentiasa 1.",
     "skala_masa_env": "DEGUP_SKALA_MASA"
   },
+  "sim_web": {
+    "_nota": "Halaman Simulation pelayar (J8, docs/sim/): renderer app yang sama, sumber sim sahaja, tiada SDK/kamera/kunci. scripts/bina-sim-web.mjs membina; tests/sim-web.test.ts menyemak bundel dalam HEAD sama dengan sumber.",
+    "folder": "docs/sim",
+    "tajuk": "Degup (Simulation)",
+    "kunci_storan": "degup-sim-tetapan",
+    "param_skala": "skala"
+  },
   "p1": {
     "_nota": "Gerbang P1 (PRD §2 H1, H2): scripts/headless-smoke.mjs mengukur, scripts/gerbang-p1.mjs menilai. Gagal H1 atau H2 = mod kira R2 (PRD §7).",
     "abai_awal_s": 15,

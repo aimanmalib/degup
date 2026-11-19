@@ -352,15 +352,27 @@ select, input[type="password"] {
 @media (max-width: 760px) {
   body { overflow: auto; }
   .bar { flex-wrap: wrap; padding: var(--j-3) var(--j-4); }
+  .bar .nav { flex-wrap: wrap; min-width: 0; }
+  .bar .butang.hantu { padding: 0 var(--j-3); }
+  /* Skrin sempit (halaman Simulation pelayar, J8; tetingkap app minimum 1024 px tidak sampai ke sini): halaman menatal,
+     babak tidak dihimpit ke tinggi skrin (teks bertindih), pratonton dalam aliran, bukan di atas pelita. */
+  #app { height: auto; min-height: 100%; }
+  .pentas { overflow: visible; }
+  .rehat, .lihat, .rasa { height: auto; min-height: 100%; justify-content: flex-start; padding: var(--j-5) var(--j-4); }
+  .rehat > *, .lihat > *, .rasa > * { flex-shrink: 0; }
   .izin { grid-template-columns: minmax(0, 1fr); height: auto; }
   .izin-wira { border-right: 0; border-bottom: 1px solid var(--garis); padding: var(--j-6) var(--j-4); }
   .izin-tatal, .izin-tindakan { padding-left: var(--j-4); padding-right: var(--j-4); }
   .lihat-pusat { flex-direction: column; gap: var(--j-3); }
   .bpm { justify-items: center; text-align: center; }
-  .pratonton { width: 8rem; top: var(--j-3); right: var(--j-3); }
+  .pratonton { position: static; width: 10rem; }
   .dedah { padding: var(--j-5) var(--j-4); align-content: start; grid-template-columns: minmax(0, 1fr); }
   .lentur { padding: var(--j-5) var(--j-4); justify-content: start; }
   .keputusan { grid-template-columns: minmax(0, 1fr); padding: var(--j-5) var(--j-4); align-content: start; }
+  .kad { grid-template-columns: minmax(0, 1fr); padding: var(--j-4); }
+  .kad-kepala, .kad-skor { flex-wrap: wrap; }
+  .kad-data .data-baris { grid-template-columns: minmax(0, 1fr); gap: var(--j-1); }
+  .kad-data .data-baris dd { text-align: left; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
