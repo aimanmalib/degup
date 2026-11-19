@@ -23,6 +23,7 @@ Internal build notes (in Malay) are kept outside the public repo.
 | 16 | Built-in demo recorder | Makes the demo video reproducible | Use the OS recorder |
 | 17 | MIT licence | Simple reuse | None |
 | 18 | Internal Malay notes are not tracked in the public repo; public measurements live in [`MEASUREMENTS.md`](MEASUREMENTS.md) | Reviewers read English; internal paths do not belong in a public repo | Track the notes again |
+| 19 | The demo video is cut by a script ([`scripts/video/sunting.mjs`](../scripts/video/sunting.mjs)): scenes, burned English captions, `.srt`, end card and loudness come from one storyboard table and [`config/video.json`](../config/video.json) | The same edit can be rebuilt when a number or the narration changes, without editing by hand | Edit the video by hand |
 
 Credit: the "renderer owns the camera, main owns the window and permissions" pattern follows the official SmartSpectra
 `electron-quickstart` sample.

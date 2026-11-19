@@ -1,0 +1,75 @@
+{
+  "_nota": "P8a/P8 (PH§7.2, PH§5.4 N7): saluran paip sunting video demo (scripts/video/sunting.mjs). Babak + narasi dibaca dari jadual skrip video (docs/hantar/SKRIP-VIDEO.md, setempat). Semua nilai di sini; kod membaca.",
+  "folder_rahsia": "~/degup-rahsia",
+  "awalan_pemegang_tempat": "PEMEGANG-TEMPAT-",
+  "jadual": {
+    "_nota": "Jadual markdown babak: lajur masa 'm:ss–m:ss', lajur narasi dalam tanda petik. Tiada petikan = babak tanpa narasi.",
+    "tajuk_lajur_masa": "Masa",
+    "tajuk_lajur_narasi": "Narasi / kapsyen (EN)"
+  },
+  "keluaran": {
+    "lebar": 1920,
+    "tinggi": 1080,
+    "fps": 30,
+    "crf": 18,
+    "preset": "medium",
+    "crf_antara": 12,
+    "preset_antara": "ultrafast",
+    "jalur_kapsyen_px": 120,
+    "audio_kbps": 192,
+    "kadar_sampel": 48000,
+    "token_latar": "--malam",
+    "token_teks": "--tulang",
+    "token_aksen": "--pelita",
+    "fail_gaya": "src/renderer/gaya.css"
+  },
+  "had": {
+    "tempoh_maks_s": 120,
+    "lufs_min": -17,
+    "lufs_maks": -16,
+    "puncak_maks_dbtp": -1.5,
+    "toleransi_babak_s": 0.15
+  },
+  "loudnorm": {
+    "sasaran_lufs": -16.5,
+    "sasaran_tp": -2.5,
+    "lra": 11
+  },
+  "kapsyen": {
+    "aksara_maks": 46,
+    "tempoh_min_s": 1.2,
+    "jarak_hujung_s": 0.3,
+    "fon": "Atkinson Hyperlegible Next",
+    "folder_fon": "node_modules/@fontsource/atkinson-hyperlegible-next/files",
+    "_skala": "Unit libass PlayResY 288 (SRT): 1 unit ≈ 3.75 px pada 1080p. Pil mesti muat dalam keluaran.jalur_kapsyen_px.",
+    "saiz": 13,
+    "jidar_bawah": 9,
+    "pinggir": 3,
+    "legap_latar": 0.72
+  },
+  "kad_akhir": {
+    "_nota": "PH§7.2 babak terakhir. Teks awam EN; tiada dakwaan kesihatan.",
+    "baris": [
+      "Degup",
+      "github.com/aimanmalib/degup",
+      "A body-awareness game, not a health test",
+      "Narration: my voice clone (ElevenLabs)"
+    ],
+    "saiz": [120, 48, 40, 32],
+    "jarak": 36,
+    "fon_fail": "node_modules/@fontsource/atkinson-hyperlegible-next/files/atkinson-hyperlegible-next-latin-400-normal.woff",
+    "fon_tebal": "node_modules/@fontsource/atkinson-hyperlegible-next/files/atkinson-hyperlegible-next-latin-700-normal.woff"
+  },
+  "ketukan": {
+    "_nota": "Perakam app tanpa bunyi: klik pendek pada setiap cap masa ketukan fixture (SKRIP-VIDEO 'Audio').",
+    "frekuensi_hz": 1400,
+    "tempoh_ms": 35,
+    "amplitud": 0.5
+  },
+  "narasi_tiruan": {
+    "_nota": "Pemegang tempat SAHAJA (P8a): bunyi berirama di tetingkap kapsyen supaya kenyaringan boleh diukur sebelum narasi ElevenLabs (P8). Tidak pernah diterbit.",
+    "frekuensi_hz": [180, 360, 540],
+    "suku_kata_hz": 4,
+    "amplitud": 0.25
+  }
+}
