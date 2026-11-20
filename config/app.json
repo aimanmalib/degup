@@ -170,7 +170,24 @@
     "folder": "logs",
     "awalan_fail": "degup-",
     "maks_bait": 5000000,
-    "teks_maks": 120
+    "teks_maks": 120,
+    "_nota_ralat": "PH§5.6 L1: mesej ralat = nama + kod + baris pertama, laluan rumah jadi ~, kunci ditapis. ralat_maks = ringkasan di main (SDK gagal dimuat); mesej_maks = medan mesej setiap peristiwa log; butiran_maks = baris Details skrin ralat mula; ralat_ui_maks = had peristiwa ralat_ui setiap proses app.",
+    "ralat_maks": 300,
+    "mesej_maks": 200,
+    "butiran_maks": 160,
+    "ralat_ui_maks": 10
+  },
+  "kamera_ralat": {
+    "_nota": "PH§5.6 L1: nama DOMException getUserMedia → kunci lang ayat skrin izin. Nama lain = kamera.ralat (ayat umum).",
+    "NotAllowedError": "kamera.ralat_disekat",
+    "SecurityError": "kamera.ralat_disekat",
+    "PermissionDeniedError": "kamera.ralat_disekat",
+    "NotReadableError": "kamera.ralat_dipakai",
+    "TrackStartError": "kamera.ralat_dipakai",
+    "AbortError": "kamera.ralat_dipakai",
+    "NotFoundError": "kamera.ralat_tiada",
+    "DevicesNotFoundError": "kamera.ralat_tiada",
+    "OverconstrainedError": "kamera.ralat_pilihan"
   },
   "kit": {
     "_nota": "PELAN J6a/J6b: scripts/kit/bina-kit.sh menindih config/app.json dalam zip dengan config/kit.json; fail_komit = komit tag kit (dibaca log).",

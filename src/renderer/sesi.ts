@@ -2,6 +2,7 @@
 // Babak (LIHAT, RASA, pendedahan) melanggan di sini; satu pendengar metrik sahaja dipasang pada sumber (perangkap SDK).
 // Live + `config.rakam_fixture`: angka sesi dikumpul untuk perakam fixture (§4.10; tiada imej).
 import { PengesanDegupan, type Degupan } from "../core/beats.js";
+import { ringkasRalat } from "../core/diagnostik.js";
 import { babakRelatif, masaMula, PengumpulFixture, sahkanFixture, type Fixture } from "../core/fixture.js";
 import { PengumpulLentur } from "../core/lentur.js";
 import type { MetrikSdk } from "../core/metrik.js";
@@ -14,9 +15,15 @@ import { SumberSim } from "../sumber/sim.js";
 import type { Keadaan } from "./keadaan.js";
 import { kilangSdk } from "./sdk-live.js";
 
-/** Sumber live tidak dapat dimulakan: tiada kunci, SDK gagal dimuat, atau ralat SDK semasa mula. */
+/**
+ * Sumber live tidak dapat dimulakan: tiada kunci, SDK gagal dimuat, atau ralat SDK semasa mula. `butiran` = ringkasan ralat
+ * asal (nama + baris pertama, laluan rumah `~`, kunci ditapis) untuk baris Butiran skrin izin dan log; null = tiada.
+ */
 export class RalatMulaLive extends Error {
-  constructor(readonly sebab: RalatLive) {
+  constructor(
+    readonly sebab: RalatLive,
+    readonly butiran: string | null = null,
+  ) {
     super(sebab);
   }
 }
@@ -42,8 +49,8 @@ export interface TetingkapRasa {
 async function buatSumber(k: Keadaan, strim: MediaStream | null): Promise<Sumber | null> {
   if (k.sumber === "live") {
     const s = await k.api.sediaLive();
-    if (!s.ok) throw new RalatMulaLive(s.sebab);
-    return new SumberLive(kilangSdk, opsyenSdk(s.kunci, k.konfig.sdk, kilangSdk.kumpulan), strim);
+    if (!s.ok) throw new RalatMulaLive(s.sebab, s.ralat ?? null);
+    return new SumberLive(kilangSdk, opsyenSdk(s.kunci, k.konfig.sdk, kilangSdk.kumpulan), strim, k.konfig.log.mesej_maks);
   }
   if (k.sumber === "sim") return new SumberSim(k.konfig.sim);
   if (k.sumber === "replay") {
@@ -97,7 +104,11 @@ export class SesiUkur {
    * @param strim kamera (live sahaja). @param ralat ralat SDK selepas mula (kunci ditolak, kredit habis): app berhenti + memaparkan.
    * Mula gagal = `RalatMulaLive`; sumber sudah dihentikan.
    */
-  static async cipta(k: Keadaan, strim: MediaStream | null = null, ralat: (r: RalatLive) => void = () => {}): Promise<SesiUkur> {
+  static async cipta(
+    k: Keadaan,
+    strim: MediaStream | null = null,
+    ralat: (r: RalatLive, butiran: string | null) => void = () => {},
+  ): Promise<SesiUkur> {
     k.api.diag({ jenis: "sesi", fasa: "mula", sumber: k.sumber });
     const s = new SesiUkur(k, await buatSumber(k, strim));
     if (s.sumber) {
@@ -121,7 +132,7 @@ export class SesiUkur {
       } catch (e) {
         await s.henti();
         if (e instanceof RalatMulaLive) throw e;
-        throw new RalatMulaLive("sdk");
+        throw new RalatMulaLive("sdk", s.sumber instanceof SumberLive ? s.sumber.ringkas(e) : ringkasRalat(e, k.konfig.log.mesej_maks));
       }
     }
     return s;

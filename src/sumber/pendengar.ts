@@ -7,7 +7,8 @@ export interface PengendaliSdk {
   pengesahan(kod: number, tUs: number): void;
   status(s: number): void;
   insight(): void;
-  ralat(kod: number, bolehUlang: boolean): void;
+  /** `mesej` = teks mentah SDK; pemanggil MESTI meringkas + menapisnya (`ringkasRalat`) sebelum log atau skrin. */
+  ralat(kod: number, bolehUlang: boolean, mesej: string): void;
 }
 
 export interface BolehDengar {
@@ -21,6 +22,7 @@ export function pasangPendengar(sdk: BolehDengar, h: PengendaliSdk): void {
   sdk.on("validationStatus", ((kod: number, tUs: number) => h.pengesahan(kod, tUs)) as F);
   sdk.on("processingStatus", ((s: number) => h.status(s)) as F);
   sdk.on("insight", (() => h.insight()) as F);
-  // Mesej ralat tidak diteruskan (boleh memetik konteks sesi); kod + boleh-ulang cukup untuk UI dan log.
-  sdk.on("error", ((kod: number, _mesej: string, bolehUlang: boolean) => h.ralat(kod, Boolean(bolehUlang))) as F);
+  // Mesej diteruskan mentah; pemanggil meringkasnya (baris pertama, dipotong, laluan rumah `~`, kunci ditapis; PH§5.6 L1).
+  sdk.on("error", ((kod: number, mesej: unknown, bolehUlang: boolean) =>
+    h.ralat(kod, Boolean(bolehUlang), typeof mesej === "string" ? mesej : "")) as F);
 }

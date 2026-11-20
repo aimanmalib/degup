@@ -144,6 +144,11 @@ button, input, select { font: inherit; color: inherit; }
 .nota { color: var(--kabus); font-size: 0.9rem; }
 .penafian { color: var(--kabus); font-size: 0.85rem; }
 .ralat { color: var(--tulang); border-left: 3px solid var(--merah); padding-left: var(--j-3); }
+/* L1: baris Butiran di bawah ralat mula: kecil, redup, boleh dipilih untuk disalin/ditangkap skrin; laluan panjang dipatah. */
+.ralat-butiran {
+  margin-top: calc(-1 * var(--j-2)); padding-left: calc(var(--j-3) + 3px); font-size: 0.8125rem; color: var(--kabus);
+  user-select: text; -webkit-user-select: text; overflow-wrap: anywhere; font-variant-numeric: tabular-nums;
+}
 
 /* Rehat + LIHAT */
 .rehat, .lihat {

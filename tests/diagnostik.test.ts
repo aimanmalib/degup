@@ -11,7 +11,8 @@ import { bacaKomitKit, LogDiagnostik } from "../src/main/log";
 import { gabung } from "../scripts/kit/gabung-config.mjs";
 
 const KUNCI = "pk_ujian_9f8e7d6c5b4a3210";
-const KEPALA = { versi: "1.0.0", komit_kit: "abc1234", os: "win32", os_versi: "10.0", arch: "x64", electron: "45", sumber: "tetapan" };
+const KEPALA = { versi: "1.0.0", komit_kit: "abc1234", os: "win32", os_versi: "10.0", arch: "x64", electron: "45", sumber: "tetapan", sdk: "3.4.0", izin_kamera: "granted" };
+const HAD = app.log;
 const folder: string[] = [];
 const baharu = () => {
   const f = mkdtempSync(join(tmpdir(), "degup-log-"));
@@ -24,21 +25,21 @@ afterEach(() => {
 
 describe("sahkanDiag", () => {
   it("menerima bentuk yang dibenarkan sahaja dan membuang medan lain (kunci, imej)", () => {
-    expect(sahkanDiag({ jenis: "status", kod: 3, apiKey: KUNCI }, 120)).toEqual({ jenis: "status", kod: 3 });
-    expect(sahkanDiag({ jenis: "kamera", label: "x".repeat(500), lebar: 1280, tinggi: 720, fps: 30, imej: "data:" }, 120)).toEqual({
+    expect(sahkanDiag({ jenis: "status", kod: 3, apiKey: KUNCI }, HAD)).toEqual({ jenis: "status", kod: 3 });
+    expect(sahkanDiag({ jenis: "kamera", label: "x".repeat(500), lebar: 1280, tinggi: 720, fps: 30, imej: "data:" }, HAD)).toEqual({
       jenis: "kamera",
       label: "x".repeat(120),
       lebar: 1280,
       tinggi: 720,
       fps: 30,
     });
-    expect(sahkanDiag({ jenis: "ralat", kod: 2, boleh_ulang: "ya" }, 120)).toEqual({ jenis: "ralat", kod: 2, boleh_ulang: false });
+    expect(sahkanDiag({ jenis: "ralat", kod: 2, boleh_ulang: "ya" }, HAD)).toEqual({ jenis: "ralat", kod: 2, boleh_ulang: false, mesej: null });
   });
 
   it("menolak jenis tidak dikenali, jenis main sahaja, dan nombor tidak sah", () => {
     for (const x of [null, "status", { jenis: "kunci", nilai: KUNCI }, { jenis: "sdk_sedia", ok: true }, { jenis: "tetingkap", lebar: 1 },
       { jenis: "status", kod: "3" }, { jenis: "metrik_pertama", ms: Number.NaN }, { jenis: "sesi", fasa: "x", sumber: "live" }])
-      expect(sahkanDiag(x, 120)).toBeNull();
+      expect(sahkanDiag(x, HAD)).toBeNull();
   });
 });
 
@@ -64,7 +65,7 @@ describe("LogDiagnostik", () => {
   it("kepala sekali (versi, komit kit, OS) + satu baris setiap peristiwa; kunci dalam tetapan TIDAK pernah tertulis", () => {
     const akar = baharu();
     const log = new LogDiagnostik(() => akar, app.log, () => KEPALA, () => [KUNCI, undefined], () => new Date(2026, 10, 19, 9));
-    log.tulis({ jenis: "sdk_sedia", ok: true, sebab: null });
+    log.tulis({ jenis: "sdk_sedia", ok: true, sebab: null, ralat: null });
     log.tulis({ jenis: "kamera", label: `Integrated Camera ${KUNCI}`, lebar: 1280, tinggi: 720, fps: 30 });
     log.tulis({ jenis: "pengesahan", kod: 1 });
     log.tulis({ jenis: "metrik_pertama", ms: 2345 });
@@ -74,7 +75,7 @@ describe("LogDiagnostik", () => {
     expect(teks).not.toContain(KUNCI);
     const baris = teks.trim().split("\n").map((x) => JSON.parse(x));
     expect(baris.map((b) => b.jenis)).toEqual(["app", "sdk_sedia", "kamera", "pengesahan", "metrik_pertama"]);
-    expect(baris[0]).toMatchObject({ komit_kit: "abc1234", os: "win32", versi: "1.0.0" });
+    expect(baris[0]).toMatchObject({ komit_kit: "abc1234", os: "win32", versi: "1.0.0", sdk: "3.4.0", izin_kamera: "granted" });
   });
 
   it("berhenti menulis bila fail mencapai had saiz; ralat fs ditelan", () => {

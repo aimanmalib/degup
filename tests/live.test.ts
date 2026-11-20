@@ -118,7 +118,11 @@ describe("SumberLive (SDK tiruan)", () => {
   it("kiraan Data: kRunning = pengesahan ya; insight automatik dikira; kunci ditolak = pengesahan tidak + ralat 'kunci'", async () => {
     const { sumber, dicipta } = bina();
     const ralat: string[] = [];
-    sumber.onRalat((r) => ralat.push(r));
+    const butiran: Array<string | null> = [];
+    sumber.onRalat((r, b) => {
+      ralat.push(r);
+      butiran.push(b);
+    });
     await sumber.mula();
     const sdk = dicipta[0]!;
     expect(sumber.kiraan.pengesahan).toBeNull();
@@ -130,6 +134,7 @@ describe("SumberLive (SDK tiruan)", () => {
     expect(sumber.kiraan.pengesahan).toBe(false);
     sdk.pancar("error", 4, "credit", false);
     expect(ralat).toEqual(["kunci", "kredit"]);
+    expect(butiran).toEqual(["2: auth", "4: credit"]);
   });
 
   it("stop gagal (SDK dalam kError) tetap memanggil destroy", async () => {
@@ -209,7 +214,8 @@ describe("SumberLive onDiag (log diagnostik kit, J6a)", () => {
     const jenis = diag.map((p) => (p as { jenis: string }).jenis);
     expect(jenis).toEqual(["status", "pengesahan", "pengesahan", "metrik_pertama", "ralat"]);
     expect(diag[0]).toEqual({ jenis: "status", kod: 3 });
-    expect(diag[4]).toEqual({ jenis: "ralat", kod: 4, boleh_ulang: false });
+    // L1: mesej SDK kini dibawa (ringkas, kunci ditapis), bukan dibuang.
+    expect(diag[4]).toEqual({ jenis: "ralat", kod: 4, boleh_ulang: false, mesej: "mesej SDK dengan [redacted]" });
     expect((diag[3] as { ms: number }).ms).toBeGreaterThanOrEqual(0);
     expect(JSON.stringify(diag)).not.toContain("kunci-ujian");
   });

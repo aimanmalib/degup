@@ -1,11 +1,11 @@
 // Proses main Degup (PRD §4.11, corak electron-quickstart): tetingkap, kebenaran kamera, safeStorage, fail tempatan.
 // Renderer memiliki kamera; main tidak pernah melihat bingkai video (SDK main menerimanya melalui jambatan rasmi bila live).
-import { app, BrowserWindow, ipcMain, safeStorage, screen, session, shell } from "electron";
+import { app, BrowserWindow, ipcMain, safeStorage, screen, session, shell, systemPreferences } from "electron";
 import { readdirSync, readFileSync } from "node:fs";
-import { arch, platform, release } from "node:os";
+import { arch, homedir, platform, release } from "node:os";
 import { join } from "node:path";
 import konfig from "../../config/app.json";
-import { sahkanDiag, saizRakam } from "../core/diagnostik.js";
+import { ringkasRalat, sahkanDiag, saizRakam } from "../core/diagnostik.js";
 import { sahkanFixture } from "../core/fixture.js";
 import { SALURAN, type FixtureSedia, type Permulaan, type Tetapan } from "../preload/api.js";
 import { simpanKad } from "./kad.js";
@@ -80,6 +80,19 @@ function kunciLive(simpanan: Simpanan): string | null {
   return app.isPackaged ? null : (process.env.SMARTSPECTRA_API_KEY?.trim() || null);
 }
 
+/** Izin kamera peringkat OS (Windows/macOS); Linux tiada API ini. Ralat = "?" (kepala log tidak pernah menghentikan app). */
+function izinKameraSistem(): string {
+  if (process.platform !== "win32" && process.platform !== "darwin") return "n/a";
+  try {
+    return systemPreferences.getMediaAccessStatus("camera");
+  } catch {
+    return "?";
+  }
+}
+
+/** Folder rumah pengguna untuk penggantian `~` dalam mesej ralat (L1). */
+const RUMAH = [homedir()];
+
 /** Log diagnostik kit (J6a): kunci tersimpan + env ditapis dari setiap baris. */
 function bukaLog(simpanan: Simpanan): LogDiagnostik {
   return new LogDiagnostik(
@@ -93,6 +106,8 @@ function bukaLog(simpanan: Simpanan): LogDiagnostik {
       arch: arch(),
       electron: process.versions.electron ?? "",
       sumber: process.env[konfig.sumber_env] ?? "tetapan",
+      sdk: konfig.sdk.versi,
+      izin_kamera: izinKameraSistem(),
     }),
     () => [simpanan.bacaKunci(), process.env.SMARTSPECTRA_API_KEY],
   );
@@ -131,19 +146,24 @@ function daftarIpc(simpanan: Simpanan, log: LogDiagnostik, tetingkap: () => Brow
         vulkanIcdLinux: konfig.sdk.vulkan_icd_linux,
         wujud: wujudFail,
       }),
+    (e, kunci) => ringkasRalat(e, konfig.log.ralat_maks, RUMAH, [kunci]),
   );
   ipcMain.handle(SALURAN.sediaLive, (e) => {
     const win = tetingkap();
     if (!win || e.sender !== win.webContents) return { ok: false, sebab: "sdk" };
     const h = pengikat.sedia(win);
-    log.tulis({ jenis: "sdk_sedia", ok: h.ok, sebab: h.ok ? null : h.sebab });
+    log.tulis({ jenis: "sdk_sedia", ok: h.ok, sebab: h.ok ? null : h.sebab, ralat: h.ok ? null : (h.ralat ?? null) });
     return h;
   });
-  // Log diagnostik: hanya bentuk peristiwa yang dibenarkan (`sahkanDiag`), hanya dari tetingkap Degup.
+  // Log diagnostik: hanya bentuk peristiwa yang dibenarkan (`sahkanDiag`), hanya dari tetingkap Degup. `ralat_ui` dihadkan
+  // `log.ralat_ui_maks` setiap proses (gelung ralat renderer tidak memenuhkan log).
+  let ralatUi = 0;
   ipcMain.on(SALURAN.diag, (e, p: unknown) => {
     const win = tetingkap();
-    const sah = win && e.sender === win.webContents ? sahkanDiag(p, konfig.log.teks_maks) : null;
-    if (sah) log.tulis(sah);
+    const sah = win && e.sender === win.webContents ? sahkanDiag(p, konfig.log, RUMAH) : null;
+    if (!sah) return;
+    if (sah.jenis === "ralat_ui" && ++ralatUi > konfig.log.ralat_ui_maks) return;
+    log.tulis(sah);
   });
   // Sumber tangkapan = ID media tetingkap Degup sendiri (format desktopCapturer); renderer tidak boleh memilih skrin/tetingkap lain.
   ipcMain.handle(SALURAN.rakamMula, (e) => {

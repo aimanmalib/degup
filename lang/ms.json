@@ -11,14 +11,19 @@
     "kembali": "Kembali",
     "tutup": "Tutup",
     "pilihan": "Pilihan",
-    "langsung": "Langsung · SmartSpectra SDK {versi}"
+    "langsung": "Langsung · SmartSpectra SDK {versi}",
+    "butiran": "Butiran: {x}"
   },
   "kamera": {
     "hidup": "Kamera hidup",
     "matikan": "Matikan kamera",
     "simulasi": "Simulasi: tiada kamera dipakai",
     "ralat": "Kamera tidak dapat dibuka. Semak kamera disambung dan tiada app lain memakainya.",
-    "pratonton": "Pratonton kamera kau"
+    "pratonton": "Pratonton kamera kau",
+    "ralat_disekat": "Windows atau macOS menyekat kamera untuk app ini. Buka tetapan privasi sistem, benarkan akses kamera untuk app desktop, kemudian cuba lagi.",
+    "ralat_dipakai": "App lain sedang memakai kamera. Tutup Zoom, Teams, app Kamera atau tab pelayar, kemudian cuba lagi.",
+    "ralat_tiada": "Tiada kamera ditemui. Sambungkan kamera, kemudian cuba lagi.",
+    "ralat_pilihan": "Kamera yang dipilih dalam Tetapan tiada. Pilih kamera lain dalam Tetapan, kemudian cuba lagi."
   },
   "izin": {
     "tajuk": "Sebelum kamera hidup",

@@ -1,14 +1,14 @@
 // Skrin izin (PRD §4.6): tujuh perkara, pautan dasar Presage, kotak 18+, "Hidupkan kamera" / "Tidak sekarang".
 // Sebelum getUserMedia. Teks wajib dari lang/ sahaja; jangan ringkaskan.
-import type { Ruang } from "../app.js";
+import type { RalatMula, Ruang } from "../app.js";
 import { h } from "../dom.js";
 import { pelita } from "./pelita.js";
 import { butangRakam } from "./rakam.js";
 
 export const BILANGAN_PERKARA = 7;
 
-/** @param ralat kunci lang ralat mula (kamera tidak dibuka, kunci tiada/ditolak, SDK gagal); null = tiada. */
-export function skrinIzin(r: Ruang, ralat: string | null): HTMLElement {
+/** @param ralat ralat mula (kamera tidak dibuka, kunci tiada/ditolak, SDK gagal): ayat + baris Butiran; null = tiada. */
+export function skrinIzin(r: Ruang, ralat: RalatMula | null): HTMLElement {
   const { t } = r.k;
   const nota = h("p", { class: "nota", id: "nota-umur", "aria-live": "polite" }, t("izin.umur_perlu"));
   const hidupkan = h(
@@ -60,7 +60,8 @@ export function skrinIzin(r: Ruang, ralat: string | null): HTMLElement {
       h(
         "div",
         { class: "izin-tindakan" },
-        ralat ? h("p", { class: "ralat", role: "alert", "data-uji": "ralat-mula" }, t(ralat)) : null,
+        ralat ? h("p", { class: "ralat", role: "alert", "data-uji": "ralat-mula" }, t(ralat.kunci)) : null,
+        ralat?.butiran ? h("p", { class: "ralat-butiran", "data-uji": "ralat-butiran" }, t("umum.butiran", { x: ralat.butiran })) : null,
         h("label", { class: "kotak-umur", for: "umur" }, kotak, h("span", {}, t("izin.umur_kotak"))),
         nota,
         h(

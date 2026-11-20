@@ -11,14 +11,19 @@
     "kembali": "Back",
     "tutup": "Close",
     "pilihan": "Options",
-    "langsung": "Live · SmartSpectra SDK {versi}"
+    "langsung": "Live · SmartSpectra SDK {versi}",
+    "butiran": "Details: {x}"
   },
   "kamera": {
     "hidup": "Camera on",
     "matikan": "Turn camera off",
     "simulasi": "Simulation: no camera in use",
     "ralat": "The camera could not open. Check it is connected and no other app is using it.",
-    "pratonton": "Your camera preview"
+    "pratonton": "Your camera preview",
+    "ralat_disekat": "Windows or macOS is blocking the camera for this app. Open your system privacy settings, allow camera access for desktop apps, then try again.",
+    "ralat_dipakai": "Another app is using the camera. Close Zoom, Teams, the Camera app or your browser tab, then try again.",
+    "ralat_tiada": "No camera was found. Connect a camera, then try again.",
+    "ralat_pilihan": "The camera chosen in Settings is not available. Choose another camera in Settings, then try again."
   },
   "izin": {
     "tajuk": "Before the camera turns on",

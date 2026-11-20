@@ -6,7 +6,7 @@
 // SDK disuntik melalui `KilangSdk` supaya modul ini boleh diuji tanpa pakej asli (ujian memakai SDK tiruan).
 // Konfigurasi dikunci: cardio + breathing sahaja, telemetri MATI, output terkumpul MATI, SATU pendengar `metrics`
 // (Exhale: pendengar kedua menggantikan yang pertama), TIADA permintaan Insight atas arahan (K6/K7).
-import { TapisUlang, type PeristiwaDiag } from "../core/diagnostik.js";
+import { ringkasRalat, TapisUlang, type PeristiwaDiag } from "../core/diagnostik.js";
 import type { MetrikSdk } from "../core/metrik.js";
 import type { Sumber } from "./jenis.js";
 import { pasangPendengar } from "./pendengar.js";
@@ -84,7 +84,8 @@ export class SumberLive implements Sumber {
   readonly jenis = "live" as const;
   private readonly metrik = new Pemancar<[MetrikSdk]>();
   private readonly petunjuk = new Pemancar<[number, number]>();
-  private readonly ralat = new Pemancar<[RalatLive]>();
+  /** Kategori + ringkasan mesej SDK (baris Butiran; null bila SDK tidak memberi mesej). */
+  private readonly ralat = new Pemancar<[RalatLive, string | null]>();
   private readonly kira = new Pemancar<[KiraanLive]>();
   private readonly diag = new Pemancar<[PeristiwaDiag]>();
   private readonly tapis = new TapisUlang();
@@ -95,7 +96,7 @@ export class SumberLive implements Sumber {
   readonly onRalat = this.ralat.dengar;
   /** Kiraan peristiwa berubah (panel Data). */
   readonly onKiraan = this.kira.dengar;
-  /** Log diagnostik kit (J6a): perubahan kod status/pengesahan, kod ralat, masa ke metrik pertama. Tiada kunci, tiada mesej. */
+  /** Log diagnostik kit (J6a, L1): perubahan kod status/pengesahan, kod + mesej ringkas ralat, masa ke metrik pertama. Tiada kunci. */
   readonly onDiag = this.diag.dengar;
   readonly kiraan: KiraanLive = { metrik: 0, pengesahan: null, insight: 0 };
   private sdk: SdkRenderer | null = null;
@@ -104,6 +105,8 @@ export class SumberLive implements Sumber {
     private readonly kilang: KilangSdk,
     private readonly opsyen: OpsyenSdk,
     private readonly strim: unknown,
+    /** Had ringkasan mesej ralat SDK (`config.log.mesej_maks`). */
+    private readonly mesejMaks = 200,
   ) {}
 
   async mula(): Promise<void> {
@@ -140,17 +143,23 @@ export class SumberLive implements Sumber {
         this.kiraan.insight++;
         this.kira.pancar(this.kiraan);
       },
-      ralat: (kod, bolehUlang) => {
-        this.diag.pancar({ jenis: "ralat", kod, boleh_ulang: bolehUlang });
+      ralat: (kod, bolehUlang, mentah) => {
+        const mesej = mentah ? this.ringkas(mentah) : null;
+        this.diag.pancar({ jenis: "ralat", kod, boleh_ulang: bolehUlang, mesej });
         const k = kategoriRalat(kod);
         if (k === "kunci") {
           this.kiraan.pengesahan = false;
           this.kira.pancar(this.kiraan);
         }
-        this.ralat.pancar(k);
+        this.ralat.pancar(k, mesej ? `${kod}: ${mesej}` : String(kod));
       },
     });
     await sdk.start();
+  }
+
+  /** Ringkasan ralat (cth `start()` gagal) dengan kunci sumber ini ditapis; untuk log + baris Butiran. */
+  ringkas(e: unknown): string {
+    return ringkasRalat(e, this.mesejMaks, [], [this.opsyen.apiKey]);
   }
 
   async henti(): Promise<void> {

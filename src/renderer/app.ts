@@ -17,6 +17,7 @@ import { panelTetapan } from "./skrin/tetapan.js";
 import { pasangCangkukUji } from "./uji.js";
 import type { Keputusan } from "../core/lentur.js";
 import type { HasilSkor } from "../core/score.js";
+import { ringkasRalat } from "../core/diagnostik.js";
 import { kunciRalat, type RalatLive } from "../sumber/live.js";
 
 export type NamaSkrin = "izin" | "rehat" | "lihat" | "rasa" | "dedah" | "lentur" | "keputusan";
@@ -68,8 +69,9 @@ async function utama(): Promise<void> {
   const dialog = h("dialog", { class: "helaian" });
   akar.append(bar, pentas, dialog);
   let skrin: NamaSkrin = "izin";
-  /** Kunci lang ralat mula (kamera / SDK) yang dipapar skrin izin; null = tiada. */
-  let ralatMula: string | null = null;
+  /** Ralat mula (kamera / SDK) yang dipapar skrin izin: kunci lang + baris Butiran (ringkasan ralat asal); null = tiada. */
+  let ralatMula: RalatMula | null = null;
+  pasangLogRalatUi(k);
   let mesejRakam: string | null = null;
   let pemasaMesej: ReturnType<typeof setTimeout> | undefined;
   let pemasaRakam: ReturnType<typeof setTimeout> | undefined;
@@ -104,8 +106,11 @@ async function utama(): Promise<void> {
           const trek = strim.getVideoTracks()[0];
           const t = trek?.getSettings() ?? {};
           k.api.diag({ jenis: "kamera", label: trek?.label ?? "", lebar: t.width ?? 0, tinggi: t.height ?? 0, fps: t.frameRate ?? 0 });
-        } catch {
-          ralatMula = "kamera.ralat";
+        } catch (e) {
+          const nama = e && typeof e === "object" && typeof (e as { name?: unknown }).name === "string" ? (e as Error).name : "Error";
+          k.api.diag({ jenis: "kamera_gagal", nama, mesej: ringkasRalat(e, k.konfig.log.mesej_maks) });
+          const ikutNama = (k.konfig.kamera_ralat as Record<string, string>)[nama];
+          ralatMula = { kunci: ikutNama ?? "kamera.ralat", butiran: ringkasRalat(e, k.konfig.log.butiran_maks) };
           lukis();
           return;
         }
@@ -116,7 +121,10 @@ async function utama(): Promise<void> {
         ruang.sesi = await SesiUkur.cipta(k, kamera.media, ralatLive);
       } catch (e) {
         kamera.tutup();
-        ralatMula = kunciRalat(e instanceof RalatMulaLive ? e.sebab : "sdk");
+        const sebab = e instanceof RalatMulaLive ? e.sebab : "sdk";
+        const butiran = e instanceof RalatMulaLive ? e.butiran : ringkasRalat(e, k.konfig.log.mesej_maks);
+        k.api.diag({ jenis: "mula_gagal", sebab, mesej: butiran });
+        ralatMula = { kunci: kunciRalat(sebab), butiran: butiran && ringkasRalat(butiran, k.konfig.log.butiran_maks) };
         lukis();
         return;
       }
@@ -149,10 +157,10 @@ async function utama(): Promise<void> {
   };
 
   /** Ralat SDK semasa babak (kunci ditolak, kredit habis, rangkaian, kamera): berhenti dan terangkan di skrin izin. */
-  function ralatLive(r: RalatLive): void {
+  function ralatLive(r: RalatLive, butiran: string | null): void {
     if (!ruang.sesi) return;
     ruang.berhenti();
-    ralatMula = kunciRalat(r);
+    ralatMula = { kunci: kunciRalat(r), butiran: butiran && ringkasRalat(butiran, k.konfig.log.butiran_maks) };
     lukis();
   }
 
@@ -270,6 +278,19 @@ async function utama(): Promise<void> {
   });
   pasangCangkukUji(ruang);
   k.maklum();
+}
+
+/** Ralat mula yang skrin izin paparkan: ayat (kunci lang) + baris Butiran kecil yang boleh dipilih (null = tiada). */
+export interface RalatMula {
+  kunci: string;
+  butiran: string | null;
+}
+
+/** Ralat renderer tidak ditangkap → log diagnostik `ralat_ui` (main menghadkan bilangan dan membersihkan mesej). */
+function pasangLogRalatUi(k: Keadaan): void {
+  const hantar = (asal: "error" | "janji", x: unknown) => k.api.diag({ jenis: "ralat_ui", asal, mesej: ringkasRalat(x, k.konfig.log.mesej_maks) });
+  window.addEventListener("error", (e) => hantar("error", e.error ?? e.message));
+  window.addEventListener("unhandledrejection", (e) => hantar("janji", e.reason));
 }
 
 export function labelFixture(k: Keadaan): string {

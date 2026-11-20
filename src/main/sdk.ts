@@ -47,7 +47,7 @@ export function sediaPersekitaran(env: Record<string, string | undefined>, k: Ko
   return ditetap;
 }
 
-export type HasilSediaLive = { ok: true; kunci: string } | { ok: false; sebab: "kunci" | "sdk" };
+export type HasilSediaLive = { ok: true; kunci: string } | { ok: false; sebab: "kunci" | "sdk"; ralat?: string };
 
 /** Pengikat sekali setiap tetingkap. `muat` = `require("@smartspectra/node-sdk/main")` (disuntik untuk ujian). */
 export class PengikatSdk<W> {
@@ -57,6 +57,8 @@ export class PengikatSdk<W> {
     private readonly muat: () => { bindSmartSpectraIpc(w: W): void },
     private readonly kunci: () => string | null,
     private readonly sediaEnv: () => void,
+    /** Ringkasan ralat muat SDK untuk log + baris Butiran (`ringkasRalat`: laluan rumah → `~`, kunci ditapis). */
+    private readonly ringkas: (e: unknown, kunci: string) => string = () => "",
   ) {}
 
   sedia(win: W & object): HasilSediaLive {
@@ -66,8 +68,8 @@ export class PengikatSdk<W> {
       try {
         this.sediaEnv();
         this.muat().bindSmartSpectraIpc(win);
-      } catch {
-        return { ok: false, sebab: "sdk" };
+      } catch (e) {
+        return { ok: false, sebab: "sdk", ralat: this.ringkas(e, kunci) };
       }
       this.terikat.add(win);
     }

@@ -36,7 +36,8 @@ export type HasilSimpanKad = { ok: true; nama: string } | { ok: false };
 
 export type HasilKunci = { ok: true } | { ok: false; sebab: "kosong" | "storan" };
 
-export type HasilSediaLive = { ok: true; kunci: string } | { ok: false; sebab: "kunci" | "sdk" };
+/** `ralat` = ringkasan ralat muat SDK (nama + baris pertama, laluan rumah `~`, tiada kunci) untuk baris Butiran. */
+export type HasilSediaLive = { ok: true; kunci: string } | { ok: false; sebab: "kunci" | "sdk"; ralat?: string };
 
 export type HasilFailDitulis = { ok: true; nama: string } | { ok: false };
 

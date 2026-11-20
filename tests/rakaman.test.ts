@@ -128,6 +128,6 @@ describe("penyediaan SDK main (§4.11)", () => {
     expect(p.sedia(win)).toEqual({ ok: true, kunci: "k" });
     expect(diikat).toEqual([win]);
     const gagal = new PengikatSdk<object>(() => { throw new Error("tiada pustaka"); }, () => "k", () => {});
-    expect(gagal.sedia({})).toEqual({ ok: false, sebab: "sdk" });
+    expect(gagal.sedia({})).toMatchObject({ ok: false, sebab: "sdk" });
   });
 });
