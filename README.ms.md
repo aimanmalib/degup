@@ -46,7 +46,7 @@ Permainan ini ada tiga babak, kira-kira tiga minit semuanya. Tempoh datang dari 
    ujian Rayleigh; [`src/core/score.ts`](src/core/score.ts)). Kelewatan tetap 150 ms setiap kali tetap dikira selaras. Rentak
    tetap juga boleh berkumpul, jadi jalur ditetapkan daripada pengetuk yang tidak merasa apa-apa
    ([`docs/MEASUREMENTS.md`](docs/MEASUREMENTS.md)), dan pusingan dikira hanya bila ketukan meliputi sebahagian besarnya: kurang
-   daripada 20 ketukan atau kurang daripada 30 saat memberi "Terlalu sedikit untuk dinilai".
+   daripada 20 ketukan atau kurang daripada 30 saat memberi "Terlalu sedikit untuk dinilai" tanpa nombor skor.
 3. **Lentur (60 s).** Kau tarik nafas 4 saat dan hembus 6 saat, mengikut pelita. Jarak antara degupan dilukis hidup, berlorek
    ikut nafas. Kebanyakan orang nampak degupan menjadi perlahan pada setiap hembusan. Degup melaporkan saiz ayunan itu dalam
    milisaat dan berapa degupan dalam satu nafas, dikira dari kadar nadi dan kadar nafas SDK ([`src/core/rsa.ts`](src/core/rsa.ts)).

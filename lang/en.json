@@ -205,6 +205,7 @@
       "meneka": "No clear link between your taps and your beats this round. Most people start here.",
       "terlalu_sedikit": "{n} taps across {s} seconds is too little to tell feeling from rhythm. A score needs at least {min} taps across {smin} seconds, so tap through the whole round."
     },
+    "terlalu_sedikit_sebahagian": "{n} of your {jumlah} taps fell between two clear beats, across {s} seconds. That is too little to tell feeling from rhythm. A score needs at least {min} taps across {smin} seconds, so tap through the whole round.",
     "nota_sim": "This round was Simulation. There was no real heartbeat to feel, so the score only shows how the game works.",
     "sesaran": "You felt the beat about {ms} ms after the camera saw it. That fixed offset does not matter; consistency is what counts.",
     "sebab_ketukan": "Only {n} taps fell between two clear beats. At least {min} are needed. Tap each time you feel a beat.",

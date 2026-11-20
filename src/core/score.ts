@@ -134,6 +134,14 @@ export function rayleigh(n: number, R: number): { z: number; p: number } {
 }
 
 /** Jalur padanan pertama (D4): setiap syarat yang ada mesti dipenuhi. */
+/**
+ * Skor yang boleh DIPAPAR (L2): null bila tak cukup data ATAU liputan gagal (jalur `terlalu_sedikit`). Nombor R×100 daripada
+ * segelintir ketukan rapat hampir sentiasa tinggi; memaparkannya di atas pil "terlalu sedikit" bercanggah dengan pil itu.
+ */
+export function skorDipapar(h: Pick<HasilSkor, "cukup" | "liputanCukup" | "skor">): number | null {
+  return h.cukup && h.liputanCukup ? h.skor : null;
+}
+
 export function pilihJalur(jalur: readonly JalurKonfig[], R: number, p: number): string {
   for (const j of jalur) {
     if (j.r_min !== undefined && R < j.r_min) continue;

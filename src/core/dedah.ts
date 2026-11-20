@@ -60,7 +60,10 @@ export function ayatDedah(h: HasilSkor, kfg: Pick<KonfigLiputan, "ketukan_min" |
   if (!h.liputanCukup) {
     // K1/D29: terlalu sedikit atau terlalu sempit untuk menilai; nombor ayat dari hasil dan config, bukan R.
     const nilai = { n: h.nKetukanSah, s: Math.round(h.rentangS), min: kfg.ketukan_min, smin: kfg.rentang_min_s };
-    ayat.push({ kunci: `dedah.makna.${h.jalur}`, nilai });
+    // L2: satu kiraan sahaja. Bila sebahagian ketukan tidak jatuh antara dua degupan jelas, ayat menyebut kedua-dua nombor
+    // supaya ia tidak bercanggah dengan "Kau ketuk {n}." di atasnya.
+    if (h.nKetukanSah !== h.n) ayat.push({ kunci: "dedah.terlalu_sedikit_sebahagian", nilai: { ...nilai, jumlah: h.n } });
+    else ayat.push({ kunci: `dedah.makna.${h.jalur}`, nilai });
     return ayat;
   }
   const sama = ayatSama(h);

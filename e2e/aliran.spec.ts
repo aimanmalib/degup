@@ -129,3 +129,44 @@ test("replay: aliran penuh atas fixture contoh, tanpa ketukan cukup → kad tanp
   await win.keyboard.press("Escape");
   await expect(win.locator("[data-uji=senarai-izin]")).toBeVisible();
 });
+
+test("L2: 12 ketukan rapat → tiada nombor skor, pil Terlalu sedikit, ayat 'n daripada jumlah'; kad + PNG sengkang", async () => {
+  test.setTimeout(180_000);
+  l = await lancar("sim", { DEGUP_SKALA_MASA: String(SKALA) });
+  const { win } = l;
+  await keRasa(win);
+  await win.waitForTimeout(app.aliran.rasa_s * SKALA * 1000 - 2500);
+  type U = { degupUji: { ketukSefasa(m: number, had: number): number; ketukAwal(): number } };
+  const sah = await win.evaluate(() => (globalThis as unknown as U).degupUji.ketukSefasa(150, 12));
+  expect(sah).toBe(12);
+  await win.evaluate(() => (globalThis as unknown as U).degupUji.ketukAwal());
+  const jalur = win.locator("[data-uji=jalur]");
+  await expect(jalur).toHaveAttribute("data-jalur", "terlalu_sedikit", { timeout: 10_000 });
+  await expect(jalur).toHaveText(ms.rasa.jalur.terlalu_sedikit);
+  await expect(win.locator("[data-uji=tiada-skor]")).toHaveText(ms.dedah.tiada_skor);
+  await expect(win.locator("[data-uji=skor]")).toHaveCount(0);
+  await expect(win.locator("[data-uji=kiraan]")).toHaveAttribute("data-n", "13");
+  const awalan = (b: typeof ms) => b.dedah.terlalu_sedikit_sebahagian.split("{s}")[0].replace("{n}", "12").replace("{jumlah}", "13");
+  await expect(win.locator("[data-uji=dedah]")).toContainText(awalan(ms));
+  await win.waitForTimeout(app.dedah.kiraan_ms + 300);
+  await tiadaLimpah(win, "[data-uji=dedah]");
+  await bukti(win, "dedah-12-ms", "l2");
+  await win.getByRole("button", { name: en.bahasa.en_penuh }).click();
+  await expect(jalur).toHaveText(en.rasa.jalur.terlalu_sedikit);
+  await expect(win.locator("[data-uji=dedah]")).toContainText(awalan(en));
+  await bukti(win, "dedah-12-en", "l2");
+  await win.getByRole("button", { name: ms.bahasa.ms_penuh }).click();
+  await win.locator("[data-uji=teruskan]").click();
+
+  await lentur(win, "l2-ms");
+  await win.locator("[data-uji=ke-keputusan]").click();
+  await expect(win.locator("[data-uji=kad-skor]")).toHaveText("—");
+  await expect(win.locator("[data-uji=kad-jalur]")).toHaveAttribute("data-jalur", "terlalu_sedikit");
+  await expect(win.locator("[data-uji=kad-jalur]")).toHaveText(ms.rasa.jalur.terlalu_sedikit);
+  await bukti(win, "keputusan-12-ms", "l2");
+  await simpanKad(win, l.data, "l2-12-ms");
+  await win.getByRole("button", { name: en.bahasa.en_penuh }).click();
+  await expect(win.locator("[data-uji=kad-jalur]")).toHaveText(en.rasa.jalur.terlalu_sedikit);
+  await bukti(win, "keputusan-12-en", "l2");
+  await simpanKad(win, l.data, "l2-12-en");
+});

@@ -90,11 +90,17 @@ describe("segmen fasa (lorek jalur IBI)", () => {
 });
 
 describe("keputusan + baris kad", () => {
-  const skor = { cukup: true, skor: 74, jalur: "selaras", N: 47, n: 41 } as HasilSkor;
+  const skor = { cukup: true, liputanCukup: true, skor: 74, jalur: "selaras", N: 47, n: 41 } as HasilSkor;
 
   it("skor tak cukup = tiada skor/jalur, kiraan dikekalkan", () => {
     const k = binaKeputusan({ ...skor, cukup: false, jalur: null }, null, null, "2026-11-09");
     expect(k).toMatchObject({ skor: null, jalur: null, N: 47, n: 41, lambatMs: null, prq: null, nadiPurata: null });
+  });
+
+  it("L2: terlalu sedikit ketukan = jalur kekal, nombor skor TIDAK (kad dan PNG memapar sengkang)", () => {
+    const k = binaKeputusan({ ...skor, skor: 95, liputanCukup: false, jalur: "terlalu_sedikit" }, null, null, "2026-11-09");
+    expect(k).toMatchObject({ skor: null, jalur: "terlalu_sedikit", N: 47, n: 41 });
+    expect(binaKeputusan(skor, null, null, "2026-11-09").skor).toBe(74);
   });
 
   it("baris kad: susunan tetap, nilai null bila tiada; setiap kunci wujud dalam BM dan EN", () => {

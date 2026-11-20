@@ -6,7 +6,7 @@ import ms from "../lang/ms.json";
 import type { Degupan } from "../src/core/beats";
 import { ayatDedah, ayatSama, garisMasa } from "../src/core/dedah";
 import { KOD_PETUNJUK, kunciPetunjuk } from "../src/core/petunjuk";
-import { kiraSkor, type KonfigSkor } from "../src/core/score";
+import { kiraSkor, skorDipapar, type KonfigSkor } from "../src/core/score";
 import { PenjejakStabil } from "../src/core/stabil";
 import { larianSim, T0, US } from "./bantu-sim";
 
@@ -119,6 +119,19 @@ describe("garis masa + ayat pendedahan", () => {
     expect(sedikit.map((a) => a.kunci)).toEqual(["rasa.kiraan", "dedah.makna.terlalu_sedikit"]);
     expect(sedikit[1]!.nilai).toMatchObject({ n: 12, min: app.rasa.liputan.ketukan_min, smin: app.rasa.liputan.rentang_min_s });
     expect(sedikit[1]!.nilai!.s).toBeLessThan(app.rasa.liputan.rentang_min_s);
+    // L2: skor yang boleh dipapar = null untuk jalur ini (rupa "Tiada skor", bukan "95 /100" di atas pil).
+    const hSedikit = skor(benar.filter((t) => t >= mula && t < akhir).slice(0, 12).map((t) => t + 150_000));
+    expect(hSedikit.cukup).toBe(true);
+    expect(skorDipapar(hSedikit)).toBeNull();
+    expect(skorDipapar(skor(benar.filter((t) => t >= mula && t < akhir).map((t) => t + 150_000)))).toBeGreaterThan(0);
+    // L2 (b): satu kiraan — ketukan di luar dua degupan jelas (sebelum degupan pertama) → ayat menyebut kedua-dua nombor.
+    const awal = benar.find((t) => t >= mula)! - 50_000;
+    const campur = skor([awal, ...benar.filter((t) => t >= mula && t < akhir).slice(0, 12).map((t) => t + 150_000)]);
+    expect(campur.n).toBe(campur.nKetukanSah + 1);
+    const sebahagian = ayatDedah(campur, app.rasa.liputan);
+    expect(sebahagian.map((a) => a.kunci)).toEqual(["rasa.kiraan", "dedah.terlalu_sedikit_sebahagian"]);
+    expect(sebahagian[1]!.nilai).toMatchObject({ n: campur.nKetukanSah, jumlah: campur.n });
+    for (const b of [ms, en]) expect(dapat(b, "dedah.terlalu_sedikit_sebahagian")).toContain("{jumlah}");
     const kosong = ayatDedah(skor([]), app.rasa.liputan);
     expect(kosong.map((a) => a.kunci)).toEqual(["rasa.kiraan", "rasa.tak_cukup", "dedah.sebab_ketukan"]);
     // J2.2: sebab = ketukan → ayat menyebut ketukan, bukan cahaya; nombor minimum dari config.

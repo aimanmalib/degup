@@ -8,10 +8,12 @@ const PHI = 0.6180339887;
 
 export interface CangkukUji {
   petunjuk(kod: number): void;
-  /** Satu ketukan setiap degupan dikesan dalam tetingkap RASA, `sesaranMs` selepasnya. Pulang bilangan ketukan. */
-  ketukSefasa(sesaranMs: number): number;
+  /** Satu ketukan setiap degupan dikesan dalam tetingkap RASA, `sesaranMs` selepasnya; `had` = hanya N degupan pertama. */
+  ketukSefasa(sesaranMs: number, had?: number): number;
   /** Satu ketukan setiap kitaran degupan pada fasa i·φ mod 1. Pulang bilangan ketukan. */
   ketukTersebar(): number;
+  /** Satu ketukan tepat pada mula tetingkap RASA (sebelum degupan pertama → tidak dikira; L2 "n daripada jumlah"). */
+  ketukAwal(): number;
 }
 
 export function pasangCangkukUji(r: Ruang): void {
@@ -24,8 +26,9 @@ export function pasangCangkukUji(r: Ruang): void {
   };
   const cangkuk: CangkukUji = {
     petunjuk: (kod) => r.sesi?.suntikPetunjuk(kod),
-    ketukSefasa(sesaranMs) {
-      const { w, d } = degupanTetingkap();
+    ketukSefasa(sesaranMs, had) {
+      const { w, d: semua } = degupanTetingkap();
+      const d = semua.slice(0, had ?? semua.length);
       for (const t of d) w?.ketuk(t + sesaranMs * 1000);
       return w ? d.length : 0;
     },
@@ -37,6 +40,11 @@ export function pasangCangkukUji(r: Ruang): void {
         n++;
       }
       return w ? n : 0;
+    },
+    ketukAwal() {
+      const w = r.sesi?.rasa;
+      w?.ketuk(w.mula);
+      return w ? 1 : 0;
     },
   };
   (window as unknown as { degupUji: CangkukUji }).degupUji = cangkuk;

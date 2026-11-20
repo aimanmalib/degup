@@ -205,6 +205,7 @@
       "meneka": "Tiada kaitan jelas antara ketukan kau dan degupan kau pusingan ini. Kebanyakan orang bermula di sini.",
       "terlalu_sedikit": "{n} ketukan dalam {s} saat terlalu sedikit untuk membezakan rasa daripada rentak. Skor memerlukan sekurang-kurangnya {min} ketukan merentasi {smin} saat, jadi ketuk sepanjang pusingan."
     },
+    "terlalu_sedikit_sebahagian": "{n} daripada {jumlah} ketukan kau jatuh antara dua degupan yang jelas, dalam {s} saat. Itu terlalu sedikit untuk membezakan rasa daripada rentak. Skor memerlukan sekurang-kurangnya {min} ketukan merentasi {smin} saat, jadi ketuk sepanjang pusingan.",
     "nota_sim": "Pusingan ini Simulasi. Tiada degupan sebenar untuk dirasa, jadi skor hanya menunjukkan cara permainan berjalan.",
     "sesaran": "Kau rasa degupan kira-kira {ms} ms selepas kamera melihatnya. Sesaran tetap itu tidak penting; yang dikira ialah ketekalan.",
     "sebab_ketukan": "Hanya {n} ketukan jatuh antara dua degupan yang jelas. Perlu sekurang-kurangnya {min}. Ketuk setiap kali kau rasa degupan.",

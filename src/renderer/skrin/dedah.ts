@@ -1,7 +1,7 @@
 // Pendedahan (PRD §4.2, §4.4): garis masa (tanda = degupan dilihat kamera, titik = ketukan, jalur kualiti berlorek),
 // "Kamera nampak N degupan. Kau ketuk n.", skor 0–100 + jalur, ayat statistik, ayat tetap. "Cuba lagi" · "Teruskan".
 import { ayatDedah, garisMasa, type GarisMasa } from "../../core/dedah.js";
-import { kiraSkor, type HasilSkor } from "../../core/score.js";
+import { kiraSkor, skorDipapar, type HasilSkor } from "../../core/score.js";
 import type { Babak, Ruang } from "../app.js";
 import { h } from "../dom.js";
 
@@ -146,7 +146,9 @@ export function babakDedah(r: Ruang): Babak {
       const { t } = k;
       const saat = Math.round((rasa.akhir - rasa.mula) / 1e6);
       const angka = h("span", { class: "skor-angka", "data-uji": "skor" }, "0");
-      const kepala = hasil.cukup
+      // L2: nombor hanya bila skor boleh dipapar; jalur `terlalu_sedikit` = rupa "Tiada skor" + pil jalur, bukan nombor besar.
+      const adaSkor = skorDipapar(hasil) !== null;
+      const kepala = adaSkor
         ? h(
             "div",
             { class: "skor" },
@@ -171,11 +173,16 @@ export function babakDedah(r: Ruang): Babak {
             "div",
             { class: "skor" },
             h("p", { class: "skor-label" }, t("dedah.skor_label")),
-            h(
-              "p",
-              { class: "skor-tiada", "data-uji": "jalur", "data-jalur": "" },
-              t("dedah.tiada_skor"),
-            ),
+            hasil.jalur
+              ? h("p", { class: "skor-tiada", "data-uji": "tiada-skor" }, t("dedah.tiada_skor"))
+              : h("p", { class: "skor-tiada", "data-uji": "jalur", "data-jalur": "" }, t("dedah.tiada_skor")),
+            hasil.jalur
+              ? h(
+                  "p",
+                  { class: `jalur jalur-${hasil.jalur}`, "data-uji": "jalur", "data-jalur": hasil.jalur },
+                  t(`rasa.jalur.${hasil.jalur}`),
+                )
+              : null,
           );
       const ayat = ayatDedah(hasil, liputan);
       const akar = h(
@@ -252,7 +259,7 @@ export function babakDedah(r: Ruang): Babak {
           ),
         ),
       );
-      if (hasil.cukup) kiraNaik(angka);
+      if (adaSkor) kiraNaik(angka);
       return akar;
     },
     buang() {

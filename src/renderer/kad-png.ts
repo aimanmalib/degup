@@ -82,7 +82,7 @@ export async function lukisKad(k: Keputusan, t: T, kfg: KonfigKad): Promise<Uint
   ctx.textAlign = "left";
   ctx.fillStyle = warna.kabus;
   teks(ctx, t("keputusan.skor"), x0, H * 0.27, (px) => badan(px, 700), 22, maks);
-  ctx.fillStyle = k.jalur ? warna.tulang : warna.kabus;
+  ctx.fillStyle = k.jalur && k.skor !== null ? warna.tulang : warna.kabus;
   teks(ctx, k.jalur ? t(`rasa.jalur.${k.jalur}`) : t("dedah.tiada_skor"), x0, H * 0.36, (px) => papar(px, 700), 40, maks);
 
   let y = H * 0.45;

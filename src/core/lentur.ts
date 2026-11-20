@@ -4,7 +4,7 @@
 // dan baris kad keputusan (kunci lang + nilai) yang dikongsi skrin dan PNG. Tulen: tiada DOM, tiada SDK. Masa µs epoch.
 import { keNombor, type MetrikSdk, type UkuranKeyakinan } from "./metrik.js";
 import { licinNafas, type HasilLentur, type KonfigLentur, type SampelNafas } from "./rsa.js";
-import type { HasilSkor } from "./score.js";
+import { skorDipapar, type HasilSkor } from "./score.js";
 
 export interface NilaiStabil {
   t: number;
@@ -147,7 +147,7 @@ export function segmenFasa(
 
 /** Ringkasan sesi untuk skrin keputusan dan kad PNG (PRD §4.2 Keputusan). */
 export interface Keputusan {
-  /** null bila RASA tak cukup data. */
+  /** null bila RASA tak cukup data atau terlalu sedikit ketukan (L2: jalur kekal, nombor tidak). */
   skor: number | null;
   jalur: string | null;
   N: number;
@@ -166,7 +166,7 @@ export function binaKeputusan(
   tarikh: string,
 ): Keputusan {
   return {
-    skor: skor?.cukup ? skor.skor : null,
+    skor: skor ? skorDipapar(skor) : null,
     jalur: skor?.cukup ? skor.jalur : null,
     N: skor?.N ?? 0,
     n: skor?.n ?? 0,

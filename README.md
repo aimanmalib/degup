@@ -43,7 +43,8 @@ The game has three scenes, about three minutes in total. Lengths come from `conf
    its beat cycle, and the score is how tightly those positions cluster (mean resultant length R plus a Rayleigh test;
    [`src/core/score.ts`](src/core/score.ts)). A fixed lag of 150 ms every time still counts as in tune. A steady rhythm can also
    cluster, so the bands are set from tappers who feel nothing ([`docs/MEASUREMENTS.md`](docs/MEASUREMENTS.md)), and a round counts
-   only when the taps cover most of it: fewer than 20 taps or less than 30 seconds gives "Too few taps to tell".
+   only when the taps cover most of it: fewer than 20 taps or less than 30 seconds gives "Too few taps to tell" and no score
+   number.
 3. **Bend (60 s).** You breathe in for 4 seconds and out for 6, following the lamp. The gap between beats is drawn live, shaded
    by the breath. Most people see the beat slow down on each out-breath. Degup reports the size of that swing in milliseconds
    and how many beats fit in one breath, computed from the SDK pulse and breathing rates ([`src/core/rsa.ts`](src/core/rsa.ts)).
