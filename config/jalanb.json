@@ -2,9 +2,9 @@
   "_nota": "K3 / PH§5.5, PH§5.4 N6, PH§7.3A: jentera jalan B (video telefon pemilik sebagai kamera). scripts/jalanb/*.mjs + src/alat/jalanb.ts membaca nilai di sini; kod tidak menyimpannya.",
   "folder_rahsia": "~/degup-rahsia",
   "kamera": {
-    "_nota": "Fail kamera palsu Chromium (--use-file-for-fake-video-capture): MJPEG kecil, bukan y4m (3 min y4m 640×360 ≈ 1.9 GB).",
-    "lebar": 640,
-    "tinggi": 360,
+    "_nota": "Fail kamera palsu Chromium (--use-file-for-fake-video-capture): MJPEG kecil, bukan y4m. Potret 406×720 = saiz yang P1 ukur dengan nadi (D-n P1c, jawapan A 22 Nov); 640×360 landskap menjadikan video telefon potret jalur 203×360 → kNoFaceFound / ralat SDK 8.",
+    "lebar": 406,
+    "tinggi": 720,
     "fps": 30,
     "kualiti_mjpeg": 4,
     "cakera_min_gb": 20
