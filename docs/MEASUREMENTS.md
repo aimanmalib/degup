@@ -1,7 +1,7 @@
 # Measurements
 
 Every number here comes from a run on this repo's own scripts or tests. Each run that uses Presage credit has its own
-section below. Nothing here is a measurement of a person.
+section below. The only measurement of a person is the owner's own phone video, in its own section below.
 
 ## Live path smoke test, no face
 
@@ -33,7 +33,36 @@ Live app run: 18.9 seconds of SDK time from Start to Esc.
 **What it does not show**
 
 No pulse, breathing rate or beat was measured. There was no face, so the SDK sent no metrics. This is a check of the code path
-and of the key, not of the signal. Measurements on the owner's own face are added here after they are recorded.
+and of the key, not of the signal. The owner's own phone video is measured in the next section.
+
+## Owner phone video, still part
+
+Date: 22 November 2026 (MYT). The owner recorded a 3 minute phone video of their own face (iPhone, 182 seconds: still, then tapping
+on each felt beat, then paced breathing) and uploaded it to the host. The video stays on the host in a private folder; it is not
+in this repo, CI or any cloud service other than Presage itself. Host and SDK as in the section above.
+
+**What ran**
+
+1. `ffmpeg`: first 60 seconds (the still part) to H.264, constant 30 fps, 720 px high, no audio, no metadata.
+2. `scripts/headless-smoke.mjs` on that 60 second clip (about 34 seconds of SDK time), then `scripts/gerbang-p1.mjs` on its summary.
+
+**What it showed**
+
+| Check | Result |
+|---|---|
+| Pulse samples arrived | yes, 10 (`cardio.pulseRate` values in `metrics`) |
+| Time to the first `metrics` payload / first pulse sample | 6.6 s / 11.2 s of video time |
+| `metrics` payloads | 227 |
+| Breathing rate samples | 2 (first at 32.7 s) |
+| Pulse samples the SDK marked stable (of those scored) | 6 of 8 |
+| Dominant `validationStatus` | 0 (`kOk`), 512 times; `kNoFaceFound` once, at 0.17 s |
+| Beats found in `cardio.arterialPressureTrace` (43 s of trace) | 58, against 65.7 expected from the pulse samples |
+| SDK errors | 0 |
+| Automatic Insights events from Presage | 1 |
+
+`scripts/gerbang-p1.mjs` on this clip: H1 (pulse samples stable) passes; H2 (beat count and spacing from the trace) does not pass
+its thresholds in `config/app.json` (count 11.7% low, spacing CV 0.32). The full H1/H2 study and the count-only mode trial were
+skipped for lack of time. This answers one question only: the SDK sends a live pulse signal from the owner's own phone video.
 
 ## What a tapper who feels nothing scores
 
