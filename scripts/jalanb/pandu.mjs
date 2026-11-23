@@ -93,7 +93,7 @@ try {
     cwd: AKAR,
     env,
     args: ["--no-sandbox", "--password-store=basic", `--lang=${o.bahasa}`, "--use-fake-device-for-media-stream", "--use-fake-ui-for-media-stream",
-      `--use-file-for-fake-video-capture=${mjpeg}`, "."],
+      `--use-file-for-fake-video-capture=${mjpeg}`, ...(process.env.DEGUP_ARG_TAMBAH ? process.env.DEGUP_ARG_TAMBAH.split(" ") : []), "."],
   });
   const win = await app.firstWindow();
   win.on("console", (m) => m.type() === "error" && hasil.konsol.push(bersih(m.text())));
@@ -280,7 +280,8 @@ try {
 } catch (e) {
   hasil.pengecualian = bersih(e?.message ?? e);
 } finally {
-  await app?.close().catch(() => {});
+  // close() boleh tergantung selepas sesi gagal: jangan tunggu lebih 20 s.
+  await Promise.race([app?.close().catch(() => {}), new Promise((r) => setTimeout(r, 20000))]);
   clearTimeout(pengawal);
 }
 

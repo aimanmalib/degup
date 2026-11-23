@@ -102,7 +102,7 @@ async function utama(): Promise<void> {
       ralatMula = null;
       if (k.sumber === "live") {
         try {
-          const strim = await kamera.buka(k.tetapan.kamera, k.konfig.sdk.kamera);
+          const strim = await kamera.buka(k.tetapan.kamera, k.konfig.sdk.kamera, k.konfig.sdk.bingkai_sdk.sisi_panjang_maks, k.konfig.sdk.bingkai_sdk.fps_maks);
           const trek = strim.getVideoTracks()[0];
           const t = trek?.getSettings() ?? {};
           k.api.diag({ jenis: "kamera", label: trek?.label ?? "", lebar: t.width ?? 0, tinggi: t.height ?? 0, fps: t.frameRate ?? 0 });
@@ -118,7 +118,7 @@ async function utama(): Promise<void> {
       void ruang.sesi?.henti();
       ruang.sesi = null;
       try {
-        ruang.sesi = await SesiUkur.cipta(k, kamera.media, ralatLive);
+        ruang.sesi = await SesiUkur.cipta(k, kamera.mediaSdk, ralatLive);
       } catch (e) {
         kamera.tutup();
         const sebab = e instanceof RalatMulaLive ? e.sebab : "sdk";

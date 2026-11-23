@@ -208,6 +208,11 @@
       "lebar": 1280,
       "tinggi": 720,
       "fps": 30
+    },
+    "bingkai_sdk": {
+      "_nota": "Bingkai dikecilkan sebelum sampai ke SDK (src/renderer/kamera.ts). Gelung bingkai renderer SDK melukis dan menyalin RGBA penuh setiap bingkai pada benang utama; kamera yang menghantar 1280 lebar, atau mesin tanpa GPU, jatuh di bawah ~30 fps = kFrameRateTooLow (kod 11) lalu ralat SDK 8. sisi_panjang_maks = sisi panjang paling banyak (piksel), 0 = jangan sentuh; fps_maks = buang bingkai melebihi kadar ini, 0 = tiada had.",
+      "sisi_panjang_maks": 640,
+      "fps_maks": 0
     }
   },
   "pautan": {
