@@ -123,6 +123,7 @@ muka sebenar. Lihat [Had](#had).
 | **Originality and Creativity** | Ia menukar tugas interosepsi makmal menjadi permainan kamera web, menskor rasa terhadap degupan dan bukan degupan itu sendiri, dan menjadikan nafas kelihatan ketika ia melentur rentak jantung |
 | SDK di teras, sekurang-kurangnya satu isyarat langsung | Gelombang nadi, kadar nadi dan pernafasan menggerakkan ketiga-tiga babak |
 | Repo awam dengan arahan pasang | [Jalankan dengan satu arahan](#jalankan-dengan-satu-arahan) (pemilik menjadikan repo awam sebelum tarikh tutup) |
+| Pos penyertaan | [dev.to/aimanmalib/degup…](https://dev.to/aimanmalib/degup-a-three-minute-webcam-game-that-checks-if-you-can-feel-your-own-heartbeat-4fpi) |
 | Video demo | [youtu.be/xMVvHVXct-Y](https://youtu.be/xMVvHVXct-Y): satu larian live penuh, video telefon pemilik sebagai kamera, lihat [Had](#had) |
 | Izin kamera dan pengendalian data | [Izin dan data](#izin-dan-data), skrin izin ([`src/renderer/skrin/izin.ts`](src/renderer/skrin/izin.ts)) dan teksnya dalam [`lang/ms.json`](lang/ms.json) (`izin`) |
 

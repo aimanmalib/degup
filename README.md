@@ -121,6 +121,7 @@ measured on a real face. See [Limits](#limits).
 | **Originality and Creativity** | It turns a lab interoception task into a webcam game, scores the feeling of a beat rather than the beat, and makes the breath visible as it bends the heart rhythm |
 | SDK at the core, at least one live signal | Pulse waveform, pulse rate and breathing drive all three scenes |
 | Public repo with install steps | [Run it in one command](#run-it-in-one-command) (the owner makes the repo public before the deadline) |
+| Submission post | [dev.to/aimanmalib/degup…](https://dev.to/aimanmalib/degup-a-three-minute-webcam-game-that-checks-if-you-can-feel-your-own-heartbeat-4fpi) |
 | Demo video | [youtu.be/xMVvHVXct-Y](https://youtu.be/xMVvHVXct-Y): one full live run, with my own phone video as the camera, see [Limits](#limits) |
 | Camera consent and data handling | [Consent and data](#consent-and-data), the consent screen ([`src/renderer/skrin/izin.ts`](src/renderer/skrin/izin.ts)) and its text in [`lang/en.json`](lang/en.json) (`izin`) |
 
