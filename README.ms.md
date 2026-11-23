@@ -258,14 +258,14 @@ Apa yang ujian tegaskan, semuanya atas isyarat sintetik dengan jawapan yang dike
 
 ## Had
 
-- **Mod live belum diukur.** Tiada larian atas muka sebenar direkod dalam [`docs/MEASUREMENTS.md`](docs/MEASUREMENTS.md).
+- **Mod live diukur pada seorang sahaja.** Satu-satunya larian atas muka sebenar dalam [`docs/MEASUREMENTS.md`](docs/MEASUREMENTS.md) ialah video telefon pemilik sendiri.
   Angka pengesan di atas atas isyarat sintetik sahaja, yang bukan fisiologi. Berapa degupan yang pengesan terlepas dalam cahaya
   malap, dan pada kamera web mana, belum diketahui.
 - **Tiada pemasang.** Tiada binaan Windows atau macOS untuk dimuat turun. Jalankan dari sumber.
 - **Disemak di Linux sahaja.** Arahan bash disemak dari klon bersih (`git archive`) di Linux di bawah xvfb pada 17 November
   2026: `npm ci` lulus dan app berjalan dalam mod `sim`, dengan `--no-sandbox` kerana ralat kotak pasir Electron di atas. Baris
   PowerShell dan macOS belum dijalankan.
-- **Belum ada video demo.**
+- **Video demo bukan sesi kamera web langsung.** [Video](https://youtu.be/xMVvHVXct-Y) ialah satu larian penuh app di pelayan Linux tanpa GPU. Kameranya video telefon muka pemilik, dan ketukan dimainkan semula daripada bunyi ketukan dalam video itu. Pusingan tamat dengan "Tiada skor" (41 degupan dilihat, 33 ketukan, bacaan lemah), dan petunjuk kamera terlalu perlahan muncul semasa Rasa. Sesi bersih dengan kamera web laptop belum dirakam.
 - **Linux perlukan Vulkan** untuk SDK; tanpa pemacu GPU ia memakai Mesa lavapipe, yang lebih perlahan.
 - **SDK menghantar ukuran terbitan kepada Presage untuk Insights** dalam mod live, dan Degup tidak dapat mematikannya. Itu perkara
   3 skrin izin.

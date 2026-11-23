@@ -121,7 +121,7 @@ measured on a real face. See [Limits](#limits).
 | **Originality and Creativity** | It turns a lab interoception task into a webcam game, scores the feeling of a beat rather than the beat, and makes the breath visible as it bends the heart rhythm |
 | SDK at the core, at least one live signal | Pulse waveform, pulse rate and breathing drive all three scenes |
 | Public repo with install steps | [Run it in one command](#run-it-in-one-command) (the owner makes the repo public before the deadline) |
-| Demo video | Not recorded yet, see [Limits](#limits) |
+| Demo video | [youtu.be/xMVvHVXct-Y](https://youtu.be/xMVvHVXct-Y): one full live run, with my own phone video as the camera, see [Limits](#limits) |
 | Camera consent and data handling | [Consent and data](#consent-and-data), the consent screen ([`src/renderer/skrin/izin.ts`](src/renderer/skrin/izin.ts)) and its text in [`lang/en.json`](lang/en.json) (`izin`) |
 
 ![Consent screen in simulation mode: seven points shown before the camera can turn on, simulated signal, no camera](docs/media/consent.png)
@@ -252,14 +252,14 @@ What the tests assert, all on synthetic signals with a known answer:
 
 ## Limits
 
-- **Live mode is not measured yet.** No run on a real face is recorded in [`docs/MEASUREMENTS.md`](docs/MEASUREMENTS.md). The
+- **Live mode is measured on one person only.** The only run on a real face in [`docs/MEASUREMENTS.md`](docs/MEASUREMENTS.md) is the owner's own phone video. The
   detector numbers above are on synthetic signals only, which are not physiology. How many beats the detector misses in dim
   light, and on which webcams, is unknown.
 - **No installer.** There is no Windows or macOS build to download. Run from source.
 - **Checked on Linux only.** The bash command was checked from a clean clone (`git archive`) on Linux under xvfb on 17 November
   2026: `npm ci` passed and the app ran in `sim` mode, with `--no-sandbox` because of the Electron sandbox error above. The
   PowerShell line and macOS have not been run.
-- **No demo video yet.**
+- **The demo video is not a live webcam session.** [The video](https://youtu.be/xMVvHVXct-Y) is one full run of the app on a Linux server with no GPU. The camera was a phone video of the owner's face, and the taps were replayed from the tapping sounds in that video. The round ended with "No score" (41 beats seen, 33 taps, weak reading), and the hint "The camera is too slow" shows during Feel. A clean session on a laptop webcam has not been recorded.
 - **Linux needs Vulkan** for the SDK; without a GPU driver it uses Mesa lavapipe, which is slower.
 - **The SDK sends derived measurements to Presage for Insights** in live mode, and Degup cannot switch that off. It is point 3
   of the consent screen.
